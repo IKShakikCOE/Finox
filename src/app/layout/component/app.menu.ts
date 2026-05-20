@@ -28,6 +28,10 @@ export class AppMenu {
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
             },
             {
+                label: 'Tracker',
+                items: [{ label: 'Expense Tracker', icon: 'pi pi-fw pi-wallet', routerLink: ['/tracker'] }]
+            },
+            {
                 label: 'UI Components',
                 items: [
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },

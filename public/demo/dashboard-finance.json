@@ -1,0 +1,32 @@
+{
+  "summary": {
+    "totalBalance": 1250000.00,
+    "monthlyIncome": 180000.00,
+    "monthlyExpense": 65000.00,
+    "savingsRate": 64,
+    "balanceChangePercent": 12.5,
+    "expenseChangePercent": 8.2
+  },
+  "allocations": [
+    { "assetClass": "Bank Accounts", "description": "Liquid Cash / Emergency Fund", "percentage": 45, "colorClass": "bg-blue-500", "textColorClass": "text-blue-500" },
+    { "assetClass": "Mutual Funds", "description": "Capital Growth (SIP)", "percentage": 32, "colorClass": "bg-emerald-500", "textColorClass": "text-emerald-500" },
+    { "assetClass": "Gold & FDs", "description": "Inflation Hedge & Security", "percentage": 23, "colorClass": "bg-amber-500", "textColorClass": "text-amber-500" }
+  ],
+  "recentTransactions": [
+    { "id": 1, "description": "Techspire Solutions Salary", "category": "Salary", "amount": 180000, "type": "income", "date": "2026-05-01T10:00:00Z" },
+    { "id": 2, "description": "Monthly Grocery - Chaldal", "category": "Food", "amount": 12500, "type": "expense", "date": "2026-05-18T15:30:00Z" },
+    { "id": 3, "description": "IDLC Balanced Fund SIP", "category": "Investment", "amount": 20000, "type": "expense", "date": "2026-05-15T09:00:00Z" },
+    { "id": 4, "description": "Apex Shoe Retail", "category": "Shopping", "amount": 4500, "type": "expense", "date": "2026-05-12T18:20:00Z" },
+    { "id": 5, "description": "DPDC Electricity Bill", "category": "Utilities", "amount": 3200, "type": "expense", "date": "2026-05-10T11:15:00Z" }
+  ],
+  "notifications": [
+    { "id": 1, "type": "system", "title": "Automated SIP", "message": "successfully processed for ৳20,000.00", "timeGroup": "TODAY", "icon": "pi pi-dollar", "bgClass": "bg-blue-100 dark:bg-blue-400/10", "iconClass": "text-blue-500" },
+    { "id": 2, "type": "analytics", "title": "Savings Insight", "message": "Your net savings rate increased by 5% compared to last month.", "timeGroup": "LAST WEEK", "icon": "pi pi-arrow-up", "bgClass": "bg-green-100 dark:bg-green-400/10", "iconClass": "text-green-500" }
+  ],
+  "cashFlow": [
+    { "quarter": "Q1", "income": 540000, "expense": 195000, "savings": 345000 },
+    { "quarter": "Q2", "income": 560000, "expense": 210000, "savings": 350000 },
+    { "quarter": "Q3", "income": 610000, "expense": 180000, "savings": 430000 },
+    { "quarter": "Q4", "income": 640000, "expense": 220000, "savings": 420000 }
+  ]
+}

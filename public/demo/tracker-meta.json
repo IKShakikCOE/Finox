@@ -1,0 +1,18 @@
+{
+  "paymentMethods": ["CASH", "BANK", "MOBILE_BANKING"],
+  "incomeCategories": ["Salary", "Freelance / Project", "Investments Profit", "Dividends", "Other Income"],
+  "expenseCategories": ["Food & Grocery", "Utilities", "Investment (SIP)", "Shopping", "Rent", "Medical", "Fuel & Transport"],
+  "initialTransactions": [
+    { "id": "TXN001", "title": "Techspire Solutions Salary", "amount": 180000, "type": "INCOME", "category": "Salary", "date": "2026-05-01", "paymentMethod": "BANK", "remarks": "Monthly Salary Transfer" },
+    { "id": "TXN002", "title": "Monthly Grocery - Chaldal", "amount": 12500, "type": "EXPENSE", "category": "Food & Grocery", "date": "2026-05-18", "paymentMethod": "MOBILE_BANKING" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN003", "title": "IDLC Balanced Fund SIP", "amount": 20000, "type": "EXPENSE", "category": "Investment (SIP)", "date": "2026-05-15", "paymentMethod": "BANK" },
+    { "id": "TXN004", "title": "DPDC Electricity Bill", "amount": 3200, "type": "EXPENSE", "category": "Utilities", "date": "2026-05-10", "paymentMethod": "MOBILE_BANKING" }
+  ]
+}
