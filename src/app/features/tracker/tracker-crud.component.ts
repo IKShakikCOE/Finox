@@ -318,20 +318,24 @@ import { Component, OnInit, inject } from '@angular/core';
 import { TrackerService } from './services/tracker.service';
 import { DynamicTableComponent } from '@/app/shared/components/dynamic-table.component';
 import { TableActionClickEvent, TableColumn, TableSettings } from '@/app/shared/models/dynamic-table.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'fx-tracker-crud',
     standalone: true,
-    imports: [DynamicTableComponent],
+    imports: [DynamicTableComponent, CommonModule],
     providers: [TrackerService],
     template: `
-        <div class="card">
-            <fx-dynamic-table 
-                [data]="trackerService.transactions()" 
+        <!-- সেটিংস অবজেক্টটি পুরোপুরি রেডি না হওয়া পর্যন্ত টেবিলটি ডমে আসবে না -->
+        <div class="card" *ngIf="tableSettings && tableSettings.title">
+            <fx-dynamic-table
+                [data]="trackerService.transactions()"
                 [columns]="tableCols"
                 [settings]="tableSettings"
+                (addClick)="openAddTransactionDialog()"
+                (bulkDeleteClick)="deleteSelectedTransactions($event)"
                 (actionClick)="handleTableAction($event)"
-                (selectionChange)="handleSelection($event)">
+            >
             </fx-dynamic-table>
         </div>
     `
@@ -342,8 +346,8 @@ export class TrackerCrudComponent implements OnInit {
     tableSettings: TableSettings = {};
 
     ngOnInit() {
-        this.trackerService.loadTrackerMetaData();
         this.setupTable();
+        this.trackerService.loadTrackerMetaData();
     }
 
     setupTable() {
@@ -353,19 +357,21 @@ export class TrackerCrudComponent implements OnInit {
             { field: 'title', header: 'Title' },
             { field: 'amount', header: 'Amount', type: 'currency' },
             { field: 'category', header: 'Category' },
-            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => val === 'INCOME' ? 'success' : 'danger' }
+            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : 'danger') }
         ];
 
         // ২. মাস্টার টেবিল সেটিংস (এখান থেকেই সবকিছু সুইচ হবে)
         this.tableSettings = {
             title: 'Financial Statements Ledger',
-            showSearch: false,
-            searchPlaceholder: 'Search transactions...',
-            globalFilterFields: ['title', 'category'],
-            showExport: false,
-            showSelection: true,
+            // showSearch: true,
+            // searchPlaceholder: 'Search transactions...',
+            // globalFilterFields: ['title', 'category'],
+            // showExport: true,
+            // showSelection: true,
             showPaginator: true,
             rowsPerPage: 10,
+            addButton: { show: true, label: 'Add' },
+            bulkDeleteButton: { show: true, label: 'Delete Selected' },
             actions: {
                 show: true,
                 edit: true,
@@ -393,5 +399,16 @@ export class TrackerCrudComponent implements OnInit {
 
     handleSelection(selectedRows: any[]) {
         console.log('Selected Rows Matrix:', selectedRows);
+    }
+
+    openAddTransactionDialog() {
+        console.log('Opening Dynamic Dialog or Modal to add new transaction...');
+        // এখানে আপনার PrimeNG Dialog বা কম্পোনেন্ট ওপেন করার লজিক আসবে
+    }
+
+    deleteSelectedTransactions(selectedItems: any[]) {
+        console.log('আইটেম যেগুলো ডিলিট হবে:', selectedItems);
+        // আপনার ConfirmationService দিয়ে ডায়ালগ দেখিয়ে তারপর API কল করুন
+        // ডিলিট সফল হওয়ার পর টেবিলের `selectedItems` ক্লিয়ার করতে কম্পোনেন্টের একটা রেফারেন্স বা রিফ্রেশ মেথড কল করতে পারেন।
     }
 }

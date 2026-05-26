@@ -7,14 +7,30 @@ export interface TableColumn {
 
 export interface TableSettings {
     title?: string;
+
     showSearch?: boolean;
     searchPlaceholder?: string;
     globalFilterFields?: string[];
+
     showExport?: boolean;
+    
     showSelection?: boolean;
+
     showPaginator?: boolean;
     rowsPerPage?: number;
     rowsPerPageOptions?: number[];
+
+    addButton?: {
+        show: boolean;
+        label?: string;
+        icon?: string;
+    };
+
+    bulkDeleteButton?: {
+        show: boolean;
+        label?: string;
+        icon?: string;
+    };
     actions?: {
         show?: boolean;
         edit?: boolean;
