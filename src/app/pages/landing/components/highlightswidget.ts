@@ -1,46 +1,42 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'highlights-widget',
+    imports: [CommonModule],
     template: `
-        <div id="highlights" class="py-6 px-6 lg:px-20 mx-0 my-12 lg:mx-20">
-            <div class="text-center">
-                <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Powerful Everywhere</div>
-                <span class="text-muted-color text-2xl">Amet consectetur adipiscing elit...</span>
+        <div id="highlights" class="py-16 px-6 lg:px-20" style="background: linear-gradient(180deg, #f8fafc 0%, #ecfdf5 50%, #f8fafc 100%)">
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-2 mb-4 border-round-3xl text-sm font-bold uppercase tracking-wider" style="background: #d1fae5; color: #059669">Why FinOx</span>
+                <h2 class="text-surface-900 dark:text-surface-0 font-bold text-4xl md:text-5xl mb-4">Built for Bangladesh</h2>
+                <p class="text-muted-color text-xl max-w-2xl mx-auto">Not just another finance app. FinOx understands the local banking system, regulations, and financial culture.</p>
             </div>
 
-            <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
-                <div class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-0" style="border-radius: 8px">
-                    <img src="https://primefaces.org/cdn/templates/sakai/landing/mockup.png" class="w-11/12" alt="mockup mobile" />
-                </div>
-
-                <div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
-                    <div class="flex items-center justify-center bg-purple-200 self-center lg:self-end" style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                        <i class="pi pi-fw pi-mobile text-4xl! text-purple-700"></i>
+            <div class="grid grid-cols-12 gap-6">
+                <div *ngFor="let item of highlights; let i = index" class="col-span-12 md:col-span-6">
+                    <div class="flex items-start gap-5 p-6 border-round-2xl h-full" style="background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04)">
+                        <div class="flex items-center justify-center border-round-xl shrink-0" [style.background]="item.bgColor" style="width: 3rem; height: 3rem">
+                            <i [class]="item.icon + ' text-lg'" [style.color]="item.color"></i>
+                        </div>
+                        <div>
+                            <h5 class="m-0 mb-2 text-surface-900 dark:text-surface-0 font-bold">{{ item.title }}</h5>
+                            <p class="m-0 text-muted-color leading-relaxed">{{ item.description }}</p>
+                        </div>
                     </div>
-                    <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Congue Quisque Egestas</div>
-                    <span class="text-surface-700 dark:text-surface-100 text-2xl leading-normal ml-0 md:ml-2" style="max-width: 650px"
-                        >Lectus arcu bibendum at varius vel pharetra vel turpis nunc. Eget aliquet nibh praesent tristique magna sit amet purus gravida. Sit amet mattis vulputate enim nulla aliquet.</span
-                    >
-                </div>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
-                <div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
-                    <div class="flex items-center justify-center bg-yellow-200 self-center lg:self-start" style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                        <i class="pi pi-fw pi-desktop text-3xl! text-yellow-700"></i>
-                    </div>
-                    <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Celerisque Eu Ultrices</div>
-                    <span class="text-surface-700 dark:text-surface-100 text-2xl leading-normal mr-0 md:mr-2" style="max-width: 650px"
-                        >Adipiscing commodo elit at imperdiet dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Suspendisse in est ante in. Mauris pharetra et ultrices neque ornare aenean euismod elementum nisi.</span
-                    >
-                </div>
-
-                <div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0" style="border-radius: 8px">
-                    <img src="https://primefaces.org/cdn/templates/sakai/landing/mockup-desktop.png" class="w-11/12" alt="mockup" />
                 </div>
             </div>
         </div>
     `
 })
-export class HighlightsWidget {}
+export class HighlightsWidget {
+    highlights = [
+        { icon: 'pi pi-globe', title: 'Bangladesh Focused', description: 'All data, banks, insurance companies, and AMCs are from Bangladesh. BDT currency, local context, Bangla support.', color: '#059669', bgColor: '#d1fae5' },
+        { icon: 'pi pi-lock', title: 'Secure & Private', description: 'Your financial data stays private. No third-party sharing, no ads, no tracking. Bank-grade security.', color: '#6366F1', bgColor: '#e0e7ff' },
+        { icon: 'pi pi-bolt', title: 'Real-time Insights', description: 'Instant budget alerts, live portfolio tracking, and AI-powered recommendations as your data changes.', color: '#F59E0B', bgColor: '#fef3c7' },
+        { icon: 'pi pi-mobile', title: 'Works Everywhere', description: 'Fully responsive design works on desktop, tablet, and mobile. Access your finances from anywhere.', color: '#EC4899', bgColor: '#fce7f3' },
+        { icon: 'pi pi-arrows-h', title: 'Compare Everything', description: 'Side-by-side comparison for banks, insurance, mutual funds, and ad campaigns with best-pick indicators.', color: '#3B82F6', bgColor: '#dbeafe' },
+        { icon: 'pi pi-chart-bar', title: 'Visual Reports', description: 'Category-wise breakdowns, trend analysis, budget vs actual charts, and exportable PDF/Excel reports.', color: '#14B8A6', bgColor: '#ccfbf1' },
+        { icon: 'pi pi-graduation-cap', title: 'Financial Literacy', description: 'Curated articles, book reviews, tips, and learning resources to grow your financial knowledge.', color: '#8B5CF6', bgColor: '#ede9fe' },
+        { icon: 'pi pi-sync', title: 'Always Up-to-date', description: 'Latest interest rates, fund NAVs, insurance premiums, and market news updated regularly.', color: '#EF4444', bgColor: '#fee2e2' }
+    ];
+}

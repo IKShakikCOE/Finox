@@ -1,0 +1,122 @@
+{
+  "amcs": [
+    { "id": "ICB", "name": "ICB Asset Management" },
+    { "id": "IDLC", "name": "IDLC Asset Management" },
+    { "id": "LBFL", "name": "LankaBangla Asset Management" },
+    { "id": "RACE", "name": "RACE Management" },
+    { "id": "AIM", "name": "Alliance Capital Asset Management" },
+    { "id": "VIPB", "name": "VIPB Asset Management" },
+    { "id": "UCB_AM", "name": "UCB Asset Management" },
+    { "id": "EDGE", "name": "Edge Asset Management" }
+  ],
+  "funds": [
+    {
+      "id": "MF001", "amcId": "ICB", "amcName": "ICB Asset Management",
+      "category": "GROWTH", "name": "ICB AMCL Unit Fund",
+      "nav": 12.45, "returnRate1Y": 8.5, "returnRate3Y": 22.0, "returnRate5Y": 38.0,
+      "minInvestment": 5000, "expenseRatio": 2.50, "fundSize": "850 Cr",
+      "riskLevel": "MODERATE",
+      "features": ["Open-ended fund", "Daily NAV", "Dividend payout", "SIP available"],
+      "objective": "Long-term capital appreciation through equity investments"
+    },
+    {
+      "id": "MF002", "amcId": "ICB", "amcName": "ICB Asset Management",
+      "category": "BALANCED", "name": "ICB AMCL Balanced Fund",
+      "nav": 10.80, "returnRate1Y": 6.2, "returnRate3Y": 16.5, "returnRate5Y": 28.0,
+      "minInvestment": 5000, "expenseRatio": 2.25, "fundSize": "420 Cr",
+      "riskLevel": "LOW",
+      "features": ["Equity + Fixed income mix", "Lower volatility", "Regular income", "SIP available"],
+      "objective": "Balanced growth with moderate risk through diversified portfolio"
+    },
+    {
+      "id": "MF003", "amcId": "IDLC", "amcName": "IDLC Asset Management",
+      "category": "GROWTH", "name": "IDLC Growth Fund",
+      "nav": 15.20, "returnRate1Y": 12.3, "returnRate3Y": 30.0, "returnRate5Y": 52.0,
+      "minInvestment": 10000, "expenseRatio": 2.00, "fundSize": "620 Cr",
+      "riskLevel": "HIGH",
+      "features": ["Aggressive equity focus", "Top performer", "Professional management", "SIP from 1000/month"],
+      "objective": "Maximum capital growth through concentrated equity positions"
+    },
+    {
+      "id": "MF004", "amcId": "IDLC", "amcName": "IDLC Asset Management",
+      "category": "BALANCED", "name": "IDLC Balanced Fund",
+      "nav": 11.50, "returnRate1Y": 7.8, "returnRate3Y": 20.0, "returnRate5Y": 35.0,
+      "minInvestment": 5000, "expenseRatio": 2.00, "fundSize": "380 Cr",
+      "riskLevel": "MODERATE",
+      "features": ["60:40 equity-debt mix", "Stable returns", "Monthly SIP", "Tax efficient"],
+      "objective": "Steady growth with controlled risk through balanced allocation"
+    },
+    {
+      "id": "MF005", "amcId": "LBFL", "amcName": "LankaBangla Asset Management",
+      "category": "GROWTH", "name": "LankaBangla 1st Mutual Fund",
+      "nav": 9.85, "returnRate1Y": 9.0, "returnRate3Y": 24.0, "returnRate5Y": 40.0,
+      "minInvestment": 5000, "expenseRatio": 2.50, "fundSize": "310 Cr",
+      "riskLevel": "HIGH",
+      "features": ["Closed-end fund", "Listed on DSE", "Annual dividend", "Professional research"],
+      "objective": "Capital appreciation through equity market investments"
+    },
+    {
+      "id": "MF006", "amcId": "LBFL", "amcName": "LankaBangla Asset Management",
+      "category": "FIXED_INCOME", "name": "LBFL Fixed Income Fund",
+      "nav": 10.20, "returnRate1Y": 5.5, "returnRate3Y": 15.0, "returnRate5Y": 26.0,
+      "minInvestment": 10000, "expenseRatio": 1.50, "fundSize": "180 Cr",
+      "riskLevel": "LOW",
+      "features": ["Government bonds focus", "Stable income", "Low volatility", "Quarterly dividend"],
+      "objective": "Regular income with capital preservation through fixed income securities"
+    },
+    {
+      "id": "MF007", "amcId": "RACE", "amcName": "RACE Management",
+      "category": "GROWTH", "name": "RACE Growth Fund",
+      "nav": 13.60, "returnRate1Y": 10.5, "returnRate3Y": 26.0, "returnRate5Y": 44.0,
+      "minInvestment": 5000, "expenseRatio": 2.25, "fundSize": "280 Cr",
+      "riskLevel": "HIGH",
+      "features": ["Small & mid cap focus", "High growth potential", "Active management", "SIP available"],
+      "objective": "Superior returns through small and mid-cap equity investments"
+    },
+    {
+      "id": "MF008", "amcId": "AIM", "amcName": "Alliance Capital Asset Management",
+      "category": "BALANCED", "name": "AIM Balanced Growth Fund",
+      "nav": 11.00, "returnRate1Y": 7.0, "returnRate3Y": 18.0, "returnRate5Y": 30.0,
+      "minInvestment": 5000, "expenseRatio": 2.00, "fundSize": "220 Cr",
+      "riskLevel": "MODERATE",
+      "features": ["Diversified portfolio", "Risk-adjusted returns", "Monthly SIP", "Experienced team"],
+      "objective": "Balanced growth through diversified equity and fixed income allocation"
+    },
+    {
+      "id": "MF009", "amcId": "VIPB", "amcName": "VIPB Asset Management",
+      "category": "GROWTH", "name": "VIPB Accelerated Growth Fund",
+      "nav": 14.30, "returnRate1Y": 11.0, "returnRate3Y": 28.0, "returnRate5Y": 48.0,
+      "minInvestment": 10000, "expenseRatio": 2.50, "fundSize": "190 Cr",
+      "riskLevel": "HIGH",
+      "features": ["Sector rotation strategy", "High conviction picks", "Quarterly review", "SIP available"],
+      "objective": "Aggressive capital growth through concentrated sector bets"
+    },
+    {
+      "id": "MF010", "amcId": "UCB_AM", "amcName": "UCB Asset Management",
+      "category": "FIXED_INCOME", "name": "UCB Income Fund",
+      "nav": 10.50, "returnRate1Y": 5.0, "returnRate3Y": 14.0, "returnRate5Y": 24.0,
+      "minInvestment": 5000, "expenseRatio": 1.75, "fundSize": "150 Cr",
+      "riskLevel": "LOW",
+      "features": ["Fixed deposit alternative", "Monthly income option", "Capital safety", "Low expense"],
+      "objective": "Regular income with minimal risk through government and corporate bonds"
+    },
+    {
+      "id": "MF011", "amcId": "EDGE", "amcName": "Edge Asset Management",
+      "category": "GROWTH", "name": "Edge Equity Opportunities Fund",
+      "nav": 16.00, "returnRate1Y": 14.0, "returnRate3Y": 35.0, "returnRate5Y": 58.0,
+      "minInvestment": 25000, "expenseRatio": 2.75, "fundSize": "450 Cr",
+      "riskLevel": "HIGH",
+      "features": ["Top quartile performer", "Research-driven", "Concentrated portfolio", "For HNI investors"],
+      "objective": "Maximum alpha generation through deep research and concentrated positions"
+    },
+    {
+      "id": "MF012", "amcId": "EDGE", "amcName": "Edge Asset Management",
+      "category": "BALANCED", "name": "Edge Conservative Fund",
+      "nav": 10.90, "returnRate1Y": 6.5, "returnRate3Y": 17.0, "returnRate5Y": 29.0,
+      "minInvestment": 10000, "expenseRatio": 1.75, "fundSize": "120 Cr",
+      "riskLevel": "LOW",
+      "features": ["Capital preservation focus", "70% fixed income", "Suitable for retirees", "Monthly payout"],
+      "objective": "Capital preservation with modest growth for conservative investors"
+    }
+  ]
+}

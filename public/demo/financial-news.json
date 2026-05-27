@@ -1,0 +1,110 @@
+{
+  "categories": ["All", "News", "Tips", "Advice", "Books", "Learning"],
+  "articles": [
+    {
+      "id": "ART001", "category": "News", "title": "Bangladesh Bank Raises Repo Rate to 8.5% — What It Means for Your Savings",
+      "excerpt": "The central bank's latest monetary policy decision impacts FDR rates, loan EMIs, and overall market liquidity. Here's how to position your finances.",
+      "author": "FinOx Editorial", "date": "2026-05-25", "readTime": "4 min",
+      "tags": ["interest-rate", "monetary-policy", "bangladesh-bank"],
+      "image": "pi pi-chart-line", "featured": true
+    },
+    {
+      "id": "ART002", "category": "Tips", "title": "5 Budgeting Methods That Actually Work for Bangladeshi Professionals",
+      "excerpt": "From the 50/30/20 rule to zero-based budgeting — find the method that fits your lifestyle and income pattern.",
+      "author": "Shakil Ahmed", "date": "2026-05-22", "readTime": "6 min",
+      "tags": ["budgeting", "personal-finance", "savings"],
+      "image": "pi pi-wallet", "featured": true
+    },
+    {
+      "id": "ART003", "category": "Advice", "title": "How to Build an Emergency Fund on a 40K Salary",
+      "excerpt": "Step-by-step guide to saving 3-6 months of expenses even when your income feels tight. Practical tips for the Bangladeshi context.",
+      "author": "Nusrat Jahan", "date": "2026-05-20", "readTime": "5 min",
+      "tags": ["emergency-fund", "savings", "financial-planning"],
+      "image": "pi pi-shield", "featured": false
+    },
+    {
+      "id": "ART004", "category": "News", "title": "DSE Index Crosses 7,500 — Bull Run or Bubble?",
+      "excerpt": "Dhaka Stock Exchange hits a 3-year high. Analysts weigh in on whether this rally is sustainable and what retail investors should do.",
+      "author": "Market Desk", "date": "2026-05-18", "readTime": "5 min",
+      "tags": ["stock-market", "dse", "investing"],
+      "image": "pi pi-chart-bar", "featured": true
+    },
+    {
+      "id": "ART005", "category": "Books", "title": "Book Review: 'The Psychology of Money' by Morgan Housel",
+      "excerpt": "Why behavior matters more than knowledge in personal finance. Key takeaways and how to apply them in the Bangladeshi context.",
+      "author": "FinOx Reviews", "date": "2026-05-15", "readTime": "8 min",
+      "tags": ["book-review", "behavioral-finance", "must-read"],
+      "image": "pi pi-book", "featured": false
+    },
+    {
+      "id": "ART006", "category": "Learning", "title": "Mutual Funds 101: A Complete Beginner's Guide for Bangladesh",
+      "excerpt": "What are mutual funds, how do they work in Bangladesh, which AMCs to consider, and how to start your first SIP with just ৳1,000/month.",
+      "author": "FinOx Academy", "date": "2026-05-12", "readTime": "10 min",
+      "tags": ["mutual-funds", "beginner", "sip", "investing"],
+      "image": "pi pi-graduation-cap", "featured": true
+    },
+    {
+      "id": "ART007", "category": "Tips", "title": "Tax Saving Strategies: Maximize Your Rebate Under Section 78",
+      "excerpt": "Life insurance, DPS, provident fund — know exactly how much you can save on taxes this year with proper investment planning.",
+      "author": "Kamal Hossain", "date": "2026-05-10", "readTime": "7 min",
+      "tags": ["tax", "tax-saving", "section-78", "investment"],
+      "image": "pi pi-percentage", "featured": false
+    },
+    {
+      "id": "ART008", "category": "Advice", "title": "Should You Pay Off Debt or Invest? A Framework for Deciding",
+      "excerpt": "The age-old dilemma solved with a simple interest rate comparison framework. When to prioritize debt payoff vs growing your portfolio.",
+      "author": "Rafiq Islam", "date": "2026-05-08", "readTime": "5 min",
+      "tags": ["debt", "investing", "financial-planning"],
+      "image": "pi pi-arrows-alt", "featured": false
+    },
+    {
+      "id": "ART009", "category": "News", "title": "bKash & Nagad Now Offer 4% Interest on Wallet Balance",
+      "excerpt": "Mobile financial services are competing with banks. Here's how the new interest-bearing wallet feature works and whether it's worth it.",
+      "author": "Tech Finance Desk", "date": "2026-05-05", "readTime": "4 min",
+      "tags": ["mobile-banking", "bkash", "nagad", "fintech"],
+      "image": "pi pi-mobile", "featured": false
+    },
+    {
+      "id": "ART010", "category": "Learning", "title": "Understanding FDR vs DPS: Which Is Better for Your Goals?",
+      "excerpt": "Fixed Deposit vs Deposit Pension Scheme — a detailed comparison of returns, liquidity, tax implications, and ideal use cases.",
+      "author": "FinOx Academy", "date": "2026-05-03", "readTime": "6 min",
+      "tags": ["fdr", "dps", "savings", "comparison"],
+      "image": "pi pi-question-circle", "featured": false
+    },
+    {
+      "id": "ART011", "category": "Books", "title": "Top 7 Personal Finance Books Every Bangladeshi Should Read",
+      "excerpt": "From Rich Dad Poor Dad to The Intelligent Investor — curated list with local context on how each book applies to our financial landscape.",
+      "author": "FinOx Reviews", "date": "2026-04-28", "readTime": "9 min",
+      "tags": ["books", "reading-list", "personal-finance"],
+      "image": "pi pi-book", "featured": true
+    },
+    {
+      "id": "ART012", "category": "Tips", "title": "How to Track Every Taka: Building a Daily Money Habit",
+      "excerpt": "The simple daily habit that transformed thousands of people's finances. How to use expense tracking without it feeling like a chore.",
+      "author": "Shakil Ahmed", "date": "2026-04-25", "readTime": "4 min",
+      "tags": ["expense-tracking", "habits", "personal-finance"],
+      "image": "pi pi-pencil", "featured": false
+    },
+    {
+      "id": "ART013", "category": "Advice", "title": "Insurance vs Investment: Stop Mixing the Two",
+      "excerpt": "Why ULIPs and endowment plans are often bad investments. How to separate your protection needs from wealth-building goals.",
+      "author": "Nusrat Jahan", "date": "2026-04-22", "readTime": "6 min",
+      "tags": ["insurance", "investment", "financial-planning"],
+      "image": "pi pi-exclamation-circle", "featured": false
+    },
+    {
+      "id": "ART014", "category": "Learning", "title": "Credit Score in Bangladesh: What It Is and Why It Matters",
+      "excerpt": "CIB reports, how banks evaluate your creditworthiness, and practical steps to build and maintain a strong credit profile.",
+      "author": "FinOx Academy", "date": "2026-04-18", "readTime": "7 min",
+      "tags": ["credit-score", "cib", "banking", "loans"],
+      "image": "pi pi-star", "featured": false
+    },
+    {
+      "id": "ART015", "category": "News", "title": "Government Savings Certificates Rate Cut: New Rates Effective June 2026",
+      "excerpt": "National Savings Directorate announces revised rates for Sanchayapatra. Here's the updated rate chart and impact on your returns.",
+      "author": "Market Desk", "date": "2026-04-15", "readTime": "3 min",
+      "tags": ["sanchayapatra", "government-bonds", "interest-rate"],
+      "image": "pi pi-flag", "featured": false
+    }
+  ]
+}

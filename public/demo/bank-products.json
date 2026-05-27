@@ -1,0 +1,191 @@
+{
+  "banks": [
+    { "id": "DBBL", "name": "Dutch-Bangla Bank", "logo": "pi pi-building" },
+    { "id": "BRAC", "name": "BRAC Bank", "logo": "pi pi-building" },
+    { "id": "EBL", "name": "Eastern Bank Ltd", "logo": "pi pi-building" },
+    { "id": "CITY", "name": "City Bank", "logo": "pi pi-building" },
+    { "id": "UCB", "name": "United Commercial Bank", "logo": "pi pi-building" },
+    { "id": "ISLAMI", "name": "Islami Bank Bangladesh", "logo": "pi pi-building" },
+    { "id": "PUBALI", "name": "Pubali Bank", "logo": "pi pi-building" },
+    { "id": "SONALI", "name": "Sonali Bank", "logo": "pi pi-building" },
+    { "id": "JANATA", "name": "Janata Bank", "logo": "pi pi-building" },
+    { "id": "MTB", "name": "Mutual Trust Bank", "logo": "pi pi-building" }
+  ],
+  "products": [
+    {
+      "id": "P001", "bankId": "DBBL", "bankName": "Dutch-Bangla Bank",
+      "category": "SAVINGS", "name": "Regular Savings Account",
+      "interestRate": 3.50, "minDeposit": 500, "tenure": null,
+      "features": ["Free debit card", "Online banking", "ATM access nationwide"],
+      "eligibility": "18+ Bangladeshi citizen with NID"
+    },
+    {
+      "id": "P002", "bankId": "DBBL", "bankName": "Dutch-Bangla Bank",
+      "category": "FDR", "name": "Fixed Deposit (1 Year)",
+      "interestRate": 7.50, "minDeposit": 50000, "tenure": "1 Year",
+      "features": ["Auto-renewal option", "Loan against FDR up to 90%"],
+      "eligibility": "Any individual or institution"
+    },
+    {
+      "id": "P003", "bankId": "DBBL", "bankName": "Dutch-Bangla Bank",
+      "category": "LOAN", "name": "Personal Loan",
+      "interestRate": 13.00, "minDeposit": null, "tenure": "1-5 Years",
+      "features": ["No collateral up to 10 Lac", "Quick disbursement"],
+      "eligibility": "Salaried with min 25K income"
+    },
+    {
+      "id": "P004", "bankId": "DBBL", "bankName": "Dutch-Bangla Bank",
+      "category": "DPS", "name": "Monthly Savings Scheme",
+      "interestRate": 7.00, "minDeposit": 500, "tenure": "3-10 Years",
+      "features": ["Monthly installment from 500 BDT", "Loan facility against DPS"],
+      "eligibility": "18+ with bank account"
+    },
+    {
+      "id": "P005", "bankId": "BRAC", "bankName": "BRAC Bank",
+      "category": "SAVINGS", "name": "Savings Account",
+      "interestRate": 2.75, "minDeposit": 2000, "tenure": null,
+      "features": ["Free internet banking", "SMS alerts", "Visa debit card"],
+      "eligibility": "18+ Bangladeshi citizen"
+    },
+    {
+      "id": "P006", "bankId": "BRAC", "bankName": "BRAC Bank",
+      "category": "FDR", "name": "Term Deposit (1 Year)",
+      "interestRate": 7.25, "minDeposit": 25000, "tenure": "1 Year",
+      "features": ["Competitive rates", "Partial encashment available"],
+      "eligibility": "Individual or joint account holders"
+    },
+    {
+      "id": "P007", "bankId": "BRAC", "bankName": "BRAC Bank",
+      "category": "LOAN", "name": "Salary Loan",
+      "interestRate": 12.50, "minDeposit": null, "tenure": "1-4 Years",
+      "features": ["Up to 15 Lac without collateral", "Flexible EMI"],
+      "eligibility": "Salaried with min 30K income"
+    },
+    {
+      "id": "P008", "bankId": "BRAC", "bankName": "BRAC Bank",
+      "category": "DPS", "name": "DPS (Monthly Deposit)",
+      "interestRate": 6.75, "minDeposit": 1000, "tenure": "2-10 Years",
+      "features": ["Flexible tenure", "Loan against DPS"],
+      "eligibility": "18+ with BRAC Bank account"
+    },
+    {
+      "id": "P009", "bankId": "EBL", "bankName": "Eastern Bank Ltd",
+      "category": "SAVINGS", "name": "EBL Savings Account",
+      "interestRate": 3.00, "minDeposit": 5000, "tenure": null,
+      "features": ["Free EBL Aqua card", "24/7 banking", "Cashback offers"],
+      "eligibility": "18+ with valid NID"
+    },
+    {
+      "id": "P010", "bankId": "EBL", "bankName": "Eastern Bank Ltd",
+      "category": "FDR", "name": "EBL Fixed Deposit (1 Year)",
+      "interestRate": 7.75, "minDeposit": 100000, "tenure": "1 Year",
+      "features": ["Higher rate for senior citizens", "Auto-renewal"],
+      "eligibility": "Individual or joint"
+    },
+    {
+      "id": "P011", "bankId": "EBL", "bankName": "Eastern Bank Ltd",
+      "category": "LOAN", "name": "EBL Personal Loan",
+      "interestRate": 14.00, "minDeposit": null, "tenure": "1-5 Years",
+      "features": ["Up to 20 Lac", "No hidden charges"],
+      "eligibility": "Salaried with min 30K income"
+    },
+    {
+      "id": "P012", "bankId": "EBL", "bankName": "Eastern Bank Ltd",
+      "category": "DPS", "name": "EBL Monthly Savings",
+      "interestRate": 7.25, "minDeposit": 1000, "tenure": "3-10 Years",
+      "features": ["Flexible installment", "Encashment before maturity"],
+      "eligibility": "18+ EBL account holder"
+    },
+    {
+      "id": "P013", "bankId": "CITY", "bankName": "City Bank",
+      "category": "SAVINGS", "name": "City Savings Account",
+      "interestRate": 3.25, "minDeposit": 10000, "tenure": null,
+      "features": ["City Rewards", "Priority banking", "Airport lounge access"],
+      "eligibility": "18+ Bangladeshi citizen"
+    },
+    {
+      "id": "P014", "bankId": "CITY", "bankName": "City Bank",
+      "category": "LOAN", "name": "City Personal Loan",
+      "interestRate": 12.00, "minDeposit": null, "tenure": "1-5 Years",
+      "features": ["Up to 30 Lac", "Same day approval", "No guarantor needed"],
+      "eligibility": "Salaried with min 40K income"
+    },
+    {
+      "id": "P015", "bankId": "ISLAMI", "bankName": "Islami Bank Bangladesh",
+      "category": "SAVINGS", "name": "Mudaraba Savings Account",
+      "interestRate": 4.00, "minDeposit": 1000, "tenure": null,
+      "features": ["Shariah compliant", "Profit sharing", "Free debit card"],
+      "eligibility": "18+ Bangladeshi citizen"
+    },
+    {
+      "id": "P016", "bankId": "ISLAMI", "bankName": "Islami Bank Bangladesh",
+      "category": "FDR", "name": "Mudaraba Term Deposit (1 Year)",
+      "interestRate": 8.00, "minDeposit": 10000, "tenure": "1 Year",
+      "features": ["Shariah compliant", "Highest profit rate", "Auto-renewal"],
+      "eligibility": "Individual or institution"
+    },
+    {
+      "id": "P017", "bankId": "ISLAMI", "bankName": "Islami Bank Bangladesh",
+      "category": "DPS", "name": "Mudaraba Monthly Deposit",
+      "interestRate": 7.50, "minDeposit": 500, "tenure": "5-10 Years",
+      "features": ["Shariah compliant", "Flexible tenure", "Profit on maturity"],
+      "eligibility": "18+ IBBL account holder"
+    },
+    {
+      "id": "P018", "bankId": "SONALI", "bankName": "Sonali Bank",
+      "category": "SAVINGS", "name": "General Savings Account",
+      "interestRate": 3.00, "minDeposit": 100, "tenure": null,
+      "features": ["Government bank security", "Nationwide branches", "Low minimum balance"],
+      "eligibility": "Any Bangladeshi citizen"
+    },
+    {
+      "id": "P019", "bankId": "SONALI", "bankName": "Sonali Bank",
+      "category": "LOAN", "name": "Personal Loan Scheme",
+      "interestRate": 9.00, "minDeposit": null, "tenure": "1-3 Years",
+      "features": ["Government employee priority", "Low interest rate"],
+      "eligibility": "Government/semi-government employees"
+    },
+    {
+      "id": "P020", "bankId": "MTB", "bankName": "Mutual Trust Bank",
+      "category": "SAVINGS", "name": "MTB Savings Plus",
+      "interestRate": 3.75, "minDeposit": 5000, "tenure": null,
+      "features": ["Higher interest tier", "Free Visa card", "Online banking"],
+      "eligibility": "18+ with valid NID"
+    },
+    {
+      "id": "P021", "bankId": "MTB", "bankName": "Mutual Trust Bank",
+      "category": "FDR", "name": "MTB Fixed Deposit (1 Year)",
+      "interestRate": 7.50, "minDeposit": 50000, "tenure": "1 Year",
+      "features": ["Competitive rate", "Loan against FDR"],
+      "eligibility": "Individual or joint"
+    },
+    {
+      "id": "P022", "bankId": "UCB", "bankName": "United Commercial Bank",
+      "category": "SAVINGS", "name": "UCB Savings Account",
+      "interestRate": 3.50, "minDeposit": 2000, "tenure": null,
+      "features": ["Free SMS banking", "Debit card", "E-statement"],
+      "eligibility": "18+ Bangladeshi citizen"
+    },
+    {
+      "id": "P023", "bankId": "UCB", "bankName": "United Commercial Bank",
+      "category": "LOAN", "name": "UCB Personal Loan",
+      "interestRate": 13.50, "minDeposit": null, "tenure": "1-5 Years",
+      "features": ["Up to 15 Lac", "Quick processing"],
+      "eligibility": "Salaried with min 25K income"
+    },
+    {
+      "id": "P024", "bankId": "PUBALI", "bankName": "Pubali Bank",
+      "category": "SAVINGS", "name": "Pubali Savings Account",
+      "interestRate": 3.25, "minDeposit": 500, "tenure": null,
+      "features": ["Wide branch network", "Free debit card"],
+      "eligibility": "18+ Bangladeshi citizen"
+    },
+    {
+      "id": "P025", "bankId": "PUBALI", "bankName": "Pubali Bank",
+      "category": "DPS", "name": "Pubali Monthly Savings",
+      "interestRate": 7.00, "minDeposit": 500, "tenure": "3-10 Years",
+      "features": ["Flexible installment", "Loan against DPS"],
+      "eligibility": "18+ Pubali account holder"
+    }
+  ]
+}

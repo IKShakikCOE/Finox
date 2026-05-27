@@ -1,0 +1,100 @@
+{
+  "platforms": [
+    { "id": "GOOGLE", "name": "Google Ads", "icon": "pi pi-google", "color": "#4285F4" },
+    { "id": "FACEBOOK", "name": "Facebook/Meta Ads", "icon": "pi pi-facebook", "color": "#1877F2" },
+    { "id": "YOUTUBE", "name": "YouTube Ads", "icon": "pi pi-youtube", "color": "#FF0000" },
+    { "id": "INSTAGRAM", "name": "Instagram Ads", "icon": "pi pi-instagram", "color": "#E4405F" },
+    { "id": "LINKEDIN", "name": "LinkedIn Ads", "icon": "pi pi-linkedin", "color": "#0A66C2" },
+    { "id": "TIKTOK", "name": "TikTok Ads", "icon": "pi pi-video", "color": "#000000" },
+    { "id": "TWITTER", "name": "X (Twitter) Ads", "icon": "pi pi-twitter", "color": "#1DA1F2" },
+    { "id": "ORGANIC", "name": "Organic/SEO", "icon": "pi pi-globe", "color": "#34A853" },
+    { "id": "EMAIL", "name": "Email Marketing", "icon": "pi pi-envelope", "color": "#FF6F00" },
+    { "id": "INFLUENCER", "name": "Influencer Marketing", "icon": "pi pi-users", "color": "#9C27B0" }
+  ],
+  "campaigns": [
+    {
+      "id": "CAM001", "platformId": "GOOGLE", "platformName": "Google Ads",
+      "name": "Brand Awareness - Search", "type": "SEARCH",
+      "status": "ACTIVE", "startDate": "2026-01-15", "endDate": "2026-06-30",
+      "budget": 150000, "spent": 98500, "impressions": 2500000, "clicks": 75000,
+      "conversions": 1200, "revenue": 450000, "cpc": 1.31, "ctr": 3.0, "roas": 4.57
+    },
+    {
+      "id": "CAM002", "platformId": "GOOGLE", "platformName": "Google Ads",
+      "name": "Product Launch - Display", "type": "DISPLAY",
+      "status": "ACTIVE", "startDate": "2026-03-01", "endDate": "2026-05-31",
+      "budget": 80000, "spent": 62000, "impressions": 5000000, "clicks": 45000,
+      "conversions": 380, "revenue": 180000, "cpc": 1.38, "ctr": 0.9, "roas": 2.90
+    },
+    {
+      "id": "CAM003", "platformId": "FACEBOOK", "platformName": "Facebook/Meta Ads",
+      "name": "Lead Generation - Carousel", "type": "LEAD_GEN",
+      "status": "ACTIVE", "startDate": "2026-02-01", "endDate": "2026-07-31",
+      "budget": 120000, "spent": 78000, "impressions": 3200000, "clicks": 96000,
+      "conversions": 2400, "revenue": 520000, "cpc": 0.81, "ctr": 3.0, "roas": 6.67
+    },
+    {
+      "id": "CAM004", "platformId": "FACEBOOK", "platformName": "Facebook/Meta Ads",
+      "name": "Retargeting - Dynamic Ads", "type": "RETARGETING",
+      "status": "ACTIVE", "startDate": "2026-03-15", "endDate": "2026-06-15",
+      "budget": 60000, "spent": 45000, "impressions": 1800000, "clicks": 54000,
+      "conversions": 1800, "revenue": 380000, "cpc": 0.83, "ctr": 3.0, "roas": 8.44
+    },
+    {
+      "id": "CAM005", "platformId": "YOUTUBE", "platformName": "YouTube Ads",
+      "name": "Video Campaign - Skippable", "type": "VIDEO",
+      "status": "ACTIVE", "startDate": "2026-04-01", "endDate": "2026-08-31",
+      "budget": 200000, "spent": 85000, "impressions": 4500000, "clicks": 135000,
+      "conversions": 900, "revenue": 280000, "cpc": 0.63, "ctr": 3.0, "roas": 3.29
+    },
+    {
+      "id": "CAM006", "platformId": "INSTAGRAM", "platformName": "Instagram Ads",
+      "name": "Story Ads - Product Showcase", "type": "STORY",
+      "status": "PAUSED", "startDate": "2026-01-01", "endDate": "2026-04-30",
+      "budget": 50000, "spent": 50000, "impressions": 2200000, "clicks": 66000,
+      "conversions": 1100, "revenue": 220000, "cpc": 0.76, "ctr": 3.0, "roas": 4.40
+    },
+    {
+      "id": "CAM007", "platformId": "LINKEDIN", "platformName": "LinkedIn Ads",
+      "name": "B2B Lead Gen - Sponsored Content", "type": "LEAD_GEN",
+      "status": "ACTIVE", "startDate": "2026-02-15", "endDate": "2026-08-15",
+      "budget": 100000, "spent": 55000, "impressions": 800000, "clicks": 12000,
+      "conversions": 150, "revenue": 750000, "cpc": 4.58, "ctr": 1.5, "roas": 13.64
+    },
+    {
+      "id": "CAM008", "platformId": "TIKTOK", "platformName": "TikTok Ads",
+      "name": "Viral Challenge Campaign", "type": "VIDEO",
+      "status": "COMPLETED", "startDate": "2026-01-10", "endDate": "2026-03-10",
+      "budget": 40000, "spent": 40000, "impressions": 8000000, "clicks": 320000,
+      "conversions": 2800, "revenue": 350000, "cpc": 0.13, "ctr": 4.0, "roas": 8.75
+    },
+    {
+      "id": "CAM009", "platformId": "EMAIL", "platformName": "Email Marketing",
+      "name": "Newsletter - Weekly Digest", "type": "EMAIL",
+      "status": "ACTIVE", "startDate": "2026-01-01", "endDate": "2026-12-31",
+      "budget": 25000, "spent": 12000, "impressions": 500000, "clicks": 75000,
+      "conversions": 3200, "revenue": 480000, "cpc": 0.16, "ctr": 15.0, "roas": 40.00
+    },
+    {
+      "id": "CAM010", "platformId": "INFLUENCER", "platformName": "Influencer Marketing",
+      "name": "Tech Influencer Collab", "type": "INFLUENCER",
+      "status": "COMPLETED", "startDate": "2026-02-01", "endDate": "2026-04-01",
+      "budget": 300000, "spent": 300000, "impressions": 6000000, "clicks": 180000,
+      "conversions": 4500, "revenue": 1200000, "cpc": 1.67, "ctr": 3.0, "roas": 4.00
+    },
+    {
+      "id": "CAM011", "platformId": "ORGANIC", "platformName": "Organic/SEO",
+      "name": "Blog Content Strategy", "type": "SEO",
+      "status": "ACTIVE", "startDate": "2026-01-01", "endDate": "2026-12-31",
+      "budget": 60000, "spent": 30000, "impressions": 1200000, "clicks": 96000,
+      "conversions": 2400, "revenue": 600000, "cpc": 0.31, "ctr": 8.0, "roas": 20.00
+    },
+    {
+      "id": "CAM012", "platformId": "TWITTER", "platformName": "X (Twitter) Ads",
+      "name": "Promoted Tweets - Launch", "type": "PROMOTED",
+      "status": "PAUSED", "startDate": "2026-03-01", "endDate": "2026-05-01",
+      "budget": 35000, "spent": 28000, "impressions": 1500000, "clicks": 22500,
+      "conversions": 180, "revenue": 95000, "cpc": 1.24, "ctr": 1.5, "roas": 3.39
+    }
+  ]
+}

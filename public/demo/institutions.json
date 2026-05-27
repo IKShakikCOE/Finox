@@ -1,0 +1,260 @@
+{
+  "banks": [
+    {
+      "id": "DBBL", "name": "Dutch-Bangla Bank Ltd", "type": "PRIVATE", "established": 1995,
+      "authorizedCapital": "10,000 Cr", "paidUpCapital": "4,800 Cr", "totalAssets": "52,000 Cr",
+      "branches": 195, "atmBooths": 5200, "employees": 8500,
+      "chairman": "Sayem Ahmed", "md": "Abul Kashem Md. Shirin",
+      "headquarters": "Dhaka", "swiftCode": "DBBLBDDH",
+      "rating": "AA+", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "nplRatio": 3.2,
+      "services": ["Retail Banking", "Corporate Banking", "SME Banking", "Agent Banking", "Mobile Banking (Rocket)"],
+      "digitalServices": ["Internet Banking", "Mobile App", "Rocket MFS", "QR Payment"],
+      "website": "https://www.dutchbanglabank.com"
+    },
+    {
+      "id": "BRAC", "name": "BRAC Bank Ltd", "type": "PRIVATE", "established": 2001,
+      "authorizedCapital": "12,000 Cr", "paidUpCapital": "5,200 Cr", "totalAssets": "58,000 Cr",
+      "branches": 187, "atmBooths": 450, "employees": 9200,
+      "chairman": "Sir Fazle Hasan Abed (Founder)", "md": "Selim R.F. Hussain",
+      "headquarters": "Dhaka", "swiftCode": "BABORDDH",
+      "rating": "AAA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "nplRatio": 2.8,
+      "services": ["Retail Banking", "SME Banking", "Corporate Banking", "bKash (Subsidiary)", "Remittance"],
+      "digitalServices": ["Astha App", "Internet Banking", "bKash Integration", "API Banking"],
+      "website": "https://www.bracbank.com"
+    },
+    {
+      "id": "EBL", "name": "Eastern Bank Ltd", "type": "PRIVATE", "established": 1992,
+      "authorizedCapital": "8,000 Cr", "paidUpCapital": "3,800 Cr", "totalAssets": "42,000 Cr",
+      "branches": 120, "atmBooths": 320, "employees": 5500,
+      "chairman": "Meah Mohammed Abdur Rahim", "md": "Ali Reza Iftekhar",
+      "headquarters": "Dhaka", "swiftCode": "EABORDDH",
+      "rating": "AAA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "nplRatio": 2.5,
+      "services": ["Retail Banking", "Corporate Banking", "Treasury", "Trade Finance", "Cards"],
+      "digitalServices": ["EBL Skybanking", "EBL 365 App", "QR Payment", "Contactless Cards"],
+      "website": "https://www.ebl.com.bd"
+    },
+    {
+      "id": "CITY", "name": "City Bank Ltd", "type": "PRIVATE", "established": 1983,
+      "authorizedCapital": "15,000 Cr", "paidUpCapital": "6,500 Cr", "totalAssets": "65,000 Cr",
+      "branches": 130, "atmBooths": 280, "employees": 6800,
+      "chairman": "Aziz Al Kaiser", "md": "Mashrur Arefin",
+      "headquarters": "Dhaka", "swiftCode": "CIABORDDH",
+      "rating": "AA+", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "nplRatio": 3.0,
+      "services": ["Retail Banking", "Priority Banking", "Corporate Banking", "Wealth Management", "Cards"],
+      "digitalServices": ["City Touch App", "Internet Banking", "Tap & Pay", "City Gems Lounge"],
+      "website": "https://www.thecitybank.com"
+    },
+    {
+      "id": "UCB", "name": "United Commercial Bank Ltd", "type": "PRIVATE", "established": 1983,
+      "authorizedCapital": "12,000 Cr", "paidUpCapital": "5,000 Cr", "totalAssets": "48,000 Cr",
+      "branches": 200, "atmBooths": 350, "employees": 7200,
+      "chairman": "Anisuzzaman Chowdhury", "md": "Arif Quadri",
+      "headquarters": "Dhaka", "swiftCode": "UCABORDDH",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "nplRatio": 4.5,
+      "services": ["Retail Banking", "Corporate Banking", "Islamic Banking Window", "SME", "Remittance"],
+      "digitalServices": ["UCB Digital App", "Internet Banking", "SMS Banking"],
+      "website": "https://www.ucb.com.bd"
+    },
+    {
+      "id": "ISLAMI", "name": "Islami Bank Bangladesh Ltd", "type": "PRIVATE_ISLAMIC", "established": 1983,
+      "authorizedCapital": "20,000 Cr", "paidUpCapital": "16,100 Cr", "totalAssets": "125,000 Cr",
+      "branches": 380, "atmBooths": 600, "employees": 14500,
+      "chairman": "Mohammed Mominul Hoque", "md": "Mohammed Monirul Moula",
+      "headquarters": "Dhaka", "swiftCode": "IBBLBDDH",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "nplRatio": 4.0,
+      "services": ["Islamic Retail Banking", "Mudaraba", "Musharaka", "Ijarah", "Foreign Exchange"],
+      "digitalServices": ["iBanking", "CellFin App", "SMS Banking", "Agent Banking"],
+      "website": "https://www.islamibankbd.com"
+    },
+    {
+      "id": "PUBALI", "name": "Pubali Bank Ltd", "type": "PRIVATE", "established": 1959,
+      "authorizedCapital": "10,000 Cr", "paidUpCapital": "4,200 Cr", "totalAssets": "55,000 Cr",
+      "branches": 490, "atmBooths": 450, "employees": 9800,
+      "chairman": "Habibur Rahman", "md": "Safiul Alam Khan Chowdhury",
+      "headquarters": "Dhaka", "swiftCode": "PUABORDDH",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "nplRatio": 4.8,
+      "services": ["Retail Banking", "Corporate Banking", "SME", "Agricultural Credit", "Remittance"],
+      "digitalServices": ["Pubali iBanking", "Mobile App", "SMS Alerts"],
+      "website": "https://www.pubalibankbd.com"
+    },
+    {
+      "id": "SONALI", "name": "Sonali Bank PLC", "type": "STATE_OWNED", "established": 1972,
+      "authorizedCapital": "30,000 Cr", "paidUpCapital": "22,000 Cr", "totalAssets": "180,000 Cr",
+      "branches": 1212, "atmBooths": 1500, "employees": 22000,
+      "chairman": "Ziaul Hasan Siddiqui", "md": "Md. Afzal Karim",
+      "headquarters": "Dhaka", "swiftCode": "BABORDDH",
+      "rating": "A+", "ratingAgency": "CRISL",
+      "riskLevel": "HIGH", "nplRatio": 12.5,
+      "services": ["Government Banking", "Retail Banking", "Agricultural Credit", "Pension", "Remittance"],
+      "digitalServices": ["Internet Banking", "Mobile App", "Agent Banking"],
+      "website": "https://www.sonalibank.com.bd"
+    },
+    {
+      "id": "JANATA", "name": "Janata Bank PLC", "type": "STATE_OWNED", "established": 1972,
+      "authorizedCapital": "25,000 Cr", "paidUpCapital": "18,000 Cr", "totalAssets": "145,000 Cr",
+      "branches": 932, "atmBooths": 800, "employees": 18000,
+      "chairman": "Md. Abdus Salam Azad", "md": "Md. Abdus Salam",
+      "headquarters": "Dhaka", "swiftCode": "JANABORDDH",
+      "rating": "A", "ratingAgency": "CRISL",
+      "riskLevel": "HIGH", "nplRatio": 15.2,
+      "services": ["Government Banking", "Industrial Credit", "Agricultural Credit", "Retail Banking"],
+      "digitalServices": ["Internet Banking", "SMS Banking"],
+      "website": "https://www.jb.com.bd"
+    },
+    {
+      "id": "MTB", "name": "Mutual Trust Bank Ltd", "type": "PRIVATE", "established": 1999,
+      "authorizedCapital": "8,000 Cr", "paidUpCapital": "3,500 Cr", "totalAssets": "35,000 Cr",
+      "branches": 130, "atmBooths": 250, "employees": 4500,
+      "chairman": "Md. Wakiluddin", "md": "Syed Mahbubur Rahman",
+      "headquarters": "Dhaka", "swiftCode": "MTABORDDH",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "nplRatio": 3.5,
+      "services": ["Retail Banking", "Corporate Banking", "SME Banking", "Cards", "Treasury"],
+      "digitalServices": ["MTB Smart Banking App", "Internet Banking", "QR Payment"],
+      "website": "https://www.mutualtrustbank.com"
+    }
+  ],
+  "insuranceCompanies": [
+    {
+      "id": "METLIFE", "name": "MetLife Bangladesh", "type": "LIFE", "established": 2010,
+      "paidUpCapital": "500 Cr", "totalAssets": "8,500 Cr", "claimSettlementRatio": 96.5,
+      "branches": 45, "employees": 3200, "agents": 25000,
+      "chairman": "Adeeb H. Khan", "md": "Ala Ahmad",
+      "headquarters": "Dhaka",
+      "rating": "AAA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "solvencyRatio": 185,
+      "products": ["Endowment", "Term Life", "Health", "Child Education", "Pension"],
+      "website": "https://www.metlife.com.bd"
+    },
+    {
+      "id": "GUARDIAN", "name": "Guardian Life Insurance Ltd", "type": "LIFE", "established": 2014,
+      "paidUpCapital": "300 Cr", "totalAssets": "4,200 Cr", "claimSettlementRatio": 94.0,
+      "branches": 65, "employees": 2800, "agents": 35000,
+      "chairman": "Mr. Nasir A. Choudhury", "md": "M.M. Monirul Alam",
+      "headquarters": "Dhaka",
+      "rating": "AA+", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "solvencyRatio": 165,
+      "products": ["Endowment", "Money Back", "Child Plan", "Term Life", "Group Insurance"],
+      "website": "https://www.guardianlife.com.bd"
+    },
+    {
+      "id": "PRAGATI", "name": "Pragati Life Insurance Ltd", "type": "LIFE", "established": 2000,
+      "paidUpCapital": "450 Cr", "totalAssets": "6,800 Cr", "claimSettlementRatio": 92.0,
+      "branches": 80, "employees": 3500, "agents": 42000,
+      "chairman": "Azam J Chowdhury", "md": "Jalalul Azim",
+      "headquarters": "Dhaka",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "solvencyRatio": 155,
+      "products": ["Endowment", "Pension", "Child Education", "Term Life", "Group"],
+      "website": "https://www.pragatilife.com"
+    },
+    {
+      "id": "JIBON", "name": "Jibon Bima Corporation", "type": "STATE_OWNED_LIFE", "established": 1973,
+      "paidUpCapital": "1,000 Cr", "totalAssets": "15,000 Cr", "claimSettlementRatio": 88.0,
+      "branches": 120, "employees": 5000, "agents": 60000,
+      "chairman": "Government Appointed", "md": "Md. Jillur Rahman",
+      "headquarters": "Dhaka",
+      "rating": "A+", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "solvencyRatio": 140,
+      "products": ["Endowment", "Whole Life", "Child Protection", "Group Insurance", "Pension"],
+      "website": "https://www.jbc.gov.bd"
+    },
+    {
+      "id": "GREEN_DELTA", "name": "Green Delta Insurance Co. Ltd", "type": "NON_LIFE", "established": 1985,
+      "paidUpCapital": "600 Cr", "totalAssets": "5,500 Cr", "claimSettlementRatio": 91.0,
+      "branches": 55, "employees": 2200, "agents": 8000,
+      "chairman": "Abdul Hafiz Choudhury", "md": "Farzanah Chowdhury",
+      "headquarters": "Dhaka",
+      "rating": "AAA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "solvencyRatio": 200,
+      "products": ["Motor", "Fire", "Marine", "Health", "Engineering", "Miscellaneous"],
+      "website": "https://www.green-delta.com"
+    },
+    {
+      "id": "SADHARAN", "name": "Sadharan Bima Corporation", "type": "STATE_OWNED_NON_LIFE", "established": 1973,
+      "paidUpCapital": "800 Cr", "totalAssets": "12,000 Cr", "claimSettlementRatio": 85.0,
+      "branches": 45, "employees": 3000, "agents": 5000,
+      "chairman": "Government Appointed", "md": "Md. Shafiqul Islam",
+      "headquarters": "Dhaka",
+      "rating": "A", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "solvencyRatio": 130,
+      "products": ["Fire", "Marine", "Motor", "Aviation", "Crop Insurance"],
+      "website": "https://www.sbc.gov.bd"
+    }
+  ],
+  "amcs": [
+    {
+      "id": "ICB", "name": "ICB Asset Management Co. Ltd", "established": 1976,
+      "paidUpCapital": "200 Cr", "aum": "3,500 Cr", "totalFunds": 8,
+      "chairman": "Md. Abul Hossain", "md": "Md. Monirul Islam",
+      "headquarters": "Dhaka",
+      "rating": "AA+", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "parentOrg": "Investment Corporation of Bangladesh",
+      "fundTypes": ["Open-End Equity", "Balanced", "Fixed Income"],
+      "investmentPhilosophy": "Value investing with focus on blue-chip stocks and government securities",
+      "website": "https://www.icb.gov.bd"
+    },
+    {
+      "id": "IDLC", "name": "IDLC Asset Management Ltd", "established": 2015,
+      "paidUpCapital": "50 Cr", "aum": "1,800 Cr", "totalFunds": 4,
+      "chairman": "Selim R.F. Hussain", "md": "Asif Saad Bin Shams",
+      "headquarters": "Dhaka",
+      "rating": "AAA", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "parentOrg": "IDLC Finance Ltd",
+      "fundTypes": ["Growth Equity", "Balanced", "Fixed Income"],
+      "investmentPhilosophy": "Research-driven active management with disciplined risk controls",
+      "website": "https://www.idlc.com"
+    },
+    {
+      "id": "LBFL", "name": "LankaBangla Asset Management", "established": 2010,
+      "paidUpCapital": "30 Cr", "aum": "950 Cr", "totalFunds": 3,
+      "chairman": "Khwaja Shahriar", "md": "Khurshed Alam",
+      "headquarters": "Dhaka",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "parentOrg": "LankaBangla Finance Ltd",
+      "fundTypes": ["Equity Growth", "Fixed Income", "Closed-End"],
+      "investmentPhilosophy": "Sector rotation with focus on high-growth mid-cap opportunities",
+      "website": "https://www.lankabangla.com"
+    },
+    {
+      "id": "RACE", "name": "RACE Management PLC", "established": 2011,
+      "paidUpCapital": "25 Cr", "aum": "680 Cr", "totalFunds": 3,
+      "chairman": "Showkat Aziz Russell", "md": "Md. Rakibur Rahman",
+      "headquarters": "Dhaka",
+      "rating": "AA", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "parentOrg": "Independent",
+      "fundTypes": ["Small & Mid Cap", "Growth", "Balanced"],
+      "investmentPhilosophy": "Bottom-up stock picking with emphasis on undervalued small and mid-cap companies",
+      "website": "https://www.racemgmt.com"
+    },
+    {
+      "id": "EDGE", "name": "Edge Asset Management Ltd", "established": 2013,
+      "paidUpCapital": "40 Cr", "aum": "1,200 Cr", "totalFunds": 3,
+      "chairman": "Mir Nasir Hossain", "md": "Khondoker Rakibul Haque",
+      "headquarters": "Dhaka",
+      "rating": "AA+", "ratingAgency": "CRISL",
+      "riskLevel": "LOW", "parentOrg": "Edge Group",
+      "fundTypes": ["Concentrated Equity", "Balanced", "Conservative"],
+      "investmentPhilosophy": "High-conviction concentrated portfolio with deep fundamental research",
+      "website": "https://www.edgeamc.com"
+    },
+    {
+      "id": "AIM", "name": "Alliance Capital Asset Management", "established": 2012,
+      "paidUpCapital": "20 Cr", "aum": "520 Cr", "totalFunds": 2,
+      "chairman": "Md. Rafiqul Islam", "md": "Md. Nazmul Hasan",
+      "headquarters": "Dhaka",
+      "rating": "A+", "ratingAgency": "CRISL",
+      "riskLevel": "MODERATE", "parentOrg": "Alliance Group",
+      "fundTypes": ["Balanced Growth", "Equity"],
+      "investmentPhilosophy": "Diversified approach balancing growth and income across market cycles",
+      "website": "https://www.alliancecapital.com.bd"
+    }
+  ]
+}

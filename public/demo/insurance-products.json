@@ -1,0 +1,152 @@
+{
+  "companies": [
+    { "id": "METLIFE", "name": "MetLife Bangladesh" },
+    { "id": "GUARDIAN", "name": "Guardian Life Insurance" },
+    { "id": "PRAGATI", "name": "Pragati Life Insurance" },
+    { "id": "POPULAR", "name": "Popular Life Insurance" },
+    { "id": "JIBON", "name": "Jibon Bima Corporation" },
+    { "id": "DELTA", "name": "Delta Life Insurance" },
+    { "id": "SUNLIFE", "name": "Sun Life Insurance" },
+    { "id": "GREEN_DELTA", "name": "Green Delta Insurance" },
+    { "id": "RELIANCE", "name": "Reliance Insurance" },
+    { "id": "SADHARAN", "name": "Sadharan Bima Corporation" }
+  ],
+  "products": [
+    {
+      "id": "INS001", "companyId": "METLIFE", "companyName": "MetLife Bangladesh",
+      "category": "LIFE", "name": "MetLife Endowment Plan",
+      "premiumRange": "3,000 - 50,000/month", "coverageAmount": "5 - 50 Lac",
+      "tenure": "10-25 Years", "maturityBenefit": "Sum Assured + Bonus",
+      "features": ["Death benefit", "Maturity benefit", "Loan facility", "Tax benefit u/s 78"],
+      "eligibility": "18-55 years, Bangladeshi citizen"
+    },
+    {
+      "id": "INS002", "companyId": "METLIFE", "companyName": "MetLife Bangladesh",
+      "category": "HEALTH", "name": "MetLife Health Guard",
+      "premiumRange": "5,000 - 25,000/year", "coverageAmount": "2 - 10 Lac",
+      "tenure": "1 Year (Renewable)", "maturityBenefit": "N/A",
+      "features": ["Hospitalization cover", "Surgery benefit", "ICU coverage", "Ambulance cost"],
+      "eligibility": "1-65 years"
+    },
+    {
+      "id": "INS003", "companyId": "GUARDIAN", "companyName": "Guardian Life Insurance",
+      "category": "LIFE", "name": "Guardian Endowment Plan",
+      "premiumRange": "2,500 - 40,000/month", "coverageAmount": "5 - 40 Lac",
+      "tenure": "10-20 Years", "maturityBenefit": "Sum Assured + Reversionary Bonus",
+      "features": ["Guaranteed maturity", "Accidental death double benefit", "Premium waiver on disability"],
+      "eligibility": "18-50 years"
+    },
+    {
+      "id": "INS004", "companyId": "GUARDIAN", "companyName": "Guardian Life Insurance",
+      "category": "CHILD", "name": "Guardian Child Education Plan",
+      "premiumRange": "2,000 - 20,000/month", "coverageAmount": "3 - 25 Lac",
+      "tenure": "10-18 Years", "maturityBenefit": "Education fund at milestones",
+      "features": ["Milestone payouts at 12, 15, 18 years", "Premium waiver on parent death", "Bonus accumulation"],
+      "eligibility": "Child: 0-12 years, Parent: 20-50 years"
+    },
+    {
+      "id": "INS005", "companyId": "PRAGATI", "companyName": "Pragati Life Insurance",
+      "category": "LIFE", "name": "Pragati Jeebon Bima",
+      "premiumRange": "1,500 - 30,000/month", "coverageAmount": "3 - 30 Lac",
+      "tenure": "10-25 Years", "maturityBenefit": "Sum Assured + Bonus",
+      "features": ["Low premium", "High bonus rate", "Loan against policy"],
+      "eligibility": "18-55 years"
+    },
+    {
+      "id": "INS006", "companyId": "PRAGATI", "companyName": "Pragati Life Insurance",
+      "category": "PENSION", "name": "Pragati Pension Scheme",
+      "premiumRange": "3,000 - 25,000/month", "coverageAmount": "10 - 50 Lac",
+      "tenure": "10-30 Years", "maturityBenefit": "Monthly pension after retirement",
+      "features": ["Guaranteed pension", "Lump sum option", "Death benefit to nominee"],
+      "eligibility": "25-50 years"
+    },
+    {
+      "id": "INS007", "companyId": "POPULAR", "companyName": "Popular Life Insurance",
+      "category": "LIFE", "name": "Popular Endowment",
+      "premiumRange": "2,000 - 35,000/month", "coverageAmount": "5 - 35 Lac",
+      "tenure": "10-20 Years", "maturityBenefit": "Sum Assured + Bonus",
+      "features": ["High claim settlement ratio", "Flexible premium", "Tax benefit"],
+      "eligibility": "18-55 years"
+    },
+    {
+      "id": "INS008", "companyId": "JIBON", "companyName": "Jibon Bima Corporation",
+      "category": "LIFE", "name": "JBC Endowment Assurance",
+      "premiumRange": "1,000 - 20,000/month", "coverageAmount": "2 - 20 Lac",
+      "tenure": "10-25 Years", "maturityBenefit": "Sum Assured + Govt Bonus",
+      "features": ["Government backed", "Lowest premium", "Nationwide service"],
+      "eligibility": "18-55 years, Bangladeshi citizen"
+    },
+    {
+      "id": "INS009", "companyId": "JIBON", "companyName": "Jibon Bima Corporation",
+      "category": "CHILD", "name": "JBC Child Protection Plan",
+      "premiumRange": "1,500 - 15,000/month", "coverageAmount": "2 - 15 Lac",
+      "tenure": "10-18 Years", "maturityBenefit": "Education fund on maturity",
+      "features": ["Government guarantee", "Low cost", "Premium waiver benefit"],
+      "eligibility": "Child: 0-14 years"
+    },
+    {
+      "id": "INS010", "companyId": "DELTA", "companyName": "Delta Life Insurance",
+      "category": "LIFE", "name": "Delta Endowment Plan",
+      "premiumRange": "2,000 - 30,000/month", "coverageAmount": "5 - 30 Lac",
+      "tenure": "10-20 Years", "maturityBenefit": "Sum Assured + Bonus",
+      "features": ["Established company", "Good bonus history", "Loan facility"],
+      "eligibility": "18-55 years"
+    },
+    {
+      "id": "INS011", "companyId": "DELTA", "companyName": "Delta Life Insurance",
+      "category": "HEALTH", "name": "Delta Health Shield",
+      "premiumRange": "4,000 - 20,000/year", "coverageAmount": "1 - 8 Lac",
+      "tenure": "1 Year (Renewable)", "maturityBenefit": "N/A",
+      "features": ["Cashless hospitalization", "Pre/post hospitalization", "Day care procedures"],
+      "eligibility": "5-60 years"
+    },
+    {
+      "id": "INS012", "companyId": "GREEN_DELTA", "companyName": "Green Delta Insurance",
+      "category": "VEHICLE", "name": "Motor Comprehensive Insurance",
+      "premiumRange": "8,000 - 50,000/year", "coverageAmount": "Full vehicle value",
+      "tenure": "1 Year", "maturityBenefit": "N/A",
+      "features": ["Accident damage", "Theft protection", "Third party liability", "Flood/fire cover"],
+      "eligibility": "Valid driving license, registered vehicle"
+    },
+    {
+      "id": "INS013", "companyId": "GREEN_DELTA", "companyName": "Green Delta Insurance",
+      "category": "HEALTH", "name": "Green Delta Health Insurance",
+      "premiumRange": "6,000 - 30,000/year", "coverageAmount": "3 - 15 Lac",
+      "tenure": "1 Year (Renewable)", "maturityBenefit": "N/A",
+      "features": ["Worldwide coverage", "Maternity benefit", "Dental coverage", "OPD benefit"],
+      "eligibility": "1-65 years"
+    },
+    {
+      "id": "INS014", "companyId": "RELIANCE", "companyName": "Reliance Insurance",
+      "category": "VEHICLE", "name": "Reliance Motor Insurance",
+      "premiumRange": "6,000 - 40,000/year", "coverageAmount": "Full vehicle value",
+      "tenure": "1 Year", "maturityBenefit": "N/A",
+      "features": ["Comprehensive cover", "Roadside assistance", "No claim bonus"],
+      "eligibility": "Valid registration and license"
+    },
+    {
+      "id": "INS015", "companyId": "SADHARAN", "companyName": "Sadharan Bima Corporation",
+      "category": "PROPERTY", "name": "Fire Insurance",
+      "premiumRange": "Varies by property value", "coverageAmount": "Up to property value",
+      "tenure": "1 Year", "maturityBenefit": "N/A",
+      "features": ["Fire damage", "Lightning", "Explosion", "Riot/strike cover"],
+      "eligibility": "Property owner with valid documents"
+    },
+    {
+      "id": "INS016", "companyId": "SUNLIFE", "companyName": "Sun Life Insurance",
+      "category": "LIFE", "name": "Sun Life Money Back Plan",
+      "premiumRange": "3,000 - 40,000/month", "coverageAmount": "5 - 40 Lac",
+      "tenure": "15-20 Years", "maturityBenefit": "Periodic survival benefits + final payout",
+      "features": ["Money back at intervals", "Full sum on maturity", "Death benefit anytime"],
+      "eligibility": "18-50 years"
+    },
+    {
+      "id": "INS017", "companyId": "SUNLIFE", "companyName": "Sun Life Insurance",
+      "category": "PENSION", "name": "Sun Life Retirement Plan",
+      "premiumRange": "5,000 - 30,000/month", "coverageAmount": "15 - 60 Lac",
+      "tenure": "10-30 Years", "maturityBenefit": "Monthly pension or lump sum",
+      "features": ["Flexible retirement age", "Spouse continuation", "Tax benefit"],
+      "eligibility": "25-55 years"
+    }
+  ]
+}
