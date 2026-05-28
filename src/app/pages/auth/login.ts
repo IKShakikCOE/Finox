@@ -82,7 +82,7 @@ export class Login {
         }
 
         this.loading = true;
-        const result = await this.authService.login(this.username, this.password);
+        const result = await this.authService.login(this.username, this.password, this.checked);
         this.loading = false;
 
         if (result.success) {

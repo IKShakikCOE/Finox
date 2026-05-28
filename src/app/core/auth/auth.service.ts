@@ -31,15 +31,18 @@ export class AuthService {
     refreshToken = signal<string | null>(null);
     isAuthenticated = computed(() => !!this.accessToken());
 
+    private rememberMe = false;
+
     constructor() {
-        // Restore session from localStorage
-        const token = localStorage.getItem('finox_access_token');
-        const refresh = localStorage.getItem('finox_refresh_token');
-        const user = localStorage.getItem('finox_user');
+        // Restore session from localStorage or sessionStorage
+        const token = localStorage.getItem('finox_access_token') || sessionStorage.getItem('finox_access_token');
+        const refresh = localStorage.getItem('finox_refresh_token') || sessionStorage.getItem('finox_refresh_token');
+        const user = localStorage.getItem('finox_user') || sessionStorage.getItem('finox_user');
 
         if (token) {
             this.accessToken.set(token);
             this.refreshToken.set(refresh);
+            this.rememberMe = !!localStorage.getItem('finox_access_token');
             if (user) {
                 this.currentUser.set(JSON.parse(user));
             }
@@ -49,7 +52,8 @@ export class AuthService {
     /**
      * Login using Direct Access Grants (Resource Owner Password Credentials)
      */
-    async login(username: string, password: string): Promise<{ success: boolean; error?: string }> {
+    async login(username: string, password: string, rememberMe: boolean = false): Promise<{ success: boolean; error?: string }> {
+        this.rememberMe = rememberMe;
         try {
             const body = new HttpParams()
                 .set('grant_type', 'password')
@@ -196,7 +200,8 @@ export class AuthService {
             };
 
             this.currentUser.set(user);
-            localStorage.setItem('finox_user', JSON.stringify(user));
+            const storage = this.rememberMe ? localStorage : sessionStorage;
+            storage.setItem('finox_user', JSON.stringify(user));
         } catch {
             // Token might be invalid
         }
@@ -229,8 +234,10 @@ export class AuthService {
     private setTokens(response: TokenResponse): void {
         this.accessToken.set(response.access_token);
         this.refreshToken.set(response.refresh_token);
-        localStorage.setItem('finox_access_token', response.access_token);
-        localStorage.setItem('finox_refresh_token', response.refresh_token);
+
+        const storage = this.rememberMe ? localStorage : sessionStorage;
+        storage.setItem('finox_access_token', response.access_token);
+        storage.setItem('finox_refresh_token', response.refresh_token);
     }
 
     private clearSession(): void {
@@ -240,5 +247,8 @@ export class AuthService {
         localStorage.removeItem('finox_access_token');
         localStorage.removeItem('finox_refresh_token');
         localStorage.removeItem('finox_user');
+        sessionStorage.removeItem('finox_access_token');
+        sessionStorage.removeItem('finox_refresh_token');
+        sessionStorage.removeItem('finox_user');
     }
 }
