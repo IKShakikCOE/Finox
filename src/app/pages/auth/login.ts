@@ -1,18 +1,22 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
-import { UserService } from '@/app/features/user/services/user.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, ToastModule],
+    providers: [MessageService],
     template: `
+        <p-toast />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, #10B981 10%, rgba(16, 185, 129, 0) 30%)">
@@ -35,8 +39,8 @@ import { UserService } from '@/app/features/user/services/user.service';
                         </div>
 
                         <div>
-                            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                            <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-120 mb-8" [(ngModel)]="email" />
+                            <label for="username" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username or Email</label>
+                            <input pInputText id="username" type="text" placeholder="Enter username or email" class="w-full md:w-120 mb-8" [(ngModel)]="username" />
 
                             <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                             <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
@@ -48,7 +52,7 @@ import { UserService } from '@/app/features/user/services/user.service';
                                 </div>
                                 <a routerLink="/auth/forgot-password" class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</a>
                             </div>
-                            <p-button label="Sign In" styleClass="w-full" (onClick)="login()"></p-button>
+                            <p-button label="Sign In" styleClass="w-full" (onClick)="login()" [loading]="loading"></p-button>
 
                             <div class="text-center mt-6">
                                 <span class="text-muted-color">Don't have an account? </span>
@@ -62,15 +66,29 @@ import { UserService } from '@/app/features/user/services/user.service';
     `
 })
 export class Login {
+    private authService = inject(AuthService);
     private router = inject(Router);
-    private userService = inject(UserService);
+    private messageService = inject(MessageService);
 
-    email: string = '';
-    password: string = '';
-    checked: boolean = false;
+    username = '';
+    password = '';
+    checked = false;
+    loading = false;
 
-    login() {
-        this.userService.isLoggedIn.set(true);
-        this.router.navigate(['/']);
+    async login() {
+        if (!this.username || !this.password) {
+            this.messageService.add({ severity: 'warn', summary: 'Required', detail: 'Please enter username and password', life: 3000 });
+            return;
+        }
+
+        this.loading = true;
+        const result = await this.authService.login(this.username, this.password);
+        this.loading = false;
+
+        if (result.success) {
+            this.router.navigate(['/app']);
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Login Failed', detail: result.error || 'Invalid credentials', life: 4000 });
+        }
     }
 }

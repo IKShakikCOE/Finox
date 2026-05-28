@@ -61,7 +61,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 
             <!-- টেবিলে কলাম রেন্ডারিং -->
             <ng-template #header>
-                <tr>
+                <tr> 
                     <!-- সিলেকশন চেকবক্স হেডার -->
                     <th *ngIf="settings.features?.selection" style="width: 3rem">
                         <p-tableHeaderCheckbox />

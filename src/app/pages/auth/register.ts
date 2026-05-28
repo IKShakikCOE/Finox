@@ -1,18 +1,22 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
-import { UserService } from '@/app/features/user/services/user.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, ToastModule],
+    providers: [MessageService],
     template: `
+        <p-toast />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, #10B981 10%, rgba(16, 185, 129, 0) 30%)">
@@ -35,16 +39,24 @@ import { UserService } from '@/app/features/user/services/user.service';
                         </div>
 
                         <div>
-                            <label class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Full Name</label>
-                            <input pInputText type="text" placeholder="Your full name" class="w-full md:w-120 mb-6" [(ngModel)]="fullName" />
+                            <div class="grid grid-cols-12 gap-4 mb-6">
+                                <div class="col-span-6">
+                                    <label class="block text-surface-900 dark:text-surface-0 font-medium mb-2">First Name</label>
+                                    <input pInputText type="text" placeholder="First name" class="w-full" [(ngModel)]="firstName" />
+                                </div>
+                                <div class="col-span-6">
+                                    <label class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Last Name</label>
+                                    <input pInputText type="text" placeholder="Last name" class="w-full" [(ngModel)]="lastName" />
+                                </div>
+                            </div>
 
-                            <label class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                            <label class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Username</label>
+                            <input pInputText type="text" placeholder="Choose a username" class="w-full md:w-120 mb-6" [(ngModel)]="username" />
+
+                            <label class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Email</label>
                             <input pInputText type="email" placeholder="Email address" class="w-full md:w-120 mb-6" [(ngModel)]="email" />
 
-                            <label class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Phone</label>
-                            <input pInputText type="tel" placeholder="+880 1XXX-XXXXXX" class="w-full md:w-120 mb-6" [(ngModel)]="phone" />
-
-                            <label class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
+                            <label class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Password</label>
                             <p-password [(ngModel)]="password" placeholder="Create a password" [toggleMask]="true" styleClass="mb-6" [fluid]="true"></p-password>
 
                             <div class="flex items-center mb-6">
@@ -52,7 +64,7 @@ import { UserService } from '@/app/features/user/services/user.service';
                                 <label for="terms" class="text-sm">I agree to the <a class="text-primary no-underline cursor-pointer">Terms of Service</a> and <a class="text-primary no-underline cursor-pointer">Privacy Policy</a></label>
                             </div>
 
-                            <p-button label="Create Account" styleClass="w-full" (onClick)="register()" [disabled]="!agreed"></p-button>
+                            <p-button label="Create Account" styleClass="w-full" (onClick)="register()" [disabled]="!agreed" [loading]="loading"></p-button>
 
                             <div class="text-center mt-6">
                                 <span class="text-muted-color">Already have an account? </span>
@@ -66,22 +78,34 @@ import { UserService } from '@/app/features/user/services/user.service';
     `
 })
 export class Register {
+    private authService = inject(AuthService);
     private router = inject(Router);
-    private userService = inject(UserService);
+    private messageService = inject(MessageService);
 
-    fullName: string = '';
-    email: string = '';
-    phone: string = '';
-    password: string = '';
-    agreed: boolean = false;
+    firstName = '';
+    lastName = '';
+    username = '';
+    email = '';
+    password = '';
+    agreed = false;
+    loading = false;
 
-    register() {
-        this.userService.updateProfile({
-            fullName: this.fullName,
-            email: this.email,
-            phone: this.phone
-        });
-        this.userService.isLoggedIn.set(true);
-        this.router.navigate(['/']);
+    async register() {
+        if (!this.username || !this.email || !this.password) {
+            this.messageService.add({ severity: 'warn', summary: 'Required', detail: 'Please fill all required fields', life: 3000 });
+            return;
+        }
+
+        this.loading = true;
+        const result = await this.authService.register(this.username, this.email, this.password, this.firstName, this.lastName);
+        this.loading = false;
+
+        if (result.success) {
+            this.messageService.add({ severity: 'success', summary: 'Account Created', detail: 'Registration successful! Please login.', life: 4000 });
+            // Redirect to login after short delay
+            setTimeout(() => this.router.navigate(['/auth/login']), 2000);
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Registration Failed', detail: result.error || 'Something went wrong', life: 4000 });
+        }
     }
 }

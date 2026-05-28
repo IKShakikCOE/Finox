@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
     selector: 'topbar-widget',
     imports: [RouterModule, StyleClassModule, ButtonModule, RippleModule],
     template: `
-        <a class="flex items-center gap-2" routerLink="/landing">
+        <a class="flex items-center gap-2" routerLink="/">
             <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-10">
                 <defs>
                     <linearGradient id="finoxLandingGrad" x1="0" y1="0" x2="54" y2="40">
@@ -44,8 +44,8 @@ import { ButtonModule } from 'primeng/button';
                 </li>
             </ul>
             <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-3">
-                <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" severity="secondary" [outlined]="true"></button>
-                <button pButton pRipple label="Get Started" routerLink="/auth/register" [rounded]="true" style="background: linear-gradient(135deg, #10B981, #059669); border: none"></button>
+                <button pButton pRipple label="Login" [rounded]="true" severity="secondary" [outlined]="true" routerLink="/auth/login"></button>
+                <button pButton pRipple label="Get Started" [rounded]="true" style="background: linear-gradient(135deg, #10B981, #059669); border: none" routerLink="/auth/register"></button>
             </div>
         </div>
     `

@@ -7,7 +7,7 @@ import { Menu, MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '@/app/layout/service/layout.service';
-import { UserService } from '@/app/features/user/services/user.service';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'app-topbar',
@@ -18,7 +18,7 @@ import { UserService } from '@/app/features/user/services/user.service';
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
             </button>
-            <a class="layout-topbar-logo" routerLink="/">
+            <a class="layout-topbar-logo" routerLink="/app">
                 <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="finoxGradient" x1="0" y1="0" x2="54" y2="40">
@@ -62,11 +62,11 @@ import { UserService } from '@/app/features/user/services/user.service';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action" routerLink="/calendar">
+                    <button type="button" class="layout-topbar-action" routerLink="/app/calendar">
                         <i class="pi pi-calendar"></i>
                         <span>Calendar</span>
                     </button>
-                    <button type="button" class="layout-topbar-action" routerLink="/messages">
+                    <button type="button" class="layout-topbar-action" routerLink="/app/messages">
                         <i class="pi pi-inbox" pBadge value="3" severity="danger"></i>
                         <span>Messages</span>
                     </button>
@@ -87,24 +87,24 @@ export class AppTopbar {
     @ViewChild('profileMenu') profileMenu!: Menu;
 
     layoutService = inject(LayoutService);
-    userService = inject(UserService);
+    authService = inject(AuthService);
     private router = inject(Router);
 
     profileMenuItems: MenuItem[] = [
         {
             label: 'My Profile',
             icon: 'pi pi-user',
-            command: () => this.router.navigate(['/profile'])
+            command: () => this.router.navigate(['/app/profile'])
         },
         {
             label: 'Settings',
             icon: 'pi pi-cog',
-            command: () => this.router.navigate(['/profile/settings'])
+            command: () => this.router.navigate(['/app/profile/settings'])
         },
         {
             label: 'Change Password',
             icon: 'pi pi-lock',
-            command: () => this.router.navigate(['/profile/change-password'])
+            command: () => this.router.navigate(['/app/profile/change-password'])
         },
         { separator: true },
         {
@@ -126,6 +126,6 @@ export class AppTopbar {
     }
 
     logout() {
-        this.userService.logout(this.router);
+        this.authService.logout();
     }
 }
