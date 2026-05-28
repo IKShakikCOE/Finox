@@ -231,6 +231,124 @@ export class AuthService {
         return this.accessToken();
     }
 
+    /**
+     * Change password for the currently logged-in user via Keycloak Admin API
+     */
+    async changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+        try {
+            // Get current user info
+            const user = this.currentUser();
+            const username = user?.username || user?.email;
+
+            if (!username) {
+                // Try to get username from stored data
+                const stored = localStorage.getItem('finox_user') || sessionStorage.getItem('finox_user');
+                if (!stored) {
+                    return { success: false, error: 'User session expired. Please login again.' };
+                }
+                const storedUser = JSON.parse(stored);
+                if (!storedUser.username && !storedUser.email) {
+                    return { success: false, error: 'User session expired. Please login again.' };
+                }
+            }
+
+            const loginUsername = username || user?.email || '';
+
+            // Verify current password by attempting a login
+            const verifyBody = new HttpParams()
+                .set('grant_type', 'password')
+                .set('client_id', KEYCLOAK_CONFIG.clientId)
+                .set('username', loginUsername)
+                .set('password', currentPassword);
+
+            const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
+            try {
+                await firstValueFrom(
+                    this.http.post<TokenResponse>(KEYCLOAK_CONFIG.tokenEndpoint, verifyBody.toString(), { headers })
+                );
+            } catch {
+                return { success: false, error: 'Current password is incorrect.' };
+            }
+
+            // Get admin token to update password
+            const adminToken = await this.getAdminToken();
+            if (!adminToken) {
+                return { success: false, error: 'Unable to connect to authentication server.' };
+            }
+
+            const adminHeaders = new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`
+            });
+
+            // Find user ID if not available
+            let userId = user?.id;
+            if (!userId) {
+                const users = await firstValueFrom(
+                    this.http.get<any[]>(`${KEYCLOAK_CONFIG.adminUsersEndpoint}?username=${encodeURIComponent(loginUsername)}`, { headers: adminHeaders })
+                );
+                if (users && users.length > 0) {
+                    userId = users[0].id;
+                } else {
+                    return { success: false, error: 'User not found in the system.' };
+                }
+            }
+
+            // Update password via Admin API
+            await firstValueFrom(
+                this.http.put(`${KEYCLOAK_CONFIG.adminUsersEndpoint}/${userId}/reset-password`, {
+                    type: 'password',
+                    value: newPassword,
+                    temporary: false
+                }, { headers: adminHeaders })
+            );
+
+            return { success: true };
+        } catch (error: any) {
+            const message = error?.error?.errorMessage || 'Failed to change password. Please try again.';
+            return { success: false, error: message };
+        }
+    }
+
+    /**
+     * Forgot password — find user by email and send reset password email via Keycloak
+     */
+    async forgotPassword(email: string): Promise<{ success: boolean; error?: string }> {
+        try {
+            const adminToken = await this.getAdminToken();
+            if (!adminToken) {
+                return { success: false, error: 'Unable to connect to authentication server.' };
+            }
+
+            const adminHeaders = new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`
+            });
+
+            // Find user by email
+            const users = await firstValueFrom(
+                this.http.get<any[]>(`${KEYCLOAK_CONFIG.adminUsersEndpoint}?email=${encodeURIComponent(email)}`, { headers: adminHeaders })
+            );
+
+            if (!users || users.length === 0) {
+                return { success: false, error: 'No account found with this email address.' };
+            }
+
+            const userId = users[0].id;
+
+            // Send reset password email action
+            await firstValueFrom(
+                this.http.put(`${KEYCLOAK_CONFIG.adminUsersEndpoint}/${userId}/execute-actions-email`, ['UPDATE_PASSWORD'], { headers: adminHeaders })
+            );
+
+            return { success: true };
+        } catch (error: any) {
+            const message = error?.error?.errorMessage || 'Failed to send reset email. Please try again.';
+            return { success: false, error: message };
+        }
+    }
+
     private setTokens(response: TokenResponse): void {
         this.accessToken.set(response.access_token);
         this.refreshToken.set(response.refresh_token);

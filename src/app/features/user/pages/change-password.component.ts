@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
-import { UserService } from '../services/user.service';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'fx-change-password',
@@ -33,39 +33,43 @@ import { UserService } from '../services/user.service';
                     <small class="text-red-500" *ngIf="confirmPassword && newPassword !== confirmPassword">Passwords do not match.</small>
                 </div>
 
-                <p-button label="Change Password" icon="pi pi-lock" (onClick)="changePassword()" [disabled]="!isValid()" class="mt-2" />
+                <p-button label="Change Password" icon="pi pi-lock" (onClick)="changePassword()" [disabled]="!isValid()" [loading]="loading" class="mt-2" />
             </div>
 
             <div class="mt-4 p-3 surface-ground border-round">
                 <span class="text-sm text-muted-color">
                     <i class="pi pi-info-circle mr-1"></i>
-                    Password must be at least 8 characters with a mix of letters and numbers.
+                    Password must be at least 8 characters. Your current password will be verified with the server.
                 </span>
             </div>
         </div>
     `
 })
 export class ChangePasswordComponent {
-    private userService = inject(UserService);
+    private authService = inject(AuthService);
     private messageService = inject(MessageService);
 
     currentPassword = '';
     newPassword = '';
     confirmPassword = '';
+    loading = false;
 
     isValid(): boolean {
         return !!(this.currentPassword && this.newPassword && this.newPassword === this.confirmPassword && this.newPassword.length >= 8);
     }
 
-    changePassword() {
-        const result = this.userService.changePassword(this.currentPassword, this.newPassword);
+    async changePassword() {
+        this.loading = true;
+        const result = await this.authService.changePassword(this.currentPassword, this.newPassword);
+        this.loading = false;
+
         if (result.success) {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: result.message, life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Password changed successfully.', life: 3000 });
             this.currentPassword = '';
             this.newPassword = '';
             this.confirmPassword = '';
         } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: result.message, life: 3000 });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error || 'Failed to change password', life: 4000 });
         }
     }
 }

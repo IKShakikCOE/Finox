@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'app-forgot-password',
@@ -46,7 +47,7 @@ import { ToastModule } from 'primeng/toast';
                             <label for="email" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email Address</label>
                             <input pInputText id="email" type="email" placeholder="Enter your registered email" class="w-full md:w-120 mb-8" [(ngModel)]="email" />
 
-                            <p-button label="Send Reset Link" styleClass="w-full" (onClick)="sendResetLink()" [disabled]="!email"></p-button>
+                            <p-button label="Send Reset Link" styleClass="w-full" (onClick)="sendResetLink()" [disabled]="!email" [loading]="loading"></p-button>
 
                             <div class="text-center mt-6">
                                 <a routerLink="/auth/login" class="text-primary font-semibold no-underline cursor-pointer">
@@ -76,19 +77,37 @@ import { ToastModule } from 'primeng/toast';
     `
 })
 export class ForgotPassword {
+    private authService = inject(AuthService);
     private messageService = inject(MessageService);
 
-    email: string = '';
-    emailSent: boolean = false;
+    email = '';
+    emailSent = false;
+    loading = false;
 
-    sendResetLink() {
+    async sendResetLink() {
         if (!this.email) return;
-        // Simulate sending reset email
-        this.emailSent = true;
-        this.messageService.add({ severity: 'success', summary: 'Sent', detail: 'Reset link sent to ' + this.email, life: 4000 });
+
+        this.loading = true;
+        const result = await this.authService.forgotPassword(this.email);
+        this.loading = false;
+
+        if (result.success) {
+            this.emailSent = true;
+            this.messageService.add({ severity: 'success', summary: 'Sent', detail: 'Reset link sent to ' + this.email, life: 4000 });
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error || 'Failed to send reset email', life: 4000 });
+        }
     }
 
-    resend() {
-        this.messageService.add({ severity: 'info', summary: 'Resent', detail: 'Reset link resent to ' + this.email, life: 3000 });
+    async resend() {
+        this.loading = true;
+        const result = await this.authService.forgotPassword(this.email);
+        this.loading = false;
+
+        if (result.success) {
+            this.messageService.add({ severity: 'info', summary: 'Resent', detail: 'Reset link resent to ' + this.email, life: 3000 });
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error || 'Failed to resend', life: 3000 });
+        }
     }
 }
