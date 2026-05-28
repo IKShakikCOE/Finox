@@ -5,10 +5,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { InstitutionService } from '../services/institution.service';
-import { BankService } from '../../bank/services/bank.service';
-import { BankProfile } from '../models/institution.model';
-import { BankProduct } from '../../bank/models/bank.model';
+import { BankService } from '../services/bank.service';
+import { BankProfile } from '../models/bank.model';
+import { BankProduct } from '../models/bank.model';
 
 @Component({
     selector: 'fx-bank-detail',
@@ -20,7 +19,7 @@ import { BankProduct } from '../../bank/models/bank.model';
             <div class="card mb-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p-button label="Back to Banks" icon="pi pi-arrow-left" [text]="true" severity="secondary" [routerLink]="['/bank/profiles']" />
+                        <p-button label="Back to Banks" icon="pi pi-arrow-left" [text]="true" severity="secondary" [routerLink]="['/app/bank']" />
                         <h3 class="mt-3 mb-1">{{ bank.name }}</h3>
                         <div class="flex items-center gap-2 flex-wrap">
                             <p-tag [value]="bank.type" severity="info" />
@@ -284,7 +283,6 @@ import { BankProduct } from '../../bank/models/bank.model';
 })
 export class BankDetailComponent implements OnInit {
     private route = inject(ActivatedRoute);
-    private institutionService = inject(InstitutionService);
     private bankService = inject(BankService);
     private sanitizer = inject(DomSanitizer);
 
@@ -322,14 +320,14 @@ export class BankDetailComponent implements OnInit {
     }
 
     private async loadData(id: string | null) {
-        if (!this.institutionService.banks().length) {
-            await this.institutionService.loadData();
+        if (!this.bankService.profiles().length) {
+            await this.bankService.loadProfiles();
         }
         if (!this.bankService.products().length) {
             await this.bankService.loadBankData();
         }
 
-        this.bank = this.institutionService.banks().find(b => b.id === id);
+        this.bank = this.bankService.profiles().find(b => b.id === id);
         this.bankProducts = this.bankService.products().filter(p => p.bankId === id);
         this.generateSampleBranches();
     }

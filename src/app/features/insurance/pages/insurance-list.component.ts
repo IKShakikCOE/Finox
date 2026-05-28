@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { InstitutionService } from '../services/institution.service';
+import { InsuranceService } from '../services/insurance.service';
 
 @Component({
     selector: 'fx-insurance-list',
@@ -98,19 +98,19 @@ import { InstitutionService } from '../services/institution.service';
     `
 })
 export class InsuranceListComponent implements OnInit {
-    public institutionService = inject(InstitutionService);
+    public insuranceService = inject(InsuranceService);
     searchQuery = '';
 
     ngOnInit() {
-        if (!this.institutionService.insuranceCompanies().length) {
-            this.institutionService.loadData();
+        if (!this.insuranceService.profiles().length) {
+            this.insuranceService.loadProfiles();
         }
     }
 
     filteredCompanies() {
         const q = this.searchQuery.toLowerCase();
-        if (!q) return this.institutionService.insuranceCompanies();
-        return this.institutionService.insuranceCompanies().filter(c =>
+        if (!q) return this.insuranceService.profiles();
+        return this.insuranceService.profiles().filter(c =>
             c.name.toLowerCase().includes(q) || c.type.toLowerCase().includes(q) || c.products.some(p => p.toLowerCase().includes(q))
         );
     }

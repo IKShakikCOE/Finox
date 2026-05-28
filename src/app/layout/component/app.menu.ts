@@ -37,25 +37,25 @@ export class AppMenu {
             {
                 label: 'Bank',
                 items: [
-                    { label: 'Products', icon: 'pi pi-fw pi-building', routerLink: ['/app/bank'] },
-                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/bank/compare'] },
-                    { label: 'Bank Profiles', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/bank/profiles'] }
+                    { label: 'Banks', icon: 'pi pi-fw pi-building', routerLink: ['/app/bank'] },
+                    { label: 'Products', icon: 'pi pi-fw pi-box', routerLink: ['/app/bank/products'] },
+                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/bank/compare'] }
                 ]
             },
             {
                 label: 'Insurance',
                 items: [
-                    { label: 'Plans', icon: 'pi pi-fw pi-shield', routerLink: ['/app/insurance'] },
-                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/insurance/compare'] },
-                    { label: 'Companies', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/insurance/companies'] }
+                    { label: 'Companies', icon: 'pi pi-fw pi-shield', routerLink: ['/app/insurance'] },
+                    { label: 'Products', icon: 'pi pi-fw pi-box', routerLink: ['/app/insurance/products'] },
+                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/insurance/compare'] }
                 ]
             },
             {
                 label: 'Mutual Funds',
                 items: [
-                    { label: 'Funds', icon: 'pi pi-fw pi-chart-line', routerLink: ['/app/mutual-funds'] },
-                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/mutual-funds/compare'] },
-                    { label: 'AMCs', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/mutual-funds/amcs'] }
+                    { label: 'AMCs', icon: 'pi pi-fw pi-chart-line', routerLink: ['/app/mutual-funds'] },
+                    { label: 'Funds', icon: 'pi pi-fw pi-box', routerLink: ['/app/mutual-funds/funds'] },
+                    { label: 'Compare', icon: 'pi pi-fw pi-arrows-h', routerLink: ['/app/mutual-funds/compare'] }
                 ]
             },
             {

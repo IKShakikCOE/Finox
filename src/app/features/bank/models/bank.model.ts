@@ -17,9 +17,39 @@ export interface BankProduct {
     eligibility: string;
 }
 
+export interface BankProfile {
+    id: string;
+    name: string;
+    type: string;
+    established: number;
+    authorizedCapital: string;
+    paidUpCapital: string;
+    totalAssets: string;
+    branches: number;
+    atmBooths: number;
+    employees: number;
+    chairman: string;
+    md: string;
+    headquarters: string;
+    swiftCode: string;
+    rating: string;
+    ratingAgency: string;
+    riskLevel: 'LOW' | 'MODERATE' | 'HIGH';
+    nplRatio: number;
+    services: string[];
+    digitalServices: string[];
+    website: string;
+}
+
 export interface BankDataResponse {
     banks: Bank[];
     products: BankProduct[];
+}
+
+export interface InstitutionsDataResponse {
+    banks: BankProfile[];
+    insuranceCompanies: any[];
+    amcs: any[];
 }
 
 export type ProductCategory = 'ALL' | 'SAVINGS' | 'LOAN' | 'FDR' | 'DPS';

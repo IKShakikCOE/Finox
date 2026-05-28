@@ -21,6 +21,25 @@ export interface MutualFund {
     objective: string;
 }
 
+export interface AMCProfile {
+    id: string;
+    name: string;
+    established: number;
+    paidUpCapital: string;
+    aum: string;
+    totalFunds: number;
+    chairman: string;
+    md: string;
+    headquarters: string;
+    rating: string;
+    ratingAgency: string;
+    riskLevel: 'LOW' | 'MODERATE' | 'HIGH';
+    parentOrg: string;
+    fundTypes: string[];
+    investmentPhilosophy: string;
+    website: string;
+}
+
 export interface MutualFundDataResponse {
     amcs: AMC[];
     funds: MutualFund[];

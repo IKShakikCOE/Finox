@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { InstitutionService } from '../services/institution.service';
+import { MutualFundService } from '../services/mutual-fund.service';
 
 @Component({
     selector: 'fx-amcs-list',
@@ -90,19 +90,19 @@ import { InstitutionService } from '../services/institution.service';
     `
 })
 export class AmcsListComponent implements OnInit {
-    public institutionService = inject(InstitutionService);
+    public mfService = inject(MutualFundService);
     searchQuery = '';
 
     ngOnInit() {
-        if (!this.institutionService.amcs().length) {
-            this.institutionService.loadData();
+        if (!this.mfService.profiles().length) {
+            this.mfService.loadProfiles();
         }
     }
 
     filteredAmcs() {
         const q = this.searchQuery.toLowerCase();
-        if (!q) return this.institutionService.amcs();
-        return this.institutionService.amcs().filter(a =>
+        if (!q) return this.mfService.profiles();
+        return this.mfService.profiles().filter(a =>
             a.name.toLowerCase().includes(q) || a.parentOrg.toLowerCase().includes(q) || a.fundTypes.some(f => f.toLowerCase().includes(q))
         );
     }

@@ -17,6 +17,28 @@ export interface InsuranceProduct {
     eligibility: string;
 }
 
+export interface InsuranceProfile {
+    id: string;
+    name: string;
+    type: string;
+    established: number;
+    paidUpCapital: string;
+    totalAssets: string;
+    claimSettlementRatio: number;
+    branches: number;
+    employees: number;
+    agents: number;
+    chairman: string;
+    md: string;
+    headquarters: string;
+    rating: string;
+    ratingAgency: string;
+    riskLevel: 'LOW' | 'MODERATE' | 'HIGH';
+    solvencyRatio: number;
+    products: string[];
+    website: string;
+}
+
 export interface InsuranceDataResponse {
     companies: InsuranceCompany[];
     products: InsuranceProduct[];

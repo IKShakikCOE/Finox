@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { InsuranceCompany, InsuranceProduct, InsuranceDataResponse, InsuranceCategory } from '../models/insurance.model';
+import { InsuranceCompany, InsuranceProduct, InsuranceProfile, InsuranceDataResponse, InsuranceCategory } from '../models/insurance.model';
 
 @Injectable({ providedIn: 'root' })
 export class InsuranceService {
@@ -9,6 +9,7 @@ export class InsuranceService {
 
     companies = signal<InsuranceCompany[]>([]);
     products = signal<InsuranceProduct[]>([]);
+    profiles = signal<InsuranceProfile[]>([]);
     selectedCategory = signal<InsuranceCategory>('ALL');
     selectedCompanyIds = signal<string[]>([]);
     compareList = signal<InsuranceProduct[]>([]);
@@ -57,5 +58,16 @@ export class InsuranceService {
 
     isInCompare(productId: string): boolean {
         return this.compareList().some(p => p.id === productId);
+    }
+
+    async loadProfiles(): Promise<void> {
+        try {
+            const data = await firstValueFrom(
+                this.http.get<{ insuranceCompanies: InsuranceProfile[] }>('demo/institutions.json')
+            );
+            this.profiles.set(data.insuranceCompanies);
+        } catch (error) {
+            console.error('Failed to load insurance profiles', error);
+        }
     }
 }

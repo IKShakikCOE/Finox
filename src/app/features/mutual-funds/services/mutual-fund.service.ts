@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { AMC, MutualFund, MutualFundDataResponse, FundCategory, RiskLevel } from '../models/mutual-fund.model';
+import { AMC, AMCProfile, MutualFund, MutualFundDataResponse, FundCategory, RiskLevel } from '../models/mutual-fund.model';
 
 @Injectable({ providedIn: 'root' })
 export class MutualFundService {
@@ -9,6 +9,7 @@ export class MutualFundService {
 
     amcs = signal<AMC[]>([]);
     funds = signal<MutualFund[]>([]);
+    profiles = signal<AMCProfile[]>([]);
     selectedCategory = signal<FundCategory>('ALL');
     selectedRisk = signal<RiskLevel>('ALL');
     selectedAmcIds = signal<string[]>([]);
@@ -62,5 +63,16 @@ export class MutualFundService {
 
     isInCompare(fundId: string): boolean {
         return this.compareList().some(f => f.id === fundId);
+    }
+
+    async loadProfiles(): Promise<void> {
+        try {
+            const data = await firstValueFrom(
+                this.http.get<{ amcs: AMCProfile[] }>('demo/institutions.json')
+            );
+            this.profiles.set(data.amcs);
+        } catch (error) {
+            console.error('Failed to load AMC profiles', error);
+        }
     }
 }

@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { InstitutionService } from '../services/institution.service';
+import { BankService } from '../services/bank.service';
 
 @Component({
     selector: 'fx-banks-list',
@@ -24,7 +24,7 @@ import { InstitutionService } from '../services/institution.service';
             </div>
 
             <div class="flex flex-col gap-4">
-                <div *ngFor="let bank of filteredBanks()" class="border surface-border border-round p-5 cursor-pointer hover:surface-hover transition-colors" [routerLink]="['/bank/profiles', bank.id]">
+                <div *ngFor="let bank of filteredBanks()" class="border surface-border border-round p-5 cursor-pointer hover:surface-hover transition-colors" [routerLink]="['/app/bank', bank.id]">
                     <div class="flex items-start justify-between mb-3">
                         <div>
                             <h4 class="m-0 mb-1">{{ bank.name }}</h4>
@@ -75,19 +75,19 @@ import { InstitutionService } from '../services/institution.service';
     `
 })
 export class BanksListComponent implements OnInit {
-    public institutionService = inject(InstitutionService);
+    public bankService = inject(BankService);
     searchQuery = '';
 
     ngOnInit() {
-        if (!this.institutionService.banks().length) {
-            this.institutionService.loadData();
+        if (!this.bankService.profiles().length) {
+            this.bankService.loadProfiles();
         }
     }
 
     filteredBanks() {
         const q = this.searchQuery.toLowerCase();
-        if (!q) return this.institutionService.banks();
-        return this.institutionService.banks().filter(b =>
+        if (!q) return this.bankService.profiles();
+        return this.bankService.profiles().filter(b =>
             b.name.toLowerCase().includes(q) || b.type.toLowerCase().includes(q) || b.headquarters.toLowerCase().includes(q)
         );
     }
