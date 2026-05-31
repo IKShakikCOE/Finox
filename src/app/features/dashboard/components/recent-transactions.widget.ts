@@ -10,7 +10,7 @@ import { DashboardService } from '../services/dashboard.service';
     selector: 'fx-recent-transactions-widget',
     imports: [CommonModule, TableModule, ButtonModule, RippleModule],
     template: `
-    <div class="card mb-8!">
+    <div class="card">
         <div class="font-semibold text-xl mb-4">Recent Transactions</div>
         <p-table [value]="dashboardService.recentTransactions()" [paginator]="true" [rows]="5" responsiveLayout="scroll">
             <ng-template #header>

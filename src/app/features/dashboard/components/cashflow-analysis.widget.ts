@@ -2,115 +2,221 @@ import { afterNextRender, Component, effect, inject, signal } from '@angular/cor
 import { ChartModule } from 'primeng/chart';
 import { LayoutService } from '@/app/layout/service/layout.service';
 import { DashboardService } from '../services/dashboard.service';
+import { TrackerService } from '../../tracker/services/tracker.service';
 
 @Component({
     standalone: true,
     selector: 'fx-cashflow-analysis-widget',
     imports: [ChartModule],
     template: `
-    <div class="card mb-8!">
-        <div class="font-semibold text-xl mb-4">Cash Flow Analysis</div>
-        @if (dashboardService.loading()) {
-            <div class="h-100 flex items-center justify-center">
-                <i class="pi pi-spin pi-spinner text-2xl text-primary"></i>
+    <div class="card">
+        <div class="flex items-center justify-between mb-4">
+            <div class="font-semibold text-xl">Cash Flow — Last 6 Months</div>
+            <div class="flex items-center gap-4 text-sm">
+                <div class="flex items-center gap-1">
+                    <span class="inline-block w-3 h-3 rounded-sm bg-green-500"></span>
+                    <span class="text-muted-color">Income</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="inline-block w-3 h-3 rounded-sm bg-red-500"></span>
+                    <span class="text-muted-color">Expense</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="inline-block w-3 h-3 rounded-full border-2 border-blue-500"></span>
+                    <span class="text-muted-color">Savings</span>
+                </div>
             </div>
-        } @else {
-            <p-chart type="bar" [data]="chartData()" [options]="chartOptions()" class="h-100" />
-        }
+        </div>
+        <p-chart type="bar" [data]="chartData()" [options]="chartOptions()"
+            style="height: 320px" />
     </div>`
 })
 export class CashFlowAnalysisWidget {
-    layoutService = inject(LayoutService);
-    dashboardService = inject(DashboardService);
+    private layoutService = inject(LayoutService);
+    private dashboardService = inject(DashboardService);
+    private trackerService = inject(TrackerService);
 
-    chartData = signal<any>(null);
-    chartOptions = signal<any>(null);
+    chartData = signal<any>(this.getDefaultChartData());
+    chartOptions = signal<any>(this.getDefaultChartOptions());
 
     constructor() {
-        // প্রথম রেন্ডারের পর চার্ট অপশন ইনিশিয়েট করার জন্য
         afterNextRender(() => {
             this.initChartOptions();
+            this.initChartData();
         });
 
-        // থিম চেঞ্জ অথবা সার্ভিস ডেটা আপডেট হলে চার্ট রেন্ডার হবে
         effect(() => {
-            // রিঅ্যাক্টিভ ডিপেন্ডেন্সি ট্র্যাকিং
+            // Track reactive dependencies
             const isDarkTheme = this.layoutService.layoutConfig().darkTheme;
-            const flowData = this.dashboardService.cashFlow();
+            const transactions = this.trackerService.transactions();
+            const cashFlow = this.dashboardService.cashFlow();
 
-            if (flowData && flowData.length > 0) {
-                // থিম চেঞ্জ এবং ডেটা লোড হওয়ার পর রি-ইনিশিয়েট হবে
-                setTimeout(() => {
-                    this.initChartOptions();
-                    this.updateChartData(flowData);
-                }, 50);
-            }
+            setTimeout(() => {
+                this.initChartOptions();
+
+                if (transactions && transactions.length > 0) {
+                    this.buildFromTransactions(transactions);
+                } else if (cashFlow && cashFlow.length > 0) {
+                    this.buildFromCashFlow(cashFlow);
+                } else {
+                    this.initChartData(); // Use dummy data
+                }
+            }, 100);
         });
     }
 
-    private updateChartData(data: any[]) {
-        const documentStyle = getComputedStyle(document.documentElement);
-        
-        // ডাইনামিকালি এপিআই রেসপন্স থেকে ম্যাপ করা হচ্ছে
-        const labels = data.map(item => item.quarter);
-        const incomeData = data.map(item => item.income);
-        const expenseData = data.map(item => item.expense);
-        const savingsData = data.map(item => item.savings);
+    /** Always-available dummy data so chart renders immediately */
+    private initChartData() {
+        const months = this.getLast6Months();
+        // Realistic dummy data for a Bangladesh professional
+        const dummyIncome =  [165000, 180000, 175000, 180000, 185000, 180000];
+        const dummyExpense = [72000,  68000,  85000,  65000,  78000,  70000];
+        const dummySavings = dummyIncome.map((inc, i) => inc - dummyExpense[i]);
 
+        this.setChartData(months.map(m => m.label), dummyIncome, dummyExpense, dummySavings);
+    }
+
+    private buildFromTransactions(transactions: any[]) {
+        const months = this.getLast6Months();
+        const incomeData: number[] = [];
+        const expenseData: number[] = [];
+        const savingsData: number[] = [];
+
+        for (const month of months) {
+            const monthTxns = transactions.filter((t: any) => {
+                if (!t.date) return false;
+                return t.date.substring(0, 7) === month.key;
+            });
+
+            const income = monthTxns
+                .filter((t: any) => t.type === 'INCOME')
+                .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+            const expense = monthTxns
+                .filter((t: any) => t.type === 'EXPENSE')
+                .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+
+            incomeData.push(income);
+            expenseData.push(expense);
+            savingsData.push(income - expense);
+        }
+
+        // Only use real data if at least some months have values
+        const hasData = incomeData.some(v => v > 0) || expenseData.some(v => v > 0);
+        if (hasData) {
+            this.setChartData(months.map(m => m.label), incomeData, expenseData, savingsData);
+        }
+    }
+
+    private buildFromCashFlow(data: any[]) {
+        this.setChartData(
+            data.map(item => item.quarter),
+            data.map(item => item.income),
+            data.map(item => item.expense),
+            data.map(item => item.savings)
+        );
+    }
+
+    private setChartData(labels: string[], income: number[], expense: number[], savings: number[]) {
         this.chartData.set({
-            labels: labels,
+            labels,
             datasets: [
                 {
                     type: 'bar',
-                    label: 'Total Income',
-                    backgroundColor: documentStyle.getPropertyValue('--p-emerald-500') || '#10b981',
-                    data: incomeData,
-                    barThickness: 24
+                    label: 'Income',
+                    backgroundColor: '#10b981',
+                    hoverBackgroundColor: '#059669',
+                    data: income,
+                    barThickness: 22,
+                    borderRadius: 4,
+                    order: 2
                 },
                 {
                     type: 'bar',
-                    label: 'Expenses',
-                    backgroundColor: documentStyle.getPropertyValue('--p-red-500') || '#ef4444',
-                    data: expenseData,
-                    barThickness: 24
+                    label: 'Expense',
+                    backgroundColor: '#ef4444',
+                    hoverBackgroundColor: '#dc2626',
+                    data: expense,
+                    barThickness: 22,
+                    borderRadius: 4,
+                    order: 3
                 },
                 {
-                    type: 'bar',
+                    type: 'line',
                     label: 'Net Savings',
-                    backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                    data: savingsData,
-                    borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
-                    borderSkipped: false,
-                    barThickness: 24
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.06)',
+                    data: savings,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2.5,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    order: 1
                 }
             ]
         });
     }
 
+    private getLast6Months(): { key: string; label: string }[] {
+        const months: { key: string; label: string }[] = [];
+        const now = new Date();
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const key = d.toISOString().substring(0, 7);
+            const label = monthNames[d.getMonth()] + ' ' + d.getFullYear().toString().slice(-2);
+            months.push({ key, label });
+        }
+        return months;
+    }
+
     private initChartOptions() {
         const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const borderColor = documentStyle.getPropertyValue('--surface-border');
-        const textMutedColor = documentStyle.getPropertyValue('--text-color-secondary');
+        const textMutedColor = documentStyle.getPropertyValue('--text-color-secondary') || '#6b7280';
+        const borderColor = documentStyle.getPropertyValue('--surface-border') || '#e5e7eb';
 
-        this.chartOptions.set({
+        this.chartOptions.set(this.buildChartOptions(textMutedColor, borderColor));
+    }
+
+    private getDefaultChartData(): any {
+        const months = this.getLast6MonthLabels();
+        return {
+            labels: months,
+            datasets: [
+                { type: 'bar', label: 'Income', backgroundColor: '#10b981', data: [165000, 180000, 175000, 180000, 185000, 180000], barThickness: 22, borderRadius: 4, order: 2 },
+                { type: 'bar', label: 'Expense', backgroundColor: '#ef4444', data: [72000, 68000, 85000, 65000, 78000, 70000], barThickness: 22, borderRadius: 4, order: 3 },
+                { type: 'line', label: 'Net Savings', borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.06)', data: [93000, 112000, 90000, 115000, 107000, 110000], fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, order: 1 }
+            ]
+        };
+    }
+
+    private getDefaultChartOptions(): any {
+        return this.buildChartOptions('#6b7280', '#e5e7eb');
+    }
+
+    private buildChartOptions(textMutedColor: string, borderColor: string): any {
+        return {
             maintainAspectRatio: false,
-            aspectRatio: 0.8,
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: {
-                    labels: {
-                        color: textColor,
-                        boxWidth: 12,
-                        font: { weight: '500' }
-                    }
-                },
+                legend: { display: false },
                 tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleFont: { size: 13 },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
                     callbacks: {
                         label: function(context: any) {
                             let label = context.dataset.label || '';
                             if (label) label += ': ';
                             if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                label += '৳' + context.parsed.y.toLocaleString('en-BD');
                             }
                             return label;
                         }
@@ -119,21 +225,35 @@ export class CashFlowAnalysisWidget {
             },
             scales: {
                 x: {
-                    stacked: false, // ফিন্যান্সিয়াল কম্পারিজনের জন্য কলামগুলো পাশাপাশি (Grouped) থাকা বেস্ট
-                    ticks: { color: textMutedColor },
-                    grid: { color: 'transparent', borderColor: 'transparent' }
+                    ticks: { color: textMutedColor, font: { size: 11, weight: '500' } },
+                    grid: { display: false }
                 },
                 y: {
-                    stacked: false,
-                    ticks: { 
+                    beginAtZero: true,
+                    ticks: {
                         color: textMutedColor,
+                        font: { size: 11 },
+                        maxTicksLimit: 6,
                         callback: function(value: number) {
-                            return (value / 1000) + 'k'; // রিড্যাবিলিটির জন্য k ফরম্যাট (যেমন: 100k, 200k)
+                            if (value >= 100000) return (value / 100000).toFixed(1) + 'L';
+                            if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
+                            return value.toString();
                         }
                     },
-                    grid: { color: borderColor, borderColor: 'transparent', drawTicks: false }
+                    grid: { color: borderColor, drawTicks: false }
                 }
             }
-        });
+        };
+    }
+
+    private getLast6MonthLabels(): string[] {
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const now = new Date();
+        const labels: string[] = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            labels.push(monthNames[d.getMonth()] + ' ' + d.getFullYear().toString().slice(-2));
+        }
+        return labels;
     }
 }
