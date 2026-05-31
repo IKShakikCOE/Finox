@@ -33,7 +33,7 @@ import { ToolbarModule } from 'primeng/toolbar';
             <ng-template #caption>
                 <div class="flex items-center justify-between flex-wrap gap-3 w-full clearfix">
                     <div class="flex items-center gap-3">
-                        <h5 class="m-0" *ngIf="settings?.title && !hideTitle">{{ settings.title }}</h5>
+                        <h5 class="m-0" *ngIf="settings.title && !hideTitle">{{ settings.title }}</h5>
                         <ng-content select="[filter]"></ng-content>
                     </div>
 
@@ -43,7 +43,7 @@ import { ToolbarModule } from 'primeng/toolbar';
                             <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" [placeholder]="settings.features?.search?.placeholder || 'Search...'" />
                         </p-iconfield>
 
-                        <button pButton *ngIf="settings?.features?.add" [label]="'Add'" [icon]="'pi pi-plus'" class="p-button-secondary p-button-outlined" (click)="addClick.emit()"></button>
+                        <button pButton *ngIf="settings.features?.add" [label]="'Add'" [icon]="'pi pi-plus'" class="p-button-secondary p-button-outlined" (click)="addClick.emit()"></button>
 
                         <button
                             pButton
@@ -54,7 +54,7 @@ import { ToolbarModule } from 'primeng/toolbar';
                             (click)="bulkDeleteClick.emit(selectedItems)"
                         ></button>
 
-                        <button pButton *ngIf="settings?.features?.export" label="Export" icon="pi pi-upload" class="p-button-secondary p-button-outlined" (click)="dt.exportCSV()"></button>
+                        <button pButton *ngIf="settings.features?.export" label="Export" icon="pi pi-upload" class="p-button-secondary p-button-outlined" (click)="dt.exportCSV()"></button>
                     </div>
                 </div>
             </ng-template>

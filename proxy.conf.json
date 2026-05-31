@@ -1,10 +1,15 @@
 {
   "/keycloak": {
-    "target": "http://127.0.0.1:8080",
+    "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
       "^/keycloak": ""
     }
+  },
+  "/api": {
+    "target": "https://localhost:7252",
+    "secure": false,
+    "changeOrigin": true
   }
 }

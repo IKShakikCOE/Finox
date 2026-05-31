@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { AuthService } from '@/app/core/auth/auth.service';
 
 @Component({
     selector: 'app-menu',
@@ -19,6 +20,7 @@ import { AppMenuitem } from './app.menuitem';
     </ul> `,
 })
 export class AppMenu {
+    private authService = inject(AuthService);
     model: MenuItem[] = [];
 
     ngOnInit() {
@@ -79,5 +81,30 @@ export class AppMenu {
                 ]
             }
         ];
+
+        // Only show admin section if user has admin role
+        if (this.authService.isAdmin()) {
+            this.model.push(
+                { separator: true },
+                {
+                    label: 'Administration',
+                    items: [
+                        { label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/app/admin'] },
+                        { label: 'Users', icon: 'pi pi-fw pi-users', routerLink: ['/app/admin/users'] },
+                        { label: 'Banks', icon: 'pi pi-fw pi-building', routerLink: ['/app/admin/banks'] },
+                        { label: 'Insurance', icon: 'pi pi-fw pi-shield', routerLink: ['/app/admin/insurance'] },
+                        { label: 'Mutual Funds', icon: 'pi pi-fw pi-chart-line', routerLink: ['/app/admin/mutual-funds'] },
+                        { label: 'News & Articles', icon: 'pi pi-fw pi-book', routerLink: ['/app/admin/news'] },
+                        { label: 'Tracker Meta', icon: 'pi pi-fw pi-tags', routerLink: ['/app/admin/tracker-meta'] },
+                        { label: 'Platforms', icon: 'pi pi-fw pi-megaphone', routerLink: ['/app/admin/platforms'] },
+                        { label: 'Profiles', icon: 'pi pi-fw pi-id-card', routerLink: ['/app/admin/profiles'] },
+                        { label: 'Audit Logs', icon: 'pi pi-fw pi-history', routerLink: ['/app/admin/audit-logs'] },
+                        { label: 'Analytics', icon: 'pi pi-fw pi-chart-pie', routerLink: ['/app/admin/analytics'] },
+                        { label: 'Announcements', icon: 'pi pi-fw pi-bell', routerLink: ['/app/admin/announcements'] },
+                        { label: 'Seed Data', icon: 'pi pi-fw pi-database', routerLink: ['/app/admin/seed'] }
+                    ]
+                }
+            );
+        }
     }
 }

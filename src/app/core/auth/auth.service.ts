@@ -29,7 +29,9 @@ export class AuthService {
     currentUser = signal<AuthUser | null>(null);
     accessToken = signal<string | null>(null);
     refreshToken = signal<string | null>(null);
+    userRoles = signal<string[]>([]);
     isAuthenticated = computed(() => !!this.accessToken());
+    isAdmin = computed(() => this.userRoles().includes('admin') || this.userRoles().includes('realm-admin'));
 
     private rememberMe = false;
 
@@ -43,10 +45,32 @@ export class AuthService {
             this.accessToken.set(token);
             this.refreshToken.set(refresh);
             this.rememberMe = !!localStorage.getItem('finox_access_token');
+            this.extractRolesFromToken(token);
             if (user) {
                 this.currentUser.set(JSON.parse(user));
             }
         }
+    }
+
+    /**
+     * Extract roles from JWT token payload
+     */
+    private extractRolesFromToken(token: string): void {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const realmRoles: string[] = payload?.realm_access?.roles || [];
+            const clientRoles: string[] = payload?.resource_access?.['finox-app']?.roles || [];
+            this.userRoles.set([...realmRoles, ...clientRoles]);
+        } catch {
+            this.userRoles.set([]);
+        }
+    }
+
+    /**
+     * Check if user has any of the specified roles
+     */
+    hasAnyRole(roles: string[]): boolean {
+        return roles.some(role => this.userRoles().includes(role));
     }
 
     /**
@@ -58,6 +82,7 @@ export class AuthService {
             const body = new HttpParams()
                 .set('grant_type', 'password')
                 .set('client_id', KEYCLOAK_CONFIG.clientId)
+                .set('scope', 'openid email profile')
                 .set('username', username)
                 .set('password', password);
 
@@ -352,6 +377,7 @@ export class AuthService {
     private setTokens(response: TokenResponse): void {
         this.accessToken.set(response.access_token);
         this.refreshToken.set(response.refresh_token);
+        this.extractRolesFromToken(response.access_token);
 
         const storage = this.rememberMe ? localStorage : sessionStorage;
         storage.setItem('finox_access_token', response.access_token);

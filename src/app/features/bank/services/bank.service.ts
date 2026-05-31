@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { Bank, BankProduct, BankProfile, BankDataResponse, InstitutionsDataResponse, ProductCategory } from '../models/bank.model';
+import { Bank, BankProduct, BankProfile, ProductCategory } from '../models/bank.model';
 
 @Injectable({ providedIn: 'root' })
 export class BankService {
@@ -30,9 +30,12 @@ export class BankService {
 
     async loadBankData(): Promise<void> {
         try {
-            const data = await firstValueFrom(this.http.get<BankDataResponse>('demo/bank-products.json'));
-            this.banks.set(data.banks);
-            this.products.set(data.products);
+            const [banks, products] = await Promise.all([
+                firstValueFrom(this.http.get<Bank[]>('/api/banks')),
+                firstValueFrom(this.http.get<BankProduct[]>('/api/banks/products'))
+            ]);
+            this.banks.set(banks);
+            this.products.set(products);
         } catch (error) {
             console.error('Failed to load bank data', error);
         }
@@ -40,8 +43,8 @@ export class BankService {
 
     async loadProfiles(): Promise<void> {
         try {
-            const data = await firstValueFrom(this.http.get<InstitutionsDataResponse>('demo/institutions.json'));
-            this.profiles.set(data.banks);
+            const profiles = await firstValueFrom(this.http.get<BankProfile[]>('/api/banks/profiles'));
+            this.profiles.set(profiles);
         } catch (error) {
             console.error('Failed to load bank profiles', error);
         }

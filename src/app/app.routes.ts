@@ -3,7 +3,7 @@ import { AppLayout } from './layout/component/app.layout';
 import { Landing } from './pages/landing/landing';
 import { Notfound } from './pages/notfound/notfound';
 import { DashboardPage } from './features/dashboard/dashboard.page';
-import { authGuard } from './core/auth/auth.guard';
+import { authGuard, roleGuard } from './core/auth/auth.guard';
 
 export const appRoutes: Routes = [
     // Public
@@ -26,7 +26,8 @@ export const appRoutes: Routes = [
             { path: 'learn', loadChildren: () => import('./features/news/news.routes').then(m => m.newsRoutes) },
             { path: 'profile', loadChildren: () => import('./features/user/user.routes').then(m => m.userRoutes) },
             { path: 'messages', loadChildren: () => import('./features/messages/messages.routes').then(m => m.messagesRoutes) },
-            { path: 'calendar', loadChildren: () => import('./features/calendar/calendar.routes').then(m => m.calendarRoutes) }
+            { path: 'calendar', loadChildren: () => import('./features/calendar/calendar.routes').then(m => m.calendarRoutes) },
+            { path: 'admin', canActivate: [roleGuard(['admin'])], loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes) }
         ]
     },
 

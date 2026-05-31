@@ -1,0 +1,1187 @@
+openapi: 3.0.3
+info:
+  title: Finox Backend API
+  description: >
+    REST API contract for the Finox personal finance super-app (Bangladesh market).
+    Derived from the Angular 21 frontend. See docs/BACKEND_SPEC.md for full context.
+    Currency is BDT throughout. Dates are YYYY-MM-DD; datetimes are ISO-8601.
+    All /api/** endpoints require a Keycloak-issued Bearer token unless marked otherwise.
+  version: 1.0.0
+  contact:
+    name: Finox
+servers:
+  - url: /api
+    description: Same-origin API (relative paths used by the frontend)
+  - url: https://api.finox.app/api
+    description: Production (configurable)
+
+tags:
+  - name: Auth
+  - name: Tracker
+  - name: Bank
+  - name: Insurance
+  - name: MutualFunds
+  - name: Investment
+  - name: News
+  - name: Calendar
+  - name: Messages
+  - name: Advisor
+  - name: User
+  - name: Dashboard
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ---------------- Auth ----------------
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user (server-side Keycloak admin wrapper)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201': { description: Created }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Trigger Keycloak password reset email
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200': { description: Reset email sent }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /auth/change-password:
+    post:
+      tags: [Auth]
+      summary: Change password for the current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPassword, newPassword]
+              properties:
+                currentPassword: { type: string, format: password }
+                newPassword: { type: string, format: password }
+      responses:
+        '200': { description: Password changed }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Current authenticated user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthUser' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  # ---------------- Tracker ----------------
+  /tracker/meta:
+    get:
+      tags: [Tracker]
+      summary: Tracker metadata (payment methods + category names)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TrackerMeta' }
+
+  /transactions:
+    get:
+      tags: [Tracker]
+      summary: List transactions for current user
+      parameters:
+        - { name: type, in: query, schema: { type: string, enum: [INCOME, EXPENSE] } }
+        - { name: search, in: query, schema: { type: string } }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Transaction' } }
+    post:
+      tags: [Tracker]
+      summary: Create a transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Transaction' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Transaction' }
+  /transactions/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    put:
+      tags: [Tracker]
+      summary: Update a transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Transaction' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Transaction' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tracker]
+      summary: Delete a transaction
+      responses:
+        '204': { description: Deleted }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /transactions/bulk-delete:
+    post:
+      tags: [Tracker]
+      summary: Bulk delete transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BulkDeleteRequest' }
+      responses:
+        '200': { description: Deleted }
+
+  /categories:
+    get:
+      tags: [Tracker]
+      summary: List categories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Category' } }
+    post:
+      tags: [Tracker]
+      summary: Create category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Category' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Category' }
+  /categories/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    put:
+      tags: [Tracker]
+      summary: Update category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Category' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Category' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tracker]
+      summary: Delete category
+      responses:
+        '204': { description: Deleted }
+  /categories/bulk-delete:
+    post:
+      tags: [Tracker]
+      summary: Bulk delete categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BulkDeleteRequest' }
+      responses:
+        '200': { description: Deleted }
+
+  /accounts:
+    get:
+      tags: [Tracker]
+      summary: List accounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Account' } }
+    post:
+      tags: [Tracker]
+      summary: Create account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Account' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Account' }
+  /accounts/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    put:
+      tags: [Tracker]
+      summary: Update account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Account' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Account' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tracker]
+      summary: Delete account
+      responses:
+        '204': { description: Deleted }
+  /accounts/bulk-delete:
+    post:
+      tags: [Tracker]
+      summary: Bulk delete accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BulkDeleteRequest' }
+      responses:
+        '200': { description: Deleted }
+
+  /budgets:
+    get:
+      tags: [Tracker]
+      summary: List budgets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Budget' } }
+    post:
+      tags: [Tracker]
+      summary: Create budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Budget' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Budget' }
+  /budgets/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    put:
+      tags: [Tracker]
+      summary: Update budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Budget' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Budget' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tracker]
+      summary: Delete budget
+      responses:
+        '204': { description: Deleted }
+
+  # ---------------- Bank ----------------
+  /banks:
+    get:
+      tags: [Bank]
+      summary: List banks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Bank' } }
+  /banks/products:
+    get:
+      tags: [Bank]
+      summary: List bank products
+      parameters:
+        - { name: category, in: query, schema: { type: string, enum: [SAVINGS, LOAN, FDR, DPS] } }
+        - { name: bankId, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/BankProduct' } }
+  /banks/profiles:
+    get:
+      tags: [Bank]
+      summary: List bank profiles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/BankProfile' } }
+  /banks/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    get:
+      tags: [Bank]
+      summary: Get a bank profile by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BankProfile' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ---------------- Insurance ----------------
+  /insurance/companies:
+    get:
+      tags: [Insurance]
+      summary: List insurance companies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/InsuranceCompany' } }
+  /insurance/products:
+    get:
+      tags: [Insurance]
+      summary: List insurance products
+      parameters:
+        - { name: category, in: query, schema: { type: string, enum: [LIFE, HEALTH, VEHICLE, PROPERTY, CHILD, PENSION] } }
+        - { name: companyId, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/InsuranceProduct' } }
+  /insurance/profiles:
+    get:
+      tags: [Insurance]
+      summary: List insurance profiles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/InsuranceProfile' } }
+
+  # ---------------- Mutual Funds ----------------
+  /mutual-funds/amcs:
+    get:
+      tags: [MutualFunds]
+      summary: List AMCs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/AMC' } }
+  /mutual-funds:
+    get:
+      tags: [MutualFunds]
+      summary: List mutual funds
+      parameters:
+        - { name: category, in: query, schema: { type: string, enum: [GROWTH, BALANCED, FIXED_INCOME] } }
+        - { name: risk, in: query, schema: { type: string, enum: [LOW, MODERATE, HIGH] } }
+        - { name: amcId, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/MutualFund' } }
+  /mutual-funds/profiles:
+    get:
+      tags: [MutualFunds]
+      summary: List AMC profiles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/AMCProfile' } }
+
+  # ---------------- Investment ----------------
+  /investment/platforms:
+    get:
+      tags: [Investment]
+      summary: List investment/ad platforms
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Platform' } }
+  /investment/campaigns:
+    get:
+      tags: [Investment]
+      summary: List campaigns for current user
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [ACTIVE, PAUSED, COMPLETED] } }
+        - { name: platformId, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Campaign' } }
+    post:
+      tags: [Investment]
+      summary: Create campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Campaign' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Campaign' }
+  /investment/campaigns/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    put:
+      tags: [Investment]
+      summary: Update campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Campaign' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Campaign' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Investment]
+      summary: Delete campaign
+      responses:
+        '204': { description: Deleted }
+
+  # ---------------- News ----------------
+  /news:
+    get:
+      tags: [News]
+      summary: List articles with categories
+      parameters:
+        - { name: category, in: query, schema: { type: string } }
+        - { name: search, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NewsResponse' }
+  /news/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    get:
+      tags: [News]
+      summary: Get a single article (with full body)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Article' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ---------------- Calendar ----------------
+  /calendar/events:
+    get:
+      tags: [Calendar]
+      summary: List calendar events for current user
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/CalendarEvent' } }
+    post:
+      tags: [Calendar]
+      summary: Create calendar event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CalendarEvent' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CalendarEvent' }
+  /calendar/events/{id}:
+    parameters: [ { $ref: '#/components/parameters/IdPath' } ]
+    delete:
+      tags: [Calendar]
+      summary: Delete calendar event
+      responses:
+        '204': { description: Deleted }
+
+  # ---------------- Messages ----------------
+  /messages/conversations:
+    get:
+      tags: [Messages]
+      summary: List conversations for current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Conversation' } }
+  /messages/contacts:
+    get:
+      tags: [Messages]
+      summary: List chat contacts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/ChatUser' } }
+  /messages:
+    get:
+      tags: [Messages]
+      summary: Messages between current user and a peer
+      parameters:
+        - { name: userId, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Message' } }
+    post:
+      tags: [Messages]
+      summary: Send a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receiverId, content]
+              properties:
+                receiverId: { type: string }
+                content: { type: string }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Message' }
+  /messages/read:
+    post:
+      tags: [Messages]
+      summary: Mark a conversation as read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId: { type: string }
+      responses:
+        '200': { description: OK }
+
+  # ---------------- Advisor ----------------
+  /advisor/chat:
+    post:
+      tags: [Advisor]
+      summary: Send a message to the AI advisor (response content is Markdown)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdvisorMessage' }
+  /advisor/history:
+    get:
+      tags: [Advisor]
+      summary: Advisor chat history for current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/AdvisorMessage' } }
+
+  # ---------------- User ----------------
+  /user/profile:
+    get:
+      tags: [User]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserProfile' }
+    put:
+      tags: [User]
+      summary: Update profile (partial)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserProfile' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserProfile' }
+  /user/settings:
+    get:
+      tags: [User]
+      summary: Get current user settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserSettings' }
+    put:
+      tags: [User]
+      summary: Update settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UserSettings' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserSettings' }
+
+  # ---------------- Dashboard ----------------
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Aggregated dashboard data for current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DashboardData' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Keycloak-issued access token (realm "finox", client "finox-app")
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: pageSize
+      in: query
+      schema: { type: integer, minimum: 1, default: 25 }
+
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error: { type: string }
+        message: { type: string }
+        details: { type: object, additionalProperties: true }
+    BulkDeleteRequest:
+      type: object
+      required: [ids]
+      properties:
+        ids: { type: array, items: { type: string } }
+
+    RegisterRequest:
+      type: object
+      required: [username, email, password, firstName, lastName]
+      properties:
+        username: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+        firstName: { type: string }
+        lastName: { type: string }
+    AuthUser:
+      type: object
+      properties:
+        id: { type: string, description: Keycloak sub }
+        username: { type: string }
+        email: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        fullName: { type: string }
+
+    Transaction:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        amount: { type: number }
+        type: { type: string, enum: [INCOME, EXPENSE] }
+        category: { type: string }
+        date: { type: string, format: date }
+        paymentMethod: { type: string }
+        accountId: { type: string }
+        remarks: { type: string }
+        isRecurring: { type: boolean }
+        recurringFrequency: { type: string, enum: [MONTHLY, WEEKLY, YEARLY] }
+    Category:
+      type: object
+      required: [name, type]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string, enum: [INCOME, EXPENSE] }
+        icon: { type: string }
+        color: { type: string }
+        parentId: { type: string }
+    Account:
+      type: object
+      required: [name, type, balance]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string, enum: [CASH, BANK, CREDIT_CARD, MOBILE_BANKING] }
+        balance: { type: number }
+        currency: { type: string, default: BDT }
+        icon: { type: string }
+        color: { type: string }
+    Budget:
+      type: object
+      required: [category, allocatedAmount, period]
+      properties:
+        id: { type: string }
+        category: { type: string }
+        allocatedAmount: { type: number }
+        period: { type: string, enum: [MONTHLY, WEEKLY, YEARLY, CUSTOM] }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        alertThreshold: { type: number, description: Percent threshold for alerts }
+    TrackerMeta:
+      type: object
+      properties:
+        paymentMethods: { type: array, items: { type: string } }
+        incomeCategories: { type: array, items: { type: string } }
+        expenseCategories: { type: array, items: { type: string } }
+
+    Bank:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        logo: { type: string }
+    BankProduct:
+      type: object
+      required: [id, bankId, bankName, category, name, interestRate]
+      properties:
+        id: { type: string }
+        bankId: { type: string }
+        bankName: { type: string }
+        category: { type: string, enum: [SAVINGS, LOAN, FDR, DPS] }
+        name: { type: string }
+        interestRate: { type: number }
+        minDeposit: { type: number, nullable: true }
+        tenure: { type: string, nullable: true }
+        features: { type: array, items: { type: string } }
+        eligibility: { type: string }
+    BankProfile:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string }
+        established: { type: integer }
+        authorizedCapital: { type: string }
+        paidUpCapital: { type: string }
+        totalAssets: { type: string }
+        branches: { type: integer }
+        atmBooths: { type: integer }
+        employees: { type: integer }
+        chairman: { type: string }
+        md: { type: string }
+        headquarters: { type: string }
+        swiftCode: { type: string }
+        rating: { type: string }
+        ratingAgency: { type: string }
+        riskLevel: { type: string, enum: [LOW, MODERATE, HIGH] }
+        nplRatio: { type: number }
+        services: { type: array, items: { type: string } }
+        digitalServices: { type: array, items: { type: string } }
+        website: { type: string }
+
+    InsuranceCompany:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+    InsuranceProduct:
+      type: object
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        companyName: { type: string }
+        category: { type: string, enum: [LIFE, HEALTH, VEHICLE, PROPERTY, CHILD, PENSION] }
+        name: { type: string }
+        premiumRange: { type: string }
+        coverageAmount: { type: string }
+        tenure: { type: string }
+        maturityBenefit: { type: string }
+        features: { type: array, items: { type: string } }
+        eligibility: { type: string }
+    InsuranceProfile:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string }
+        established: { type: integer }
+        paidUpCapital: { type: string }
+        totalAssets: { type: string }
+        claimSettlementRatio: { type: number }
+        branches: { type: integer }
+        employees: { type: integer }
+        agents: { type: integer }
+        chairman: { type: string }
+        md: { type: string }
+        headquarters: { type: string }
+        rating: { type: string }
+        ratingAgency: { type: string }
+        riskLevel: { type: string, enum: [LOW, MODERATE, HIGH] }
+        solvencyRatio: { type: number }
+        products: { type: array, items: { type: string } }
+        website: { type: string }
+
+    AMC:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+    MutualFund:
+      type: object
+      properties:
+        id: { type: string }
+        amcId: { type: string }
+        amcName: { type: string }
+        category: { type: string, enum: [GROWTH, BALANCED, FIXED_INCOME] }
+        name: { type: string }
+        nav: { type: number }
+        returnRate1Y: { type: number }
+        returnRate3Y: { type: number }
+        returnRate5Y: { type: number }
+        minInvestment: { type: number }
+        expenseRatio: { type: number }
+        fundSize: { type: string }
+        riskLevel: { type: string, enum: [LOW, MODERATE, HIGH] }
+        features: { type: array, items: { type: string } }
+        objective: { type: string }
+    AMCProfile:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        established: { type: integer }
+        paidUpCapital: { type: string }
+        aum: { type: string }
+        totalFunds: { type: integer }
+        chairman: { type: string }
+        md: { type: string }
+        headquarters: { type: string }
+        rating: { type: string }
+        ratingAgency: { type: string }
+        riskLevel: { type: string, enum: [LOW, MODERATE, HIGH] }
+        parentOrg: { type: string }
+        fundTypes: { type: array, items: { type: string } }
+        investmentPhilosophy: { type: string }
+        website: { type: string }
+
+    Platform:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        icon: { type: string }
+        color: { type: string }
+    Campaign:
+      type: object
+      properties:
+        id: { type: string }
+        platformId: { type: string }
+        platformName: { type: string }
+        name: { type: string }
+        type: { type: string }
+        status: { type: string, enum: [ACTIVE, PAUSED, COMPLETED] }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        budget: { type: number }
+        spent: { type: number }
+        impressions: { type: integer }
+        clicks: { type: integer }
+        conversions: { type: integer }
+        revenue: { type: number }
+        cpc: { type: number }
+        ctr: { type: number }
+        roas: { type: number }
+
+    Article:
+      type: object
+      properties:
+        id: { type: string }
+        category: { type: string, enum: [News, Tips, Advice, Books, Learning] }
+        title: { type: string }
+        excerpt: { type: string }
+        content: { type: string, description: Full body (HTML or Markdown), for detail view }
+        author: { type: string }
+        date: { type: string }
+        readTime: { type: string }
+        tags: { type: array, items: { type: string } }
+        image: { type: string }
+        featured: { type: boolean }
+    NewsResponse:
+      type: object
+      properties:
+        categories: { type: array, items: { type: string } }
+        articles: { type: array, items: { $ref: '#/components/schemas/Article' } }
+
+    CalendarEvent:
+      type: object
+      required: [title, date, type]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        date: { type: string, format: date }
+        time: { type: string }
+        type: { type: string, enum: [PAYMENT, MEETING, REMINDER, DEADLINE] }
+        description: { type: string }
+        color: { type: string }
+
+    ChatUser:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        avatar: { type: string }
+        status: { type: string, enum: [online, offline, away] }
+        lastSeen: { type: string }
+    Message:
+      type: object
+      properties:
+        id: { type: string }
+        senderId: { type: string }
+        receiverId: { type: string }
+        content: { type: string }
+        timestamp: { type: string, format: date-time }
+        read: { type: boolean }
+    Conversation:
+      type: object
+      properties:
+        user: { $ref: '#/components/schemas/ChatUser' }
+        lastMessage: { type: string }
+        lastMessageTime: { type: string, format: date-time }
+        unreadCount: { type: integer }
+
+    AdvisorMessage:
+      type: object
+      properties:
+        id: { type: string }
+        role: { type: string, enum: [user, assistant] }
+        content: { type: string, description: Markdown }
+        timestamp: { type: string, format: date-time }
+
+    UserProfile:
+      type: object
+      properties:
+        id: { type: string }
+        fullName: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        avatar: { type: string }
+        designation: { type: string }
+        company: { type: string }
+        address: { type: string }
+        city: { type: string }
+        country: { type: string }
+        joinDate: { type: string }
+        currency: { type: string }
+        language: { type: string }
+        timezone: { type: string }
+    UserSettings:
+      type: object
+      properties:
+        notifications:
+          type: object
+          properties:
+            email: { type: boolean }
+            push: { type: boolean }
+            budgetAlerts: { type: boolean }
+            weeklyReport: { type: boolean }
+        privacy:
+          type: object
+          properties:
+            showProfile: { type: boolean }
+            showActivity: { type: boolean }
+        display:
+          type: object
+          properties:
+            currency: { type: string }
+            dateFormat: { type: string }
+            language: { type: string }
+
+    FinanceSummary:
+      type: object
+      properties:
+        totalBalance: { type: number }
+        monthlyIncome: { type: number }
+        monthlyExpense: { type: number }
+        savingsRate: { type: number }
+        balanceChangePercent: { type: number }
+        expenseChangePercent: { type: number }
+    AssetAllocation:
+      type: object
+      properties:
+        assetClass: { type: string }
+        description: { type: string }
+        percentage: { type: number }
+        colorClass: { type: string }
+        textColorClass: { type: string }
+    CashFlowData:
+      type: object
+      properties:
+        quarter: { type: string }
+        income: { type: number }
+        expense: { type: number }
+        savings: { type: number }
+    DashboardTransaction:
+      type: object
+      properties:
+        id: { type: integer }
+        description: { type: string }
+        category: { type: string }
+        amount: { type: number }
+        type: { type: string, enum: [income, expense] }
+        date: { type: string, format: date-time }
+    DashboardNotification:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        title: { type: string }
+        message: { type: string }
+        timeGroup: { type: string, enum: [TODAY, 'LAST WEEK'] }
+        icon: { type: string }
+        bgClass: { type: string }
+        iconClass: { type: string }
+    DashboardData:
+      type: object
+      properties:
+        summary: { $ref: '#/components/schemas/FinanceSummary' }
+        allocations: { type: array, items: { $ref: '#/components/schemas/AssetAllocation' } }
+        recentTransactions: { type: array, items: { $ref: '#/components/schemas/DashboardTransaction' } }
+        notifications: { type: array, items: { $ref: '#/components/schemas/DashboardNotification' } }
+        cashFlow: { type: array, items: { $ref: '#/components/schemas/CashFlowData' } }

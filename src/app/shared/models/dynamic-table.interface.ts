@@ -10,7 +10,7 @@ export interface TableAction {
     label: string;
     icon: string;
     severity?: 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null | undefined;
-    action: 'view' | 'edit' | 'delete' | 'custom';
+    action: 'view' | 'edit' | 'delete' | 'custom' | string;
 }
 
 export interface DialogField {

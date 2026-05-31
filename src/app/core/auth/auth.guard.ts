@@ -25,8 +25,13 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
             return false;
         }
 
-        // For role-based access, check user roles from token
-        // (implement when roles are available in token)
-        return true;
+        // Check if user has any of the required roles
+        if (authService.hasAnyRole(requiredRoles)) {
+            return true;
+        }
+
+        // User doesn't have required role — redirect to main app
+        router.navigate(['/app']);
+        return false;
     };
 };
