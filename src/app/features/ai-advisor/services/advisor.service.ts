@@ -62,7 +62,8 @@ export class AdvisorService {
         if (lowerQuery.includes('spending') || lowerQuery.includes('expense') || lowerQuery.includes('save')) {
             const categories = new Map<string, number>();
             transactions.filter(t => t.type === 'EXPENSE').forEach(t => {
-                categories.set(t.category || 'Other', (categories.get(t.category || 'Other') || 0) + (t.amount || 0));
+                const catName = t.category?.name || 'Other';
+                categories.set(catName, (categories.get(catName) || 0) + (t.amount || 0));
             });
             const topCategory = [...categories.entries()].sort((a, b) => b[1] - a[1])[0];
 

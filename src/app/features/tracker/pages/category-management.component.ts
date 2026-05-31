@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -31,6 +31,7 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
             <h4 class="mt-0 mb-4">Category Management</h4>
 
             <fx-dynamic-table
+                #fxTable
                 [data]="filteredCategories()"
                 [settings]="tableSettings"
                 [hideTitle]="true"
@@ -50,6 +51,10 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
                     <div class="flex items-center gap-2">
                         <p-radiobutton inputId="catIncome" name="catFilter" value="INCOME" [(ngModel)]="catFilter" (onClick)="onFilterChange()" />
                         <label for="catIncome" class="text-emerald-500 font-semibold">Income</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p-radiobutton inputId="catTransfer" name="catFilter" value="TRANSFER" [(ngModel)]="catFilter" (onClick)="onFilterChange()" />
+                        <label for="catTransfer" class="text-blue-500 font-semibold">Transfer</label>
                     </div>
                 </div>
             </fx-dynamic-table>
@@ -71,17 +76,19 @@ export class CategoryManagementComponent implements OnInit {
     private messageService = inject(MessageService);
     private confirmationService = inject(ConfirmationService);
 
+    @ViewChild('fxTable') fxTable!: DynamicTableComponent;
+
     tableSettings: TableSettings = { endpoint: '' };
     dialogVisible = false;
     dialogConfig: DialogConfig = { header: '', fields: [] };
     formData: Record<string, any> = {};
     isNew = true;
 
-    private _catFilter = signal<'ALL' | 'INCOME' | 'EXPENSE'>('ALL');
-    catFilter: 'ALL' | 'INCOME' | 'EXPENSE' = 'ALL';
+    private _catFilter = signal<'ALL' | 'INCOME' | 'EXPENSE' | 'TRANSFER'>('ALL');
+    catFilter: 'ALL' | 'INCOME' | 'EXPENSE' | 'TRANSFER' = 'ALL';
 
     filteredCategories = computed(() => {
-        const all = this.trackerService.categories();
+        const all = this.trackerService.categoriesFlat();
         const filter = this._catFilter();
         if (filter === 'ALL') return all;
         return all.filter(c => c.type === filter);
@@ -93,16 +100,19 @@ export class CategoryManagementComponent implements OnInit {
 
     ngOnInit() {
         this.setupTable();
-        if (!this.trackerService.categories().length) {
-            this.trackerService.loadTrackerMetaData();
+        if (!this.trackerService.categoriesFlat().length) {
+            this.trackerService.loadCategories();
+            this.trackerService.loadCategoriesFlat();
         }
     }
 
     setupTable() {
         const cols: TableColumn[] = [
-            { field: 'name', header: 'Category Name' },
-            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : 'danger') },
-            { field: 'color', header: 'Color' }
+            { field: 'name', header: 'Category', type: 'category' },
+            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : val === 'TRANSFER' ? 'info' : 'danger') },
+            { field: 'parent.name', header: 'Parent' },
+            { field: 'color', header: 'Color', type: 'color' },
+            { field: 'sortOrder', header: 'Order' }
         ];
 
         this.tableSettings = {
@@ -129,14 +139,15 @@ export class CategoryManagementComponent implements OnInit {
     private buildDialogConfig(): DialogConfig {
         return {
             header: 'Category Details',
-            width: '500px',
+            width: '900px',
             fields: [
                 {
                     key: 'name',
                     label: 'Category Name',
                     type: 'text',
-                    placeholder: 'e.g., Food & Grocery',
-                    required: true
+                    placeholder: 'e.g., Groceries',
+                    required: true,
+                    colSpan: 6
                 },
                 {
                     key: 'type',
@@ -145,14 +156,54 @@ export class CategoryManagementComponent implements OnInit {
                     required: true,
                     options: [
                         { value: 'EXPENSE', label: 'Expense', labelClass: 'text-red-500 font-semibold' },
-                        { value: 'INCOME', label: 'Income', labelClass: 'text-emerald-500 font-semibold' }
+                        { value: 'INCOME', label: 'Income', labelClass: 'text-emerald-500 font-semibold' },
+                        { value: 'TRANSFER', label: 'Transfer', labelClass: 'text-blue-500 font-semibold' }
                     ]
                 },
                 {
+                    key: 'parentId',
+                    label: 'Parent Category (optional)',
+                    type: 'select',
+                    placeholder: 'None (top-level)',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    options: () => this.trackerService.categories()
+                        .filter(c => !c.parentId || c.parentId === null)
+                },
+                {
+                    key: 'icon',
+                    label: 'Icon',
+                    type: 'select',
+                    placeholder: 'Search icon...',
+                    filter: true,
+                    options: [
+                        'pi-shopping-cart', 'pi-car', 'pi-home', 'pi-heart', 'pi-book',
+                        'pi-wallet', 'pi-credit-card', 'pi-gift', 'pi-briefcase', 'pi-building',
+                        'pi-bolt', 'pi-globe', 'pi-users', 'pi-chart-line', 'pi-chart-bar',
+                        'pi-dollar', 'pi-calculator', 'pi-shield', 'pi-star', 'pi-play',
+                        'pi-send', 'pi-desktop', 'pi-mobile', 'pi-wifi', 'pi-wrench',
+                        'pi-truck', 'pi-tag', 'pi-calendar', 'pi-clock', 'pi-cog',
+                        'pi-code', 'pi-pencil', 'pi-palette', 'pi-video', 'pi-box',
+                        'pi-map', 'pi-directions', 'pi-sun', 'pi-cloud', 'pi-plus-circle',
+                        'pi-exclamation-triangle', 'pi-ellipsis-h', 'pi-question', 'pi-id-card',
+                        'pi-percentage', 'pi-replay', 'pi-arrow-up', 'pi-chart-pie', 'pi-comments'
+                    ],
+                    colSpan: 6
+                },
+                {
                     key: 'color',
-                    label: 'Color Code',
-                    type: 'text',
-                    placeholder: '#FF5733'
+                    label: 'Color',
+                    type: 'color',
+                    colSpan: 6
+                },
+                {
+                    key: 'sortOrder',
+                    label: 'Sort Order',
+                    type: 'number',
+                    placeholder: '0',
+                    min: 0,
+                    max: 999,
+                    colSpan: 6
                 }
             ]
         };
@@ -169,9 +220,11 @@ export class CategoryManagementComponent implements OnInit {
                 message: `Delete category "${event.data.name}"?`,
                 header: 'Confirm Delete',
                 icon: 'pi pi-exclamation-triangle',
-                accept: () => {
-                    this.trackerService.deleteCategory(event.data.id);
-                    this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Category removed', life: 3000 });
+                accept: async () => {
+                    const success = await this.trackerService.deleteCategory(event.data.id);
+                    this.messageService.add(success
+                        ? { severity: 'success', summary: 'Deleted', detail: 'Category removed', life: 3000 }
+                        : { severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
                 }
             });
         }
@@ -189,21 +242,29 @@ export class CategoryManagementComponent implements OnInit {
             message: `Delete ${items.length} selected categories?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                items.forEach(item => this.trackerService.deleteCategory(item.id));
-                this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Categories removed', life: 3000 });
+            accept: async () => {
+                const ids = items.map(item => item.id);
+                const success = await this.trackerService.bulkDeleteCategories(ids);
+                if (success) this.fxTable?.clearSelection();
+                this.messageService.add(success
+                    ? { severity: 'success', summary: 'Deleted', detail: 'Categories removed', life: 3000 }
+                    : { severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
             }
         });
     }
 
-    onSave(event: DialogSaveEvent) {
+    async onSave(event: DialogSaveEvent) {
         const cat = event.data as Category;
         if (event.isNew) {
-            this.trackerService.addCategory(cat);
-            this.messageService.add({ severity: 'success', summary: 'Created', detail: 'Category added', life: 3000 });
+            const created = await this.trackerService.addCategory(cat);
+            this.messageService.add(created
+                ? { severity: 'success', summary: 'Created', detail: 'Category added', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to create', life: 3000 });
         } else {
-            this.trackerService.updateCategory(cat);
-            this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Category updated', life: 3000 });
+            const updated = await this.trackerService.updateCategory(cat.id!, cat);
+            this.messageService.add(updated
+                ? { severity: 'success', summary: 'Updated', detail: 'Category updated', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to update', life: 3000 });
         }
     }
 }

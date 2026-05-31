@@ -57,7 +57,11 @@ import { TrackerService } from '../services/tracker.service';
                     <h5 class="mb-4">Expense by Category</h5>
                     <div class="flex flex-col gap-3">
                         <div *ngFor="let item of expenseByCategory()" class="flex items-center justify-between p-3 border-round surface-border border">
-                            <span class="font-medium">{{ item.category }}</span>
+                            <span class="font-medium inline-flex items-center gap-2">
+                                <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'"></i>
+                                {{ item.category }}
+                            </span>
                             <div class="flex items-center gap-3">
                                 <span class="font-semibold text-red-500">{{ item.total | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
                                 <span class="text-muted-color text-sm">({{ item.percentage }}%)</span>
@@ -71,7 +75,11 @@ import { TrackerService } from '../services/tracker.service';
                     <h5 class="mb-4">Income by Category</h5>
                     <div class="flex flex-col gap-3">
                         <div *ngFor="let item of incomeByCategory()" class="flex items-center justify-between p-3 border-round surface-border border">
-                            <span class="font-medium">{{ item.category }}</span>
+                            <span class="font-medium inline-flex items-center gap-2">
+                                <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'"></i>
+                                {{ item.category }}
+                            </span>
                             <div class="flex items-center gap-3">
                                 <span class="font-semibold text-emerald-500">{{ item.total | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
                                 <span class="text-muted-color text-sm">({{ item.percentage }}%)</span>
@@ -91,25 +99,29 @@ export class TrackerReportsComponent implements OnInit {
 
     ngOnInit() {
         if (!this.trackerService.transactions().length) {
-            this.trackerService.loadTrackerMetaData();
+            this.trackerService.loadTransactions();
         }
     }
 
     private groupByCategory(type: 'INCOME' | 'EXPENSE') {
         const txns = this.trackerService.transactions().filter(t => t.type === type);
         const total = txns.reduce((sum, t) => sum + (t.amount || 0), 0);
-        const grouped = new Map<string, number>();
+        const grouped = new Map<string, { total: number; icon?: string; color?: string }>();
 
         txns.forEach(t => {
-            const cat = t.category || 'Uncategorized';
-            grouped.set(cat, (grouped.get(cat) || 0) + (t.amount || 0));
+            const cat = t.category?.name || 'Uncategorized';
+            const existing = grouped.get(cat) || { total: 0, icon: t.category?.icon, color: t.category?.color };
+            existing.total += (t.amount || 0);
+            grouped.set(cat, existing);
         });
 
         return Array.from(grouped.entries())
-            .map(([category, catTotal]) => ({
+            .map(([category, data]) => ({
                 category,
-                total: catTotal,
-                percentage: total > 0 ? Math.round((catTotal / total) * 100) : 0
+                total: data.total,
+                icon: data.icon,
+                color: data.color,
+                percentage: total > 0 ? Math.round((data.total / total) * 100) : 0
             }))
             .sort((a, b) => b.total - a.total);
     }

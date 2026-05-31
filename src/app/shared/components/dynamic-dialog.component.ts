@@ -9,6 +9,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ColorPickerModule } from 'primeng/colorpicker';
 import { DialogConfig, DialogField, DialogSaveEvent } from '../models/dynamic-table.interface';
 
 @Component({
@@ -24,14 +25,16 @@ import { DialogConfig, DialogField, DialogSaveEvent } from '../models/dynamic-ta
         InputNumberModule,
         SelectModule,
         RadioButtonModule,
-        DatePickerModule
+        DatePickerModule,
+        ColorPickerModule
     ],
     template: `
         <p-dialog
             [(visible)]="visible"
-            [style]="{ width: config.width || '700px' }"
+            [style]="{ width: config.width || '900px', overflow: 'visible' }"
             [header]="config.header"
             [modal]="true"
+            [contentStyle]="{ overflow: 'visible' }"
             (onHide)="onCancel()"
         >
             <ng-template #content>
@@ -91,7 +94,7 @@ import { DialogConfig, DialogField, DialogSaveEvent } from '../models/dynamic-ta
                         <!-- Number input -->
                         <div *ngSwitchCase="'number'">
                             <label [for]="field.key" class="block font-bold mb-3">{{ field.label }}</label>
-                            <p-inputnumber [id]="field.key" [(ngModel)]="formData[field.key]" fluid />
+                            <p-inputnumber [id]="field.key" [(ngModel)]="formData[field.key]" [min]="field.min ?? null" [max]="field.max ?? null" fluid />
                             <small class="text-red-500" *ngIf="submitted && field.required && !formData[field.key]">
                                 {{ field.label }} is required.
                             </small>
@@ -116,20 +119,101 @@ import { DialogConfig, DialogField, DialogSaveEvent } from '../models/dynamic-ta
                         <!-- Select dropdown -->
                         <div *ngSwitchCase="'select'">
                             <label [for]="field.key" class="block font-bold mb-3">{{ field.label }}</label>
+                            <ng-container *ngIf="field.optionLabel; else plainSelect">
+                                <p-select
+                                    [(ngModel)]="formData[field.key]"
+                                    [inputId]="field.key"
+                                    [options]="resolveOptions(field)"
+                                    [optionLabel]="field.optionLabel"
+                                    [optionValue]="field.optionValue"
+                                    [placeholder]="field.placeholder || 'Select...'"
+                                    [filter]="field.filter || false"
+                                    (onChange)="onFieldChange(field)"
+                                    fluid
+                                >
+                                    <ng-template let-item pTemplate="item">
+                                        <div class="flex items-center gap-2">
+                                            <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                            <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'" style="font-size: 0.9rem"></i>
+                                            <span>{{ item[field.optionLabel || 'name'] }}</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-item pTemplate="selectedItem">
+                                        <div class="flex items-center gap-2" *ngIf="item">
+                                            <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                            <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'" style="font-size: 0.9rem"></i>
+                                            <span>{{ item[field.optionLabel || 'name'] }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-select>
+                            </ng-container>
+                            <ng-template #plainSelect>
+                                <p-select
+                                    [(ngModel)]="formData[field.key]"
+                                    [inputId]="field.key"
+                                    [options]="resolveOptions(field)"
+                                    [placeholder]="field.placeholder || 'Select...'"
+                                    [filter]="field.filter || false"
+                                    (onChange)="onFieldChange(field)"
+                                    fluid
+                                />
+                            </ng-template>
+                        </div>
+
+                        <!-- Grouped select dropdown (categories with parent headers) -->
+                        <div *ngSwitchCase="'grouped-select'">
+                            <label [for]="field.key" class="block font-bold mb-3">{{ field.label }}</label>
                             <p-select
                                 [(ngModel)]="formData[field.key]"
                                 [inputId]="field.key"
                                 [options]="resolveOptions(field)"
+                                [optionLabel]="field.optionLabel || 'name'"
+                                [optionValue]="field.optionValue || 'id'"
+                                [optionGroupLabel]="field.optionGroupLabel || 'name'"
+                                [optionGroupChildren]="field.optionGroupChildren || 'children'"
+                                [group]="true"
                                 [placeholder]="field.placeholder || 'Select...'"
+                                [filter]="true"
+                                filterBy="name"
                                 fluid
                             />
+                        </div>
+
+                        <!-- Dependent select: second dropdown filtered by first (e.g., parent → child category) -->
+                        <div *ngSwitchCase="'dependent-select'">
+                            <label [for]="field.key" class="block font-bold mb-3">{{ field.label }}</label>
+                            <p-select
+                                [(ngModel)]="formData[field.key]"
+                                [inputId]="field.key"
+                                [options]="resolveDependentOptions(field)"
+                                [optionLabel]="field.optionLabel || 'name'"
+                                [optionValue]="field.optionValue || 'id'"
+                                [placeholder]="field.placeholder || 'Select...'"
+                                [disabled]="!resolveDependentOptions(field).length"
+                                fluid
+                            >
+                                <ng-template let-item pTemplate="item">
+                                    <div class="flex items-center gap-2">
+                                        <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                        <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'" style="font-size: 0.9rem"></i>
+                                        <span>{{ item.name }}</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-item pTemplate="selectedItem">
+                                    <div class="flex items-center gap-2" *ngIf="item">
+                                        <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                        <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'" style="font-size: 0.9rem"></i>
+                                        <span>{{ item.name }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-select>
                         </div>
 
                         <!-- Radio buttons -->
                         <div *ngSwitchCase="'radio'">
                             <span class="block font-bold mb-4">{{ field.label }}</span>
-                            <div class="grid grid-cols-12 gap-4">
-                                <div *ngFor="let opt of resolveOptions(field); let i = index" class="flex items-center gap-2 col-span-6">
+                            <div class="flex flex-wrap gap-4">
+                                <div *ngFor="let opt of resolveOptions(field); let i = index" class="flex items-center gap-2">
                                     <p-radiobutton
                                         [inputId]="field.key + '_' + i"
                                         [name]="field.key"
@@ -154,6 +238,18 @@ import { DialogConfig, DialogField, DialogSaveEvent } from '../models/dynamic-ta
                                 [showIcon]="field.showIcon !== false"
                                 fluid
                             />
+                        </div>
+
+                        <!-- Color picker -->
+                        <div *ngSwitchCase="'color'">
+                            <label [for]="field.key" class="block font-bold mb-3">{{ field.label }}</label>
+                            <div class="flex items-center gap-3">
+                                <p-colorpicker [id]="field.key" [(ngModel)]="formData[field.key]" />
+                                <span *ngIf="formData[field.key]" class="inline-flex items-center gap-2">
+                                    <span [style.background-color]="'#' + formData[field.key]" style="width: 24px; height: 24px; border-radius: 4px; display: inline-block; border: 1px solid #ccc"></span>
+                                    <span class="text-sm font-mono">#{{ formData[field.key] }}</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </ng-template>
@@ -183,6 +279,14 @@ export class DynamicDialogComponent {
             return field.options();
         }
         return field.options || [];
+    }
+
+    /** For dependent-select: resolves options based on another field's current value */
+    resolveDependentOptions(field: DialogField): any[] {
+        if (typeof field.dependentOptions === 'function') {
+            return field.dependentOptions(this.formData);
+        }
+        return [];
     }
 
     getOptionValue(opt: any): any {

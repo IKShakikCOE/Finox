@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -31,6 +31,7 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
             <h4 class="mt-0 mb-4">{{ tableSettings.title }}</h4>
 
             <fx-dynamic-table
+                #fxTable
                 [data]="filteredTransactions()"
                 [settings]="tableSettings"
                 [hideTitle]="true"
@@ -71,6 +72,8 @@ export class TrackerCrudComponent implements OnInit {
     private messageService = inject(MessageService);
     private confirmationService = inject(ConfirmationService);
 
+    @ViewChild('fxTable') fxTable!: DynamicTableComponent;
+
     tableCols: TableColumn[] = [];
     tableSettings: TableSettings = { endpoint: '' };
 
@@ -95,7 +98,7 @@ export class TrackerCrudComponent implements OnInit {
 
     ngOnInit() {
         this.setupTable();
-        this.trackerService.loadTrackerMetaData();
+        this.trackerService.loadAll();
     }
 
     setupTable() {
@@ -103,8 +106,9 @@ export class TrackerCrudComponent implements OnInit {
             { field: 'date', header: 'Date', type: 'date' },
             { field: 'title', header: 'Title' },
             { field: 'amount', header: 'Amount', type: 'currency' },
-            { field: 'category', header: 'Category' },
-            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : 'danger') }
+            { field: 'category', header: 'Category', type: 'category' },
+            { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : 'danger') },
+            { field: 'remarks', header: 'Remarks' }
         ];
 
         this.tableSettings = {
@@ -139,7 +143,7 @@ export class TrackerCrudComponent implements OnInit {
     private buildDialogConfig(): DialogConfig {
         return {
             header: 'Transaction Details',
-            width: '700px',
+            width: '900px',
             fields: [
                 {
                     key: 'type',
@@ -147,11 +151,12 @@ export class TrackerCrudComponent implements OnInit {
                     type: 'radio',
                     options: [
                         { value: 'EXPENSE', label: 'Expense', labelClass: 'text-red-500 font-semibold' },
-                        { value: 'INCOME', label: 'Income', labelClass: 'text-emerald-500 font-semibold' }
+                        { value: 'INCOME', label: 'Income', labelClass: 'text-emerald-500 font-semibold' },
+                        { value: 'TRANSFER', label: 'Transfer', labelClass: 'text-blue-500 font-semibold' }
                     ],
                     onChange: (_value, formData) => {
-                        // Update category options when type changes
-                        formData['category'] = '';
+                        formData['_parentCategoryId'] = '';
+                        formData['categoryId'] = '';
                     }
                 },
                 {
@@ -179,18 +184,35 @@ export class TrackerCrudComponent implements OnInit {
                     colSpan: 6
                 },
                 {
-                    key: 'category',
+                    key: '_parentCategoryId',
                     label: 'Category',
                     type: 'select',
-                    placeholder: 'Select a Category',
-                    options: () => this.getAvailableCategories()
+                    placeholder: 'Select Category',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    options: () => this.getParentCategories(),
+                    onChange: (_value, formData) => {
+                        formData['categoryId'] = ''; // Reset sub-category when parent changes
+                    },
+                    colSpan: 6
+                },
+                {
+                    key: 'categoryId',
+                    label: 'Sub-category',
+                    type: 'dependent-select',
+                    placeholder: 'Select Sub-category',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    dependentOptions: (formData) => this.getChildCategories(formData['_parentCategoryId']),
+                    colSpan: 6
                 },
                 {
                     key: 'paymentMethod',
                     label: 'Payment Method',
                     type: 'select',
                     placeholder: 'Select Payment Method',
-                    options: () => this.trackerService.paymentMethods()
+                    options: ['CASH', 'BANK', 'MOBILE_BANKING', 'CREDIT_CARD'],
+                    colSpan: 6
                 },
                 {
                     key: 'remarks',
@@ -202,10 +224,18 @@ export class TrackerCrudComponent implements OnInit {
         };
     }
 
-    private getAvailableCategories(): string[] {
-        return this.formData['type'] === 'INCOME'
-            ? this.trackerService.incomeCategories()
-            : this.trackerService.expenseCategories();
+    /** Returns parent categories filtered by the current transaction type */
+    private getParentCategories(): any[] {
+        const type = this.formData['type'] || 'EXPENSE';
+        return this.trackerService.categories()
+            .filter(c => c.type === type && (!c.parentId || c.parentId === null));
+    }
+
+    /** Returns child categories for a given parent */
+    private getChildCategories(parentId: string): any[] {
+        if (!parentId) return [];
+        const parent = this.trackerService.categories().find(c => c.id === parentId);
+        return parent?.children || [];
     }
 
     handleTableAction(event: TableActionClickEvent) {
@@ -231,7 +261,9 @@ export class TrackerCrudComponent implements OnInit {
     }
 
     editTransaction(txn: Transaction) {
-        this.formData = { ...txn };
+        // Derive parent category from the child's parentId for the two-field picker
+        const parentId = txn.category?.parentId || txn.categoryId;
+        this.formData = { ...txn, _parentCategoryId: parentId || '' };
         this.isNew = false;
         this.dialogConfig = this.buildDialogConfig();
         this.dialogVisible = true;
@@ -242,10 +274,13 @@ export class TrackerCrudComponent implements OnInit {
             message: 'Are you sure you want to delete this entry: ' + txn.title + '?',
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                const updatedTxns = this.trackerService.transactions().filter((val) => val.id !== txn.id);
-                this.trackerService.transactions.set(updatedTxns);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Entry Deleted', life: 3000 });
+            accept: async () => {
+                const success = await this.trackerService.deleteTransaction(txn.id!);
+                if (success) {
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Entry Deleted', life: 3000 });
+                } else {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
+                }
             }
         });
     }
@@ -255,32 +290,50 @@ export class TrackerCrudComponent implements OnInit {
             message: 'Are you sure you want to delete the selected transactions?',
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                const updatedTxns = this.trackerService.transactions().filter((val) => !selectedItems.includes(val));
-                this.trackerService.transactions.set(updatedTxns);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transactions Deleted', life: 3000 });
+            accept: async () => {
+                const ids = selectedItems.map(item => item.id);
+                const success = await this.trackerService.bulkDeleteTransactions(ids);
+                if (success) {
+                    this.fxTable?.clearSelection();
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transactions Deleted', life: 3000 });
+                } else {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
+                }
             }
         });
     }
 
-    onDialogSave(event: DialogSaveEvent) {
-        const txn = event.data as Transaction;
-        const _txns = this.trackerService.transactions();
+    async onDialogSave(event: DialogSaveEvent) {
+        const txn = event.data as any;
 
         // Normalize date if it's a Date object
         if ((txn.date as any) instanceof Date) {
             txn.date = (txn.date as unknown as Date).toISOString().substring(0, 10);
         }
 
+        // If sub-category not selected, fall back to parent category
+        if (!txn.categoryId && txn._parentCategoryId) {
+            txn.categoryId = txn._parentCategoryId;
+        }
+
+        // Remove temp UI-only fields before sending to API
+        delete txn._parentCategoryId;
+        delete txn.category; // Remove navigation object, API only needs categoryId
+
         if (event.isNew) {
-            txn.id = 'TXN' + Math.floor(1000 + Math.random() * 9000);
-            this.trackerService.transactions.set([txn, ..._txns]);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transaction Created', life: 3000 });
+            const created = await this.trackerService.addTransaction(txn);
+            if (created) {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transaction Created', life: 3000 });
+            } else {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create', life: 3000 });
+            }
         } else {
-            const index = _txns.findIndex((t) => t.id === txn.id);
-            _txns[index] = txn;
-            this.trackerService.transactions.set([..._txns]);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transaction Updated', life: 3000 });
+            const updated = await this.trackerService.updateTransaction(txn.id!, txn);
+            if (updated) {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Transaction Updated', life: 3000 });
+            } else {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update', life: 3000 });
+            }
         }
     }
 }

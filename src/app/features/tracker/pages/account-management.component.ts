@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -25,6 +25,7 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
 
         <div class="card">
             <fx-dynamic-table
+                #fxTable
                 [data]="trackerService.accounts()"
                 [settings]="tableSettings"
                 (addClick)="openNew()"
@@ -49,6 +50,8 @@ export class AccountManagementComponent implements OnInit {
     private messageService = inject(MessageService);
     private confirmationService = inject(ConfirmationService);
 
+    @ViewChild('fxTable') fxTable!: DynamicTableComponent;
+
     tableSettings: TableSettings = { endpoint: '' };
     dialogVisible = false;
     dialogConfig: DialogConfig = { header: '', fields: [] };
@@ -58,7 +61,7 @@ export class AccountManagementComponent implements OnInit {
     ngOnInit() {
         this.setupTable();
         if (!this.trackerService.accounts().length) {
-            this.trackerService.loadTrackerMetaData();
+            this.trackerService.loadAccounts();
         }
     }
 
@@ -94,7 +97,7 @@ export class AccountManagementComponent implements OnInit {
     private buildDialogConfig(): DialogConfig {
         return {
             header: 'Account Details',
-            width: '500px',
+            width: '900px',
             fields: [
                 {
                     key: 'name',
@@ -143,9 +146,11 @@ export class AccountManagementComponent implements OnInit {
                 message: `Delete account "${event.data.name}"?`,
                 header: 'Confirm Delete',
                 icon: 'pi pi-exclamation-triangle',
-                accept: () => {
-                    this.trackerService.deleteAccount(event.data.id);
-                    this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Account removed', life: 3000 });
+                accept: async () => {
+                    const success = await this.trackerService.deleteAccount(event.data.id);
+                    this.messageService.add(success
+                        ? { severity: 'success', summary: 'Deleted', detail: 'Account removed', life: 3000 }
+                        : { severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
                 }
             });
         }
@@ -163,21 +168,29 @@ export class AccountManagementComponent implements OnInit {
             message: `Delete ${items.length} selected accounts?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                items.forEach(item => this.trackerService.deleteAccount(item.id));
-                this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Accounts removed', life: 3000 });
+            accept: async () => {
+                const ids = items.map(item => item.id);
+                const success = await this.trackerService.bulkDeleteAccounts(ids);
+                if (success) this.fxTable?.clearSelection();
+                this.messageService.add(success
+                    ? { severity: 'success', summary: 'Deleted', detail: 'Accounts removed', life: 3000 }
+                    : { severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
             }
         });
     }
 
-    onSave(event: DialogSaveEvent) {
+    async onSave(event: DialogSaveEvent) {
         const acc = event.data as Account;
         if (event.isNew) {
-            this.trackerService.addAccount(acc);
-            this.messageService.add({ severity: 'success', summary: 'Created', detail: 'Account added', life: 3000 });
+            const created = await this.trackerService.addAccount(acc);
+            this.messageService.add(created
+                ? { severity: 'success', summary: 'Created', detail: 'Account added', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to create', life: 3000 });
         } else {
-            this.trackerService.updateAccount(acc);
-            this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Account updated', life: 3000 });
+            const updated = await this.trackerService.updateAccount(acc.id!, acc);
+            this.messageService.add(updated
+                ? { severity: 'success', summary: 'Updated', detail: 'Account updated', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to update', life: 3000 });
         }
     }
 }

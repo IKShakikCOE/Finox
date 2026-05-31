@@ -1,7 +1,7 @@
 export interface TableColumn {
     field: string;
     header: string;
-    type?: 'text' | 'date' | 'currency' | 'tag';
+    type?: 'text' | 'date' | 'currency' | 'tag' | 'icon' | 'color' | 'category';
     tagSeverity?: (value: any) => 'success' | 'danger' | 'info' | 'warn' | 'secondary';
 }
 
@@ -16,10 +16,12 @@ export interface TableAction {
 export interface DialogField {
     key: string;
     label: string;
-    type: 'text' | 'textarea' | 'number' | 'currency' | 'select' | 'radio' | 'date';
+    type: 'text' | 'textarea' | 'number' | 'currency' | 'select' | 'grouped-select' | 'dependent-select' | 'radio' | 'date' | 'color';
     placeholder?: string;
     required?: boolean;
     options?: any[] | (() => any[]);
+    /** For dependent-select: function that receives formData and returns filtered options */
+    dependentOptions?: (formData: Record<string, any>) => any[];
     /** Column span out of 12 grid (default: 12 = full width) */
     colSpan?: number;
     /** Currency code for 'currency' type fields */
@@ -34,6 +36,20 @@ export interface DialogField {
     labelClass?: string;
     /** Callback when value changes */
     onChange?: (value: any, formData: Record<string, any>) => void;
+    /** For grouped-select: the field name for group label (default: 'name') */
+    optionGroupLabel?: string;
+    /** For grouped-select: the field name for group children array (default: 'children') */
+    optionGroupChildren?: string;
+    /** For select/grouped-select/dependent-select: the field name for option label */
+    optionLabel?: string;
+    /** For select/grouped-select/dependent-select: the field name for option value */
+    optionValue?: string;
+    /** For number: minimum value */
+    min?: number;
+    /** For number: maximum value */
+    max?: number;
+    /** For select: enable search/filter in dropdown */
+    filter?: boolean;
 }
 
 export interface DialogConfig {

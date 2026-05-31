@@ -54,7 +54,11 @@ import { DialogConfig, DialogSaveEvent } from '@/app/shared/models/dynamic-table
                 <div *ngFor="let item of trackerService.budgetVsActual()" class="col-span-12 md:col-span-6 lg:col-span-4">
                     <div class="border surface-border border-round p-4 h-full flex flex-col">
                         <div class="flex items-center justify-between mb-3">
-                            <h5 class="m-0">{{ item.category }}</h5>
+                            <h5 class="m-0 inline-flex items-center gap-2">
+                                <span *ngIf="item.category?.color" [style.background-color]="item.category?.color" style="width: 12px; height: 12px; border-radius: 50%; display: inline-block"></span>
+                                <i *ngIf="item.category?.icon" [class]="'pi ' + item.category?.icon" [style.color]="item.category?.color || 'inherit'"></i>
+                                {{ item.categoryName }}
+                            </h5>
                             <div class="flex gap-1">
                                 <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info" size="small" (onClick)="editBudget(item)" />
                                 <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small" (onClick)="deleteBudget(item)" />
@@ -141,22 +145,45 @@ export class BudgetingComponent implements OnInit {
 
     ngOnInit() {
         if (!this.trackerService.transactions().length) {
-            this.trackerService.loadTrackerMetaData();
+            this.trackerService.loadAll();
         }
     }
 
     private buildDialogConfig(): DialogConfig {
         return {
             header: 'Budget Details',
-            width: '500px',
+            width: '900px',
             fields: [
                 {
-                    key: 'category',
+                    key: '_parentCategoryId',
                     label: 'Category',
                     type: 'select',
                     required: true,
-                    placeholder: 'Select expense category',
-                    options: () => this.trackerService.expenseCategories()
+                    placeholder: 'Select category group',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    options: () => this.trackerService.categories()
+                        .filter(c => c.type === 'EXPENSE' && (!c.parentId || c.parentId === null)),
+                    onChange: (_value, formData) => {
+                        formData['categoryId'] = '';
+                    },
+                    colSpan: 6
+                },
+                {
+                    key: 'categoryId',
+                    label: 'Sub-category',
+                    type: 'dependent-select',
+                    required: true,
+                    placeholder: 'Select sub-category',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    dependentOptions: (formData) => {
+                        const parentId = formData['_parentCategoryId'];
+                        if (!parentId) return [];
+                        const parent = this.trackerService.categories().find(c => c.id === parentId);
+                        return parent?.children || [];
+                    },
+                    colSpan: 6
                 },
                 {
                     key: 'allocatedAmount',
@@ -194,7 +221,9 @@ export class BudgetingComponent implements OnInit {
     }
 
     editBudget(budget: any) {
-        this.formData = { ...budget };
+        // Derive parent from category's parentId for the two-field picker
+        const parentId = budget.category?.parentId || budget.categoryId;
+        this.formData = { ...budget, _parentCategoryId: parentId || '' };
         this.isNew = false;
         this.dialogConfig = this.buildDialogConfig();
         this.dialogVisible = true;
@@ -202,24 +231,46 @@ export class BudgetingComponent implements OnInit {
 
     deleteBudget(budget: any) {
         this.confirmationService.confirm({
-            message: `Delete budget for "${budget.category}"?`,
+            message: `Delete budget for "${budget.categoryName}"?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.trackerService.deleteBudget(budget.id);
-                this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Budget removed', life: 3000 });
+            accept: async () => {
+                const success = await this.trackerService.deleteBudget(budget.id);
+                this.messageService.add(success
+                    ? { severity: 'success', summary: 'Deleted', detail: 'Budget removed', life: 3000 }
+                    : { severity: 'error', summary: 'Error', detail: 'Failed to delete', life: 3000 });
             }
         });
     }
 
-    onSave(event: DialogSaveEvent) {
-        const budget = event.data as Budget;
+    async onSave(event: DialogSaveEvent) {
+        const budget = event.data as any;
+
+        // If sub-category not selected, fall back to parent category
+        if (!budget.categoryId && budget._parentCategoryId) {
+            budget.categoryId = budget._parentCategoryId;
+        }
+
+        // Remove temp UI-only fields
+        delete budget._parentCategoryId;
+        delete budget.category;
+        delete budget.categoryName;
+        delete budget.spent;
+        delete budget.remaining;
+        delete budget.percentage;
+        delete budget.isOverBudget;
+        delete budget.isNearLimit;
+
         if (event.isNew) {
-            this.trackerService.addBudget(budget);
-            this.messageService.add({ severity: 'success', summary: 'Created', detail: 'Budget added', life: 3000 });
+            const created = await this.trackerService.addBudget(budget);
+            this.messageService.add(created
+                ? { severity: 'success', summary: 'Created', detail: 'Budget added', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to create', life: 3000 });
         } else {
-            this.trackerService.updateBudget(budget);
-            this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Budget updated', life: 3000 });
+            const updated = await this.trackerService.updateBudget(budget.id!, budget);
+            this.messageService.add(updated
+                ? { severity: 'success', summary: 'Updated', detail: 'Budget updated', life: 3000 }
+                : { severity: 'error', summary: 'Error', detail: 'Failed to update', life: 3000 });
         }
     }
 }

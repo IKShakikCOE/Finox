@@ -51,7 +51,7 @@ import { ToolbarModule } from 'primeng/toolbar';
                             [label]="'Delete' + ' (' + selectedItems.length + ')'"
                             icon="pi pi-trash"
                             class="p-button-danger p-button-outlined"
-                            (click)="bulkDeleteClick.emit(selectedItems)"
+                            (click)="onBulkDelete()"
                         ></button>
 
                         <button pButton *ngIf="settings.features?.export" label="Export" icon="pi pi-upload" class="p-button-secondary p-button-outlined" (click)="dt.exportCSV()"></button>
@@ -84,12 +84,28 @@ import { ToolbarModule } from 'primeng/toolbar';
 
                     <td *ngFor="let col of settings.columns || []">
                         <ng-container [ngSwitch]="col.type">
-                            <span *ngSwitchCase="'date'">{{ rowData[col.field] | date: 'dd MMM yyyy' }}</span>
-                            <span *ngSwitchCase="'currency'" class="font-semibold">{{ rowData[col.field] | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
+                            <span *ngSwitchCase="'date'">{{ resolveField(rowData, col.field) | date: 'dd MMM yyyy' }}</span>
+                            <span *ngSwitchCase="'currency'" class="font-semibold">{{ resolveField(rowData, col.field) | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
                             <span *ngSwitchCase="'tag'">
-                                <p-tag [value]="rowData[col.field]" [severity]="col.tagSeverity ? col.tagSeverity(rowData[col.field]) : 'secondary'" />
+                                <p-tag [value]="resolveField(rowData, col.field)" [severity]="col.tagSeverity ? col.tagSeverity(resolveField(rowData, col.field)) : 'secondary'" />
                             </span>
-                            <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+                            <span *ngSwitchCase="'icon'">
+                                <i *ngIf="resolveField(rowData, col.field)" [class]="'pi ' + resolveField(rowData, col.field)" style="font-size: 1.2rem"></i>
+                            </span>
+                            <span *ngSwitchCase="'color'">
+                                <span *ngIf="resolveField(rowData, col.field)" class="inline-flex items-center gap-2">
+                                    <span [style.background-color]="resolveField(rowData, col.field)" style="width: 20px; height: 20px; border-radius: 4px; display: inline-block; border: 1px solid #ccc"></span>
+                                    <span class="text-sm text-muted-color">{{ resolveField(rowData, col.field) }}</span>
+                                </span>
+                            </span>
+                            <span *ngSwitchCase="'category'">
+                                <span class="inline-flex items-center gap-2">
+                                    <span *ngIf="(rowData.category?.color || rowData.color)" [style.background-color]="rowData.category?.color || rowData.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
+                                    <i *ngIf="(rowData.category?.icon || rowData.icon)" [class]="'pi ' + (rowData.category?.icon || rowData.icon)" [style.color]="rowData.category?.color || rowData.color || 'inherit'" style="font-size: 1rem"></i>
+                                    <span>{{ rowData.category?.name || rowData.name || resolveField(rowData, col.field) }}</span>
+                                </span>
+                            </span>
+                            <span *ngSwitchDefault>{{ resolveField(rowData, col.field) }}</span>
                         </ng-container>
                     </td>
 
@@ -126,8 +142,22 @@ export class DynamicTableComponent {
         this.actionClick.emit({ action, data: rowData });
     }
 
+    onBulkDelete() {
+        this.bulkDeleteClick.emit([...this.selectedItems]);
+    }
+
+    /** Called by parent after successful bulk delete to clear selection */
+    clearSelection() {
+        this.selectedItems = [];
+    }
+
     onSelectionChange() {
         this.selectionChange.emit(this.selectedItems);
+    }
+
+    /** Resolves dot-notation field paths like 'category.name' */
+    resolveField(row: any, field: string): any {
+        return field.split('.').reduce((obj, key) => obj?.[key], row) ?? '';
     }
 
     openNew() {}
