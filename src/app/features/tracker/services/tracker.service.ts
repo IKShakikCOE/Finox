@@ -17,6 +17,7 @@ export class TrackerService {
     accounts = signal<Account[]>([]);
     budgets = signal<Budget[]>([]);
     loading = signal(false);
+    isLoaded = signal(false);
 
     // ─── Computed summaries ──────────────────────────────────────────────────────
     totalIncome = computed(() =>
@@ -47,13 +48,23 @@ export class TrackerService {
 
     async loadTransactions(): Promise<void> {
         try {
-            this.loading.set(true);
             const data = await firstValueFrom(this.http.get<Transaction[]>('/api/transactions'));
             this.transactions.set(data);
         } catch (error) {
             console.error('Failed to load transactions', error);
-        } finally {
-            this.loading.set(false);
+        }
+    }
+
+    /** Silently fetch the latest transactions without triggering loading spinners */
+    async refreshTransactionsInBackground(): Promise<void> {
+        // If the app is already doing a full initial load, it will fetch transactions anyway.
+        if (this.loading()) return;
+        
+        try {
+            const data = await firstValueFrom(this.http.get<Transaction[]>('/api/transactions'));
+            this.transactions.set(data);
+        } catch (error) {
+            console.error('Failed to refresh transactions in background', error);
         }
     }
 
@@ -97,7 +108,10 @@ export class TrackerService {
     }
 
     /** Load all tracker data in parallel */
-    async loadAll(): Promise<void> {
+    async loadAll(force = false): Promise<void> {
+        if (this.loading()) return;
+        if (this.isLoaded() && !force) return;
+
         this.loading.set(true);
         await Promise.all([
             this.loadTrackerMetaData(),
@@ -107,6 +121,7 @@ export class TrackerService {
             this.loadAccounts(),
             this.loadBudgets()
         ]);
+        this.isLoaded.set(true);
         this.loading.set(false);
     }
 
