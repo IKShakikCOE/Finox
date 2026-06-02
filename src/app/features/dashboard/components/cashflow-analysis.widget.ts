@@ -1,5 +1,6 @@
 import { afterNextRender, Component, effect, inject, signal } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
+import { SkeletonModule } from 'primeng/skeleton';
 import { LayoutService } from '@/app/layout/service/layout.service';
 import { DashboardService } from '../services/dashboard.service';
 import { TrackerService } from '../../tracker/services/tracker.service';
@@ -7,7 +8,7 @@ import { TrackerService } from '../../tracker/services/tracker.service';
 @Component({
     standalone: true,
     selector: 'fx-cashflow-analysis-widget',
-    imports: [ChartModule],
+    imports: [ChartModule, SkeletonModule],
     template: `
     <div class="card">
         <div class="flex items-center justify-between mb-4">
@@ -27,14 +28,17 @@ import { TrackerService } from '../../tracker/services/tracker.service';
                 </div>
             </div>
         </div>
-        <p-chart type="bar" [data]="chartData()" [options]="chartOptions()"
-            style="height: 320px" />
+        @if (trackerService.loading()) {
+            <p-skeleton width="100%" height="320px"></p-skeleton>
+        } @else {
+            <p-chart type="bar" [data]="chartData()" [options]="chartOptions()" style="height: 320px" />
+        }
     </div>`
 })
 export class CashFlowAnalysisWidget {
     private layoutService = inject(LayoutService);
     private dashboardService = inject(DashboardService);
-    private trackerService = inject(TrackerService);
+    trackerService = inject(TrackerService);
 
     chartData = signal<any>(this.getDefaultChartData());
     chartOptions = signal<any>(this.getDefaultChartOptions());

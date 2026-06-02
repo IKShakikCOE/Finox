@@ -1,14 +1,15 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackerService } from '../../tracker/services/tracker.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
     standalone: true,
     selector: 'fx-stats-widget',
-    imports: [CommonModule],
+    imports: [CommonModule, SkeletonModule],
     templateUrl: './stats.widget.html'
 })
-export class StatsWidgetComponent implements OnInit {
+export class StatsWidgetComponent {
     trackerService = inject(TrackerService);
 
     totalBalance = this.trackerService.balance;
@@ -76,10 +77,4 @@ export class StatsWidgetComponent implements OnInit {
         if (this.totalBalance() === 0) return 0;
         return Math.round((currNet / this.totalBalance()) * 100);
     });
-
-    ngOnInit() {
-        if (!this.trackerService.transactions().length) {
-            this.trackerService.loadTransactions();
-        }
-    }
 }

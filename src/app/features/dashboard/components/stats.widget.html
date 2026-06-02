@@ -1,63 +1,126 @@
-<div class="col-span-12 lg:col-span-6 xl:col-span-3">
-    <div class="card mb-0">
-        <div class="flex justify-between mb-4">
-            <div>
-                <span class="block text-muted-color font-medium mb-4">Total Balance</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ totalBalance() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+@if (trackerService.loading()) {
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p-skeleton width="6rem" height="1rem" styleClass="mb-4"></p-skeleton>
+                    <p-skeleton width="8rem" height="1.75rem"></p-skeleton>
+                </div>
+                <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
             </div>
-            <div class="flex items-center justify-center bg-emerald-100 dark:bg-emerald-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
-                <i class="pi pi-wallet text-emerald-500 text-xl!"></i>
+            <div class="flex gap-2">
+                <p-skeleton width="3rem" height="1rem"></p-skeleton>
+                <p-skeleton width="5rem" height="1rem"></p-skeleton>
             </div>
         </div>
-        <span class="text-emerald-500 font-medium">+{{ balanceChangePercent() }}% </span>
-        <span class="text-muted-color">this month</span>
     </div>
-</div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p-skeleton width="6rem" height="1rem" styleClass="mb-4"></p-skeleton>
+                    <p-skeleton width="8rem" height="1.75rem"></p-skeleton>
+                </div>
+                <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+            </div>
+            <div class="flex gap-2">
+                <p-skeleton width="4rem" height="1rem"></p-skeleton>
+                <p-skeleton width="5rem" height="1rem"></p-skeleton>
+            </div>
+        </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p-skeleton width="6rem" height="1rem" styleClass="mb-4"></p-skeleton>
+                    <p-skeleton width="8rem" height="1.75rem"></p-skeleton>
+                </div>
+                <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+            </div>
+            <div class="flex gap-2">
+                <p-skeleton width="3rem" height="1rem"></p-skeleton>
+                <p-skeleton width="6rem" height="1rem"></p-skeleton>
+            </div>
+        </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p-skeleton width="6rem" height="1rem" styleClass="mb-4"></p-skeleton>
+                    <p-skeleton width="8rem" height="1.75rem"></p-skeleton>
+                </div>
+                <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+            </div>
+            <div class="flex gap-2">
+                <p-skeleton width="4rem" height="1rem"></p-skeleton>
+                <p-skeleton width="6rem" height="1rem"></p-skeleton>
+            </div>
+        </div>
+    </div>
+} @else {
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <span class="block text-muted-color font-medium mb-4">Total Balance</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ totalBalance() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                </div>
+                <div class="flex items-center justify-center bg-emerald-100 dark:bg-emerald-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-wallet text-emerald-500 text-xl!"></i>
+                </div>
+            </div>
+            <span class="text-emerald-500 font-medium">+{{ balanceChangePercent() }}% </span>
+            <span class="text-muted-color">this month</span>
+        </div>
+    </div>
 
-<div class="col-span-12 lg:col-span-6 xl:col-span-3">
-    <div class="card mb-0">
-        <div class="flex justify-between mb-4">
-            <div>
-                <span class="block text-muted-color font-medium mb-4">Monthly Income</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyIncome() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <span class="block text-muted-color font-medium mb-4">Monthly Income</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyIncome() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                </div>
+                <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-arrow-down-left text-blue-500 text-xl!"></i>
+                </div>
             </div>
-            <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
-                <i class="pi pi-arrow-down-left text-blue-500 text-xl!"></i>
-            </div>
+            <span class="text-emerald-500 font-medium">Net Savings: </span>
+            <span class="text-muted-color">{{ netSavings() | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
         </div>
-        <span class="text-emerald-500 font-medium">Net Savings: </span>
-        <span class="text-muted-color">{{ netSavings() | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
     </div>
-</div>
 
-<div class="col-span-12 lg:col-span-6 xl:col-span-3">
-    <div class="card mb-0">
-        <div class="flex justify-between mb-4">
-            <div>
-                <span class="block text-muted-color font-medium mb-4">Expenses</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyExpense() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <span class="block text-muted-color font-medium mb-4">Expenses</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyExpense() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                </div>
+                <div class="flex items-center justify-center bg-red-100 dark:bg-red-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-arrow-up-right text-red-500 text-xl!"></i>
+                </div>
             </div>
-            <div class="flex items-center justify-center bg-red-100 dark:bg-red-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
-                <i class="pi pi-arrow-up-right text-red-500 text-xl!"></i>
-            </div>
+            <span class="text-red-500 font-medium">+{{ expenseChangePercent() }}% </span>
+            <span class="text-muted-color">higher spending</span>
         </div>
-        <span class="text-red-500 font-medium">+{{ expenseChangePercent() }}% </span>
-        <span class="text-muted-color">higher spending</span>
     </div>
-</div>
 
-<div class="col-span-12 lg:col-span-6 xl:col-span-3">
-    <div class="card mb-0">
-        <div class="flex justify-between mb-4">
-            <div>
-                <span class="block text-muted-color font-medium mb-4">Savings Rate</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ savingsRate() }}%</div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <span class="block text-muted-color font-medium mb-4">Savings Rate</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ savingsRate() }}%</div>
+                </div>
+                <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-chart-line text-purple-500 text-xl!"></i>
+                </div>
             </div>
-            <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
-                <i class="pi pi-chart-line text-purple-500 text-xl!"></i>
-            </div>
+            <span class="text-purple-500 font-medium">Target: 50% </span>
+            <span class="text-muted-color">recommended</span>
         </div>
-        <span class="text-purple-500 font-medium">Target: 50% </span>
-        <span class="text-muted-color">recommended</span>
     </div>
-</div>
+}

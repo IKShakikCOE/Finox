@@ -1,20 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TrackerService } from '../../tracker/services/tracker.service';
-import {
-    Accordion,
-    AccordionPanel,
-    AccordionHeader,
-    AccordionContent
-} from 'primeng/accordion';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
     standalone: true,
     selector: 'fx-budget-health-widget',
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Accordion, AccordionPanel, AccordionHeader, AccordionContent],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, AccordionModule],
     template: `
     <div class="card">
         <div class="flex items-center justify-between mb-4">
@@ -23,7 +19,31 @@ import {
                 severity="secondary" size="small" routerLink="/app/tracker/budgeting" />
         </div>
 
-        @if (trackerService.groupedBudgets().length === 0) {
+        @if (trackerService.loading()) {
+            <div class="flex flex-col gap-4 mt-4">
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between">
+                        <p-skeleton width="40%" height="1.2rem"></p-skeleton>
+                        <p-skeleton width="15%" height="1.2rem"></p-skeleton>
+                    </div>
+                    <p-skeleton width="100%" height="0.5rem"></p-skeleton>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between">
+                        <p-skeleton width="50%" height="1.2rem"></p-skeleton>
+                        <p-skeleton width="15%" height="1.2rem"></p-skeleton>
+                    </div>
+                    <p-skeleton width="100%" height="0.5rem"></p-skeleton>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between">
+                        <p-skeleton width="30%" height="1.2rem"></p-skeleton>
+                        <p-skeleton width="15%" height="1.2rem"></p-skeleton>
+                    </div>
+                    <p-skeleton width="100%" height="0.5rem"></p-skeleton>
+                </div>
+            </div>
+        } @else if (trackerService.groupedBudgets().length === 0) {
             <div class="text-center p-4 text-muted-color">
                 <i class="pi pi-wallet text-2xl mb-2 block"></i>
                 <p class="text-sm m-0">No budgets set yet.</p>
@@ -216,12 +236,6 @@ import {
         `
     ]
 })
-export class BudgetHealthWidget implements OnInit {
+export class BudgetHealthWidget {
     trackerService = inject(TrackerService);
-
-    ngOnInit() {
-        if (!this.trackerService.transactions().length) {
-            this.trackerService.loadTrackerMetaData();
-        }
-    }
 }
