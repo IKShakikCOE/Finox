@@ -25,7 +25,7 @@ import { TrackerService } from '../../tracker/services/tracker.service';
                 <tr>
                     <td style="width: 40%;">{{ tx.title || 'No description' }}</td>
                     <td style="width: 25%;">
-                        <span class="p-1 px-2 rounded text-xs font-semibold bg-surface-100 dark:bg-surface-800 flex items-center gap-2 w-max">
+                        <span class="flex items-center gap-2">
                             <i *ngIf="tx.category?.icon" [class]="'pi ' + tx.category.icon" [style.color]="tx.category.color || 'inherit'"></i>
                             {{ tx.category?.name || 'Uncategorized' }}
                         </span>
