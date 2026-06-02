@@ -3,13 +3,13 @@
         <div class="flex justify-between mb-4">
             <div>
                 <span class="block text-muted-color font-medium mb-4">Total Balance</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ (dashboardService.summary()?.totalBalance ?? 0) | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ totalBalance() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
             </div>
             <div class="flex items-center justify-center bg-emerald-100 dark:bg-emerald-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                 <i class="pi pi-wallet text-emerald-500 text-xl!"></i>
             </div>
         </div>
-        <span class="text-emerald-500 font-medium">+{{ dashboardService.summary()?.balanceChangePercent }}% </span>
+        <span class="text-emerald-500 font-medium">+{{ balanceChangePercent() }}% </span>
         <span class="text-muted-color">this month</span>
     </div>
 </div>
@@ -19,14 +19,14 @@
         <div class="flex justify-between mb-4">
             <div>
                 <span class="block text-muted-color font-medium mb-4">Monthly Income</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ (dashboardService.summary()?.monthlyIncome ?? 0) | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyIncome() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
             </div>
             <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                 <i class="pi pi-arrow-down-left text-blue-500 text-xl!"></i>
             </div>
         </div>
         <span class="text-emerald-500 font-medium">Net Savings: </span>
-        <span class="text-muted-color">{{ dashboardService.netSavings() | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
+        <span class="text-muted-color">{{ netSavings() | currency: 'BDT' : 'symbol' : '1.0-0' }}</span>
     </div>
 </div>
 
@@ -35,13 +35,13 @@
         <div class="flex justify-between mb-4">
             <div>
                 <span class="block text-muted-color font-medium mb-4">Expenses</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ (dashboardService.summary()?.monthlyExpense ?? 0) | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
+                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ monthlyExpense() | currency: 'BDT' : 'symbol' : '1.0-0' }}</div>
             </div>
             <div class="flex items-center justify-center bg-red-100 dark:bg-red-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                 <i class="pi pi-arrow-up-right text-red-500 text-xl!"></i>
             </div>
         </div>
-        <span class="text-red-500 font-medium">+{{ dashboardService.summary()?.expenseChangePercent }}% </span>
+        <span class="text-red-500 font-medium">+{{ expenseChangePercent() }}% </span>
         <span class="text-muted-color">higher spending</span>
     </div>
 </div>
@@ -51,7 +51,7 @@
         <div class="flex justify-between mb-4">
             <div>
                 <span class="block text-muted-color font-medium mb-4">Savings Rate</span>
-                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ dashboardService.summary()?.savingsRate ?? 0 }}%</div>
+                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ savingsRate() }}%</div>
             </div>
             <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                 <i class="pi pi-chart-line text-purple-500 text-xl!"></i>
