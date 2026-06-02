@@ -305,9 +305,16 @@ export class TrackerService {
     // ─── Budget vs Actual (computed) ─────────────────────────────────────────────
     budgetVsActual = computed(() => {
         return this.budgets().map(budget => {
+            const category = budget.category || this.categoriesFlat().find(c => c.id === budget.categoryId);
+            
+            const categoryIds = [budget.categoryId];
+            const children = this.categoriesFlat().filter(c => c.parentId === budget.categoryId);
+            categoryIds.push(...children.map(c => c.id!));
+
             const spent = this.transactions()
-                .filter(t => t.type === 'EXPENSE' && t.categoryId === budget.categoryId)
+                .filter(t => t.type === 'EXPENSE' && t.categoryId && categoryIds.includes(t.categoryId))
                 .reduce((sum, t) => sum + (t.amount || 0), 0);
+                
             const percentage = budget.allocatedAmount > 0 ? Math.round((spent / budget.allocatedAmount) * 100) : 0;
             const remaining = budget.allocatedAmount - spent;
             const isOverBudget = spent > budget.allocatedAmount;
@@ -315,13 +322,92 @@ export class TrackerService {
 
             return {
                 ...budget,
-                categoryName: budget.category?.name || this.categories().find(c => c.id === budget.categoryId)?.name || 'Unknown',
+                category,
+                categoryName: category?.name || 'Unknown',
                 spent,
                 remaining,
                 percentage,
                 isOverBudget,
                 isNearLimit
             };
+        });
+    });
+
+    groupedBudgets = computed(() => {
+        const allBudgets = this.budgetVsActual();
+        const groups: Record<string, {
+            parentCategory: Category;
+            parentBudget?: any;
+            subBudgets: any[];
+            totalAllocated: number;
+            totalSpent: number;
+            percentage: number;
+            remaining: number;
+            isOverBudget: boolean;
+            isNearLimit: boolean;
+            subPeriods?: string;
+        }> = {};
+
+        // Find parent categories for grouping
+        allBudgets.forEach(budget => {
+            const cat = budget.category;
+            if (!cat) return;
+            
+            // Determine the top-level parent
+            const parentCat = cat.parentId ? this.categoriesFlat().find(c => c.id === cat.parentId) : cat;
+            if (!parentCat) return;
+
+            if (!groups[parentCat.id!]) {
+                groups[parentCat.id!] = {
+                    parentCategory: parentCat,
+                    subBudgets: [],
+                    totalAllocated: 0,
+                    totalSpent: 0,
+                    percentage: 0,
+                    remaining: 0,
+                    isOverBudget: false,
+                    isNearLimit: false
+                };
+            }
+
+            if (cat.parentId) {
+                groups[parentCat.id!].subBudgets.push(budget);
+            } else {
+                groups[parentCat.id!].parentBudget = budget;
+            }
+        });
+
+        // Calculate totals for each group
+        return Object.values(groups).map(group => {
+            const hasParentBudget = !!group.parentBudget;
+            
+            group.totalAllocated = hasParentBudget 
+                ? group.parentBudget.allocatedAmount 
+                : group.subBudgets.reduce((sum, b) => sum + b.allocatedAmount, 0);
+
+            const categoryIds = [group.parentCategory.id!];
+            const children = this.categoriesFlat().filter(c => c.parentId === group.parentCategory.id);
+            categoryIds.push(...children.map(c => c.id!));
+            
+            const groupSpent = this.transactions()
+                .filter(t => t.type === 'EXPENSE' && t.categoryId && categoryIds.includes(t.categoryId))
+                .reduce((sum, t) => sum + (t.amount || 0), 0);
+
+            group.totalSpent = groupSpent;
+
+            group.percentage = group.totalAllocated > 0 ? Math.round((group.totalSpent / group.totalAllocated) * 100) : 0;
+            group.remaining = group.totalAllocated - group.totalSpent;
+            group.isOverBudget = group.totalSpent > group.totalAllocated;
+            
+            // For near limit, if parent has budget use its threshold, otherwise default to 80
+            const threshold = hasParentBudget ? (group.parentBudget.alertThreshold || 80) : 80;
+            group.isNearLimit = !group.isOverBudget && group.percentage >= threshold;
+
+            // Comma-separated unique periods from sub-budgets
+            const uniquePeriods = [...new Set(group.subBudgets.map(b => b.period))];
+            (group as any).subPeriods = uniquePeriods.join(', ');
+
+            return group;
         });
     });
 
