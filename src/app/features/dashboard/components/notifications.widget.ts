@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { DashboardService } from '../services/dashboard.service';
+import { TrackerService } from '../../tracker/services/tracker.service';
 
 @Component({
     standalone: true,
@@ -46,14 +46,20 @@ import { DashboardService } from '../services/dashboard.service';
         }
     </div>`
 })
-export class NotificationsWidget {
-    dashboardService = inject(DashboardService);
+export class NotificationsWidget implements OnInit {
+    trackerService = inject(TrackerService);
 
     getUpdatesByGroup(group: 'TODAY' | 'LAST WEEK') {
-        return this.dashboardService.notifications().filter((u) => u.timeGroup === group);
+        return this.trackerService.notifications().filter((u: any) => u.timeGroup === group);
     }
 
     hasUpdates(group: 'TODAY' | 'LAST WEEK'): boolean {
         return this.getUpdatesByGroup(group).length > 0;
+    }
+
+    ngOnInit() {
+        if (!this.trackerService.transactions().length) {
+            this.trackerService.loadTransactions();
+        }
     }
 }

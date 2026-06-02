@@ -413,4 +413,90 @@ export class TrackerService {
 
     totalBudgetAllocated = computed(() => this.budgets().reduce((sum, b) => sum + b.allocatedAmount, 0));
     totalBudgetSpent = computed(() => this.budgetVsActual().reduce((sum, b) => sum + b.spent, 0));
+
+    // Dynamic Notifications based on budgets and transactions
+    notifications = computed(() => {
+        const alerts: any[] = [];
+        let idCounter = 1;
+
+        // 1. Budget Alerts
+        const grouped = this.groupedBudgets();
+        grouped.forEach(group => {
+            if (group.isOverBudget) {
+                alerts.push({
+                    id: idCounter++,
+                    type: 'budget',
+                    title: 'Budget Exceeded',
+                    message: `You have exceeded your ${group.parentCategory.name} budget by ৳${Math.abs(group.remaining)}.`,
+                    timeGroup: 'TODAY',
+                    bgClass: 'bg-red-100 dark:bg-red-400/10',
+                    iconClass: 'text-red-500',
+                    icon: 'pi pi-exclamation-triangle'
+                });
+            } else if (group.isNearLimit) {
+                alerts.push({
+                    id: idCounter++,
+                    type: 'budget',
+                    title: 'Near Budget Limit',
+                    message: `${group.parentCategory.name} budget is at ${group.percentage}% capacity.`,
+                    timeGroup: 'TODAY',
+                    bgClass: 'bg-yellow-100 dark:bg-yellow-400/10',
+                    iconClass: 'text-yellow-500',
+                    icon: 'pi pi-info-circle'
+                });
+            }
+        });
+
+        // 2. Transaction Alerts
+        const txs = this.transactions();
+        if (txs.length > 0) {
+            // Find any very large recent expenses (e.g., > 10,000 BDT)
+            const todayStr = new Date().toISOString().split('T')[0];
+            const recentLargeExpenses = txs.filter(t => t.type === 'EXPENSE' && t.amount >= 10000 && t.date >= todayStr);
+            
+            recentLargeExpenses.forEach(exp => {
+                alerts.push({
+                    id: idCounter++,
+                    type: 'transaction',
+                    title: 'Large Expense',
+                    message: `৳${exp.amount} spent on ${exp.title || 'Unknown'}.`,
+                    timeGroup: 'TODAY',
+                    bgClass: 'bg-orange-100 dark:bg-orange-400/10',
+                    iconClass: 'text-orange-500',
+                    icon: 'pi pi-dollar'
+                });
+            });
+
+            // Find recent incomes today
+            const recentIncomes = txs.filter(t => t.type === 'INCOME' && t.date >= todayStr);
+            recentIncomes.forEach(inc => {
+                alerts.push({
+                    id: idCounter++,
+                    type: 'transaction',
+                    title: 'Income Received',
+                    message: `৳${inc.amount} received from ${inc.title || 'Unknown'}.`,
+                    timeGroup: 'TODAY',
+                    bgClass: 'bg-green-100 dark:bg-green-400/10',
+                    iconClass: 'text-green-500',
+                    icon: 'pi pi-check-circle'
+                });
+            });
+        }
+
+        // Just add a welcome/info notification if nothing else is happening
+        if (alerts.length === 0) {
+            alerts.push({
+                id: idCounter++,
+                type: 'info',
+                title: 'All Good!',
+                message: 'Your finances are on track. No pending alerts.',
+                timeGroup: 'TODAY',
+                bgClass: 'bg-blue-100 dark:bg-blue-400/10',
+                iconClass: 'text-blue-500',
+                icon: 'pi pi-check'
+            });
+        }
+
+        return alerts;
+    });
 }
