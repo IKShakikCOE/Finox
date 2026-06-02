@@ -6,15 +6,29 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TagModule } from 'primeng/tag';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TableColumn, TableSettings, TableActionClickEvent } from '../models/dynamic-table.interface';
 import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
     selector: 'fx-dynamic-table',
     standalone: true,
-    imports: [CommonModule, TableModule, ButtonModule, ToolbarModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
+    imports: [CommonModule, TableModule, ButtonModule, ToolbarModule, InputTextModule, IconFieldModule, InputIconModule, TagModule, SkeletonModule],
     template: `
-        <p-table
+        @if (loading) {
+            <div class="flex justify-between items-center mb-4">
+                <p-skeleton width="15rem" height="1.75rem"></p-skeleton>
+                <p-skeleton width="8rem" height="2.5rem"></p-skeleton>
+            </div>
+            <div class="flex flex-col gap-2">
+                <p-skeleton width="100%" height="3rem"></p-skeleton>
+                <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+                <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+                <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+                <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+            </div>
+        } @else {
+            <p-table
             #dt
             [value]="data"
             [rows]="settings.features?.pagination?.defaultRowsPerPage || 10"
@@ -90,7 +104,7 @@ import { ToolbarModule } from 'primeng/toolbar';
                                 <p-tag [value]="resolveField(rowData, col.field)" [severity]="col.tagSeverity ? col.tagSeverity(resolveField(rowData, col.field)) : 'secondary'" />
                             </span>
                             <span *ngSwitchCase="'icon'">
-                                <i *ngIf="resolveField(rowData, col.field)" [class]="'pi ' + resolveField(rowData, col.field)" style="font-size: 1.2rem"></i>
+                                <i *ngIf="resolveField(rowData, col.field)" [class]="'pi ' + resolveField(rowData, col.field)" [style.color]="rowData.color || 'inherit'" style="font-size: 1.2rem"></i>
                             </span>
                             <span *ngSwitchCase="'color'">
                                 <span *ngIf="resolveField(rowData, col.field)" class="inline-flex items-center gap-2">
@@ -100,7 +114,6 @@ import { ToolbarModule } from 'primeng/toolbar';
                             </span>
                             <span *ngSwitchCase="'category'">
                                 <span class="inline-flex items-center gap-2">
-                                    <span *ngIf="(rowData.category?.color || rowData.color)" [style.background-color]="rowData.category?.color || rowData.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
                                     <i *ngIf="(rowData.category?.icon || rowData.icon)" [class]="'pi ' + (rowData.category?.icon || rowData.icon)" [style.color]="rowData.category?.color || rowData.color || 'inherit'" style="font-size: 1rem"></i>
                                     <span>{{ rowData.category?.name || rowData.name || resolveField(rowData, col.field) }}</span>
                                 </span>
@@ -119,12 +132,14 @@ import { ToolbarModule } from 'primeng/toolbar';
                 </tr>
             </ng-template>
         </p-table>
+        }
     `
 })
 export class DynamicTableComponent {
     @Input() data: any[] = [];
     @Input() settings: TableSettings = {endpoint: ''};
     @Input() hideTitle: boolean = false;
+    @Input() loading: boolean = false;
 
     @Output() actionClick = new EventEmitter<TableActionClickEvent>();
     @Output() selectionChange = new EventEmitter<any[]>();

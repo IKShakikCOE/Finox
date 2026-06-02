@@ -29,50 +29,35 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
     template: `
         <p-toast />
 
-        @if (trackerService.loading()) {
-            <div class="card">
-                <div class="flex justify-between items-center mb-4">
-                    <p-skeleton width="15rem" height="1.75rem"></p-skeleton>
-                    <p-skeleton width="8rem" height="2.5rem"></p-skeleton>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <p-skeleton width="100%" height="3rem"></p-skeleton>
-                    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
-                    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
-                    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
-                    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
-                </div>
-            </div>
-        } @else {
-            <div class="card" *ngIf="tableSettings && tableSettings.title">
-                <h4 class="mt-0 mb-4">{{ tableSettings.title }}</h4>
+        <div class="card" *ngIf="trackerService.loading() || (tableSettings && tableSettings.title)">
+            <h4 class="mt-0 mb-4">{{ tableSettings.title }}</h4>
 
-                <fx-dynamic-table
-                    #fxTable
-                    [data]="filteredTransactions()"
-                    [settings]="tableSettings"
-                    [hideTitle]="true"
-                    (addClick)="openNew()"
-                    (bulkDeleteClick)="deleteSelectedTransactions($event)"
-                    (actionClick)="handleTableAction($event)"
-                >
-                    <div filter class="flex items-center gap-3">
-                        <div class="flex items-center gap-2">
-                            <p-radiobutton inputId="filterAll" name="typeFilter" value="ALL" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
-                            <label for="filterAll" class="font-semibold">All</label>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <p-radiobutton inputId="filterExpense" name="typeFilter" value="EXPENSE" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
-                            <label for="filterExpense" class="text-red-500 font-semibold">Expense</label>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <p-radiobutton inputId="filterIncome" name="typeFilter" value="INCOME" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
-                            <label for="filterIncome" class="text-emerald-500 font-semibold">Income</label>
-                        </div>
+            <fx-dynamic-table
+                #fxTable
+                [data]="filteredTransactions()"
+                [settings]="tableSettings"
+                [hideTitle]="true"
+                [loading]="trackerService.loading()"
+                (addClick)="openNew()"
+                (bulkDeleteClick)="deleteSelectedTransactions($event)"
+                (actionClick)="handleTableAction($event)"
+            >
+                <div filter class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <p-radiobutton inputId="filterAll" name="typeFilter" value="ALL" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
+                        <label for="filterAll" class="font-semibold">All</label>
                     </div>
-                </fx-dynamic-table>
-            </div>
-        }
+                    <div class="flex items-center gap-2">
+                        <p-radiobutton inputId="filterExpense" name="typeFilter" value="EXPENSE" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
+                        <label for="filterExpense" class="text-red-500 font-semibold">Expense</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p-radiobutton inputId="filterIncome" name="typeFilter" value="INCOME" [(ngModel)]="typeFilter" (onClick)="onFilterChange()" />
+                        <label for="filterIncome" class="text-emerald-500 font-semibold">Income</label>
+                    </div>
+                </div>
+            </fx-dynamic-table>
+        </div>
 
         <fx-dynamic-dialog
             [config]="dialogConfig"

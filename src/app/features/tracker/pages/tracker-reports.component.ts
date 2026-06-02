@@ -58,7 +58,6 @@ import { TrackerService } from '../services/tracker.service';
                     <div class="flex flex-col gap-3">
                         <div *ngFor="let item of expenseByCategory()" class="flex items-center justify-between p-3 border-round surface-border border">
                             <span class="font-medium inline-flex items-center gap-2">
-                                <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
                                 <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'"></i>
                                 {{ item.category }}
                             </span>
@@ -76,7 +75,6 @@ import { TrackerService } from '../services/tracker.service';
                     <div class="flex flex-col gap-3">
                         <div *ngFor="let item of incomeByCategory()" class="flex items-center justify-between p-3 border-round surface-border border">
                             <span class="font-medium inline-flex items-center gap-2">
-                                <span *ngIf="item.color" [style.background-color]="item.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block"></span>
                                 <i *ngIf="item.icon" [class]="'pi ' + item.icon" [style.color]="item.color || 'inherit'"></i>
                                 {{ item.category }}
                             </span>

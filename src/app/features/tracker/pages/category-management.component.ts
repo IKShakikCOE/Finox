@@ -35,6 +35,7 @@ import { DialogConfig, DialogSaveEvent, TableActionClickEvent, TableColumn, Tabl
                 [data]="filteredCategories()"
                 [settings]="tableSettings"
                 [hideTitle]="true"
+                [loading]="trackerService.loading()"
                 (addClick)="openNew()"
                 (bulkDeleteClick)="deleteSelected($event)"
                 (actionClick)="handleAction($event)"
@@ -108,9 +109,10 @@ export class CategoryManagementComponent implements OnInit {
 
     setupTable() {
         const cols: TableColumn[] = [
-            { field: 'name', header: 'Category', type: 'category' },
+            { field: 'name', header: 'Category Name', type: 'text' },
             { field: 'type', header: 'Type', type: 'tag', tagSeverity: (val) => (val === 'INCOME' ? 'success' : val === 'TRANSFER' ? 'info' : 'danger') },
             { field: 'parent.name', header: 'Parent' },
+            { field: 'icon', header: 'Icon', type: 'icon' },
             { field: 'color', header: 'Color', type: 'color' },
             { field: 'sortOrder', header: 'Order' }
         ];

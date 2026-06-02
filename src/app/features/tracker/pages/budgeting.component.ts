@@ -150,7 +150,6 @@ import { DialogConfig, DialogSaveEvent } from '@/app/shared/models/dynamic-table
                         <div class="border surface-border border-round p-4 h-full flex flex-col">
                             <div class="flex items-center justify-between mb-3">
                                 <h5 class="m-0 inline-flex items-center gap-2">
-                                    <span *ngIf="group.parentBudget.category?.color" [style.background-color]="group.parentBudget.category?.color" style="width: 12px; height: 12px; border-radius: 50%; display: inline-block"></span>
                                     <i *ngIf="group.parentBudget.category?.icon" [class]="'pi ' + group.parentBudget.category?.icon" [style.color]="group.parentBudget.category?.color || 'inherit'"></i>
                                     {{ group.parentBudget.categoryName }}
                                 </h5>
@@ -215,7 +214,6 @@ import { DialogConfig, DialogSaveEvent } from '@/app/shared/models/dynamic-table
                         <div class="border surface-border border-round p-4 h-full flex flex-col">
                             <div class="flex items-center justify-between mb-3">
                                 <h5 class="m-0 inline-flex items-center gap-2">
-                                    <span *ngIf="group.parentCategory?.color" [style.background-color]="group.parentCategory?.color" style="width: 12px; height: 12px; border-radius: 50%; display: inline-block"></span>
                                     <i *ngIf="group.parentCategory?.icon" [class]="'pi ' + group.parentCategory?.icon" [style.color]="group.parentCategory?.color || 'inherit'"></i>
                                     {{ group.parentCategory.name }}
                                 </h5>
