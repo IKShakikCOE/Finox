@@ -50,12 +50,14 @@ public static class ServiceCollectionExtensions
     {
         var connectionString = configuration.GetConnectionString(connectionStringName);
 
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException($"Connection string '{connectionStringName}' was not found or is empty.");
+        }
+
         services.AddDbContext<TContext>(options =>
         {
-            if (!string.IsNullOrWhiteSpace(connectionString))
-            {
-                options.UseNpgsql(connectionString);
-            }
+            options.UseNpgsql(connectionString);
         });
 
         return services;
