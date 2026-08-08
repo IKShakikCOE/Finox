@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Investment.Application\Investment.Application.csproj" />
+    <ProjectReference Include="..\Investment.Infrastructure\Investment.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.API\Finox.Shared.API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

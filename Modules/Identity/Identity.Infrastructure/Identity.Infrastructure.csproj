@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Identity.Application\Identity.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Infrastructure\Finox.Shared.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracker.Application\Tracker.Application.csproj" />
+    <ProjectReference Include="..\Tracker.Infrastructure\Tracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.API\Finox.Shared.API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

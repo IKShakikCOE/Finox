@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging.Domain\Messaging.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Application\Finox.Shared.Application.csproj" />
+  </ItemGroup>
+</Project>

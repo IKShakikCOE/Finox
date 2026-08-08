@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Dashboard.Domain\Dashboard.Domain.csproj" />
+    <ProjectReference Include="..\..\Tracker\Tracker.Domain\Tracker.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Application\Finox.Shared.Application.csproj" />
+  </ItemGroup>
+</Project>

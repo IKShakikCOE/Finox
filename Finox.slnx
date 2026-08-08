@@ -1,0 +1,65 @@
+<Solution>
+  <Project Path="Finox/Finox.csproj" />
+
+  <Folder Name="/Shared/">
+    <Project Path="Shared/Finox.Shared.Domain/Finox.Shared.Domain.csproj" />
+    <Project Path="Shared/Finox.Shared.Application/Finox.Shared.Application.csproj" />
+    <Project Path="Shared/Finox.Shared.Infrastructure/Finox.Shared.Infrastructure.csproj" />
+    <Project Path="Shared/Finox.Shared.API/Finox.Shared.API.csproj" />
+  </Folder>
+
+  <Folder Name="/Modules/Tracker/">
+    <Project Path="Modules/Tracker/Tracker.Domain/Tracker.Domain.csproj" />
+    <Project Path="Modules/Tracker/Tracker.Application/Tracker.Application.csproj" />
+    <Project Path="Modules/Tracker/Tracker.Infrastructure/Tracker.Infrastructure.csproj" />
+    <Project Path="Modules/Tracker/Tracker.API/Tracker.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Catalog/">
+    <Project Path="Modules/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
+    <Project Path="Modules/Catalog/Catalog.Application/Catalog.Application.csproj" />
+    <Project Path="Modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
+    <Project Path="Modules/Catalog/Catalog.API/Catalog.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
+    <Project Path="Modules/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
+    <Project Path="Modules/Identity/Identity.API/Identity.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Investment/">
+    <Project Path="Modules/Investment/Investment.Domain/Investment.Domain.csproj" />
+    <Project Path="Modules/Investment/Investment.Application/Investment.Application.csproj" />
+    <Project Path="Modules/Investment/Investment.Infrastructure/Investment.Infrastructure.csproj" />
+    <Project Path="Modules/Investment/Investment.API/Investment.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Calendar/">
+    <Project Path="Modules/Calendar/Calendar.Domain/Calendar.Domain.csproj" />
+    <Project Path="Modules/Calendar/Calendar.Application/Calendar.Application.csproj" />
+    <Project Path="Modules/Calendar/Calendar.Infrastructure/Calendar.Infrastructure.csproj" />
+    <Project Path="Modules/Calendar/Calendar.API/Calendar.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Messaging/">
+    <Project Path="Modules/Messaging/Messaging.Domain/Messaging.Domain.csproj" />
+    <Project Path="Modules/Messaging/Messaging.Application/Messaging.Application.csproj" />
+    <Project Path="Modules/Messaging/Messaging.Infrastructure/Messaging.Infrastructure.csproj" />
+    <Project Path="Modules/Messaging/Messaging.API/Messaging.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Advisor/">
+    <Project Path="Modules/Advisor/Advisor.Domain/Advisor.Domain.csproj" />
+    <Project Path="Modules/Advisor/Advisor.Application/Advisor.Application.csproj" />
+    <Project Path="Modules/Advisor/Advisor.Infrastructure/Advisor.Infrastructure.csproj" />
+    <Project Path="Modules/Advisor/Advisor.API/Advisor.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Dashboard/">
+    <Project Path="Modules/Dashboard/Dashboard.Domain/Dashboard.Domain.csproj" />
+    <Project Path="Modules/Dashboard/Dashboard.Application/Dashboard.Application.csproj" />
+    <Project Path="Modules/Dashboard/Dashboard.Infrastructure/Dashboard.Infrastructure.csproj" />
+    <Project Path="Modules/Dashboard/Dashboard.API/Dashboard.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Crawler/">
+    <Project Path="Modules/Crawler/Crawler.Domain/Crawler.Domain.csproj" />
+    <Project Path="Modules/Crawler/Crawler.Application/Crawler.Application.csproj" />
+    <Project Path="Modules/Crawler/Crawler.Infrastructure/Crawler.Infrastructure.csproj" />
+    <Project Path="Modules/Crawler/Crawler.API/Crawler.API.csproj" />
+  </Folder>
+</Solution>
