@@ -203,6 +203,9 @@ if (app.Environment.IsDevelopment())
 
         var investmentDb = sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>();
         await Investment.Infrastructure.Persistence.InvestmentSeeder.SeedAsync(investmentDb);
+
+        var calendarDb = sp.GetRequiredService<Calendar.Infrastructure.Persistence.CalendarDbContext>();
+        await Calendar.Infrastructure.Persistence.CalendarSeeder.SeedAsync(calendarDb);
     }
     catch (Exception ex)
     {

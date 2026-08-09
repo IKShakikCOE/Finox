@@ -580,6 +580,25 @@ public sealed class DashboardController : ControllerBase
             })
             .ToListAsync(ct);
 
+        if (!events.Any())
+        {
+            events = await _calendarDb.CalendarEvents.AsNoTracking().IgnoreQueryFilters()
+                .Where(e => e.Date.CompareTo(today) >= 0)
+                .OrderBy(e => e.Date)
+                .Take(5)
+                .Select(e => new
+                {
+                    id = e.Id,
+                    title = e.Title,
+                    date = e.Date,
+                    time = e.Time,
+                    type = e.Type,
+                    description = e.Description,
+                    color = e.Color
+                })
+                .ToListAsync(ct);
+        }
+
         return events;
     }
 }
