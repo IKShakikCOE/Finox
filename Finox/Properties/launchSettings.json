@@ -3,7 +3,7 @@
   "profiles": {
     "Finox": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:10303;http://localhost:10304",
       "environmentVariables": {

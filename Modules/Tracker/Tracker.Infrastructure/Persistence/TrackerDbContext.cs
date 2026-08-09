@@ -31,7 +31,8 @@ public class TrackerDbContext : DbContext
     /// The owner id used by the per-user query filter. Read at query-translation time so a
     /// single context instance always reflects the request's current user.
     /// </summary>
-    public string CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : string.Empty;
+    public string CurrentOwnerId => _currentUser.IsAuthenticated ? (_currentUser.Id ?? string.Empty) : string.Empty;
+    public string CurrentUsername => _currentUser.IsAuthenticated ? (_currentUser.Username ?? string.Empty) : string.Empty;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,32 +52,27 @@ public class TrackerDbContext : DbContext
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))
             {
-                if (entityType.ClrType == typeof(Category))
-                {
-                    // Categories: show system (owner_id IS NULL) + current user's own
-                    modelBuilder.Entity<Category>().HasQueryFilter(
-                        c => c.OwnerId == null || c.OwnerId == "" || c.OwnerId == CurrentOwnerId);
-                }
-                else
-                {
-                    var filter = BuildOwnerFilter(entityType.ClrType);
-                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
-                }
+                var filter = BuildOwnerFilter(entityType.ClrType);
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
             }
         }
     }
 
-    /// <summary>Builds <c>e =&gt; e.OwnerId == CurrentOwnerId</c> for the given owned entity type.</summary>
+    /// <summary>Builds filter matching system rows (null/empty) or current user (Id or Username).</summary>
     private LambdaExpression BuildOwnerFilter(Type clrType)
     {
         var parameter = Expression.Parameter(clrType, "e");
         var ownerProperty = Expression.Property(parameter, nameof(IOwnedEntity.OwnerId));
 
-        var currentOwner = Expression.Property(
-            Expression.Constant(this),
-            nameof(CurrentOwnerId));
+        var currentOwner = Expression.Property(Expression.Constant(this), nameof(CurrentOwnerId));
+        var currentUsername = Expression.Property(Expression.Constant(this), nameof(CurrentUsername));
 
-        var body = Expression.Equal(ownerProperty, currentOwner);
+        var isNull = Expression.Equal(ownerProperty, Expression.Constant(null, typeof(string)));
+        var isEmpty = Expression.Equal(ownerProperty, Expression.Constant("", typeof(string)));
+        var equalsOwner = Expression.Equal(ownerProperty, currentOwner);
+        var equalsUsername = Expression.Equal(ownerProperty, currentUsername);
+
+        var body = Expression.OrElse(isNull, Expression.OrElse(isEmpty, Expression.OrElse(equalsOwner, equalsUsername)));
         return Expression.Lambda(body, parameter);
     }
 }

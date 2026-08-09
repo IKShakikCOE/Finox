@@ -38,6 +38,41 @@ public sealed class DashboardController : ControllerBase
         return Ok(summary);
     }
 
+    [HttpGet("recent-transactions")]
+    public async Task<IActionResult> GetRecentTransactions(CancellationToken ct)
+    {
+        var transactions = await ComputeRecentTransactionsAsync(ct);
+        return Ok(transactions);
+    }
+
+    [HttpGet("budget-health")]
+    public async Task<IActionResult> GetBudgetHealth(CancellationToken ct)
+    {
+        var budgetHealth = await ComputeBudgetHealthAsync(ct);
+        return Ok(budgetHealth);
+    }
+
+    [HttpGet("cashflow")]
+    public async Task<IActionResult> GetCashFlow(CancellationToken ct)
+    {
+        var cashFlow = await ComputeCashFlowAsync(ct);
+        return Ok(cashFlow);
+    }
+
+    [HttpGet("asset-allocations")]
+    public async Task<IActionResult> GetAllocations(CancellationToken ct)
+    {
+        var allocations = await ComputeAllocationsAsync(ct);
+        return Ok(allocations);
+    }
+
+    [HttpGet("notifications")]
+    public async Task<IActionResult> GetNotifications(CancellationToken ct)
+    {
+        var notifications = await ComputeNotificationsAsync(ct);
+        return Ok(notifications);
+    }
+
     [HttpGet("upcoming-events")]
     public async Task<IActionResult> GetUpcomingEvents(CancellationToken ct)
     {
@@ -45,14 +80,7 @@ public sealed class DashboardController : ControllerBase
         return Ok(events);
     }
 
-    [HttpGet("news")]
-    public async Task<IActionResult> GetNews(CancellationToken ct)
-    {
-        var news = await ComputeNewsAsync(ct);
-        return Ok(news);
-    }
-
-    [HttpGet("investment-summary")]
+    [HttpGet("investment-performance")]
     public async Task<IActionResult> GetInvestmentSummary(CancellationToken ct)
     {
         var summary = await ComputeInvestmentSummaryAsync(ct);
@@ -66,39 +94,11 @@ public sealed class DashboardController : ControllerBase
         return Ok(overview);
     }
 
-    [HttpGet("allocations")]
-    public async Task<IActionResult> GetAllocations(CancellationToken ct)
+    [HttpGet("financial-news")]
+    public async Task<IActionResult> GetNews(CancellationToken ct)
     {
-        var allocations = await ComputeAllocationsAsync(ct);
-        return Ok(allocations);
-    }
-
-    [HttpGet("recent-transactions")]
-    public async Task<IActionResult> GetRecentTransactions(CancellationToken ct)
-    {
-        var transactions = await ComputeRecentTransactionsAsync(ct);
-        return Ok(transactions);
-    }
-
-    [HttpGet("notifications")]
-    public async Task<IActionResult> GetNotifications(CancellationToken ct)
-    {
-        var notifications = await ComputeNotificationsAsync(ct);
-        return Ok(notifications);
-    }
-
-    [HttpGet("cashflow")]
-    public async Task<IActionResult> GetCashFlow(CancellationToken ct)
-    {
-        var cashFlow = await ComputeCashFlowAsync(ct);
-        return Ok(cashFlow);
-    }
-
-    [HttpGet("budget-health")]
-    public async Task<IActionResult> GetBudgetHealth(CancellationToken ct)
-    {
-        var budgetHealth = await ComputeBudgetHealthAsync(ct);
-        return Ok(budgetHealth);
+        var news = await ComputeNewsAsync(ct);
+        return Ok(news);
     }
 
     // ─── Private Helper Calculations ──────────────────────────────────────────
@@ -198,7 +198,7 @@ public sealed class DashboardController : ControllerBase
                 return new
                 {
                     assetClass = info.Name,
-                    description = $"{g.Count()} Account(s) - ৳{groupBalance:N0}",
+                    description = $"{g.Count()} Account(s) - ৳ {groupBalance:N0}",
                     percentage = Math.Max(0, pct),
                     colorClass = info.Color,
                     textColorClass = info.TextColor
@@ -289,7 +289,7 @@ public sealed class DashboardController : ControllerBase
                     id = notifId++,
                     type = "budget",
                     title = "Budget Exceeded",
-                    message = $"You have exceeded your {categoryName} budget by ৳{spent - b.AllocatedAmount:N0}.",
+                    message = $"You have exceeded your {categoryName} budget by ৳ {spent - b.AllocatedAmount:N0}.",
                     timeGroup = "TODAY",
                     icon = "pi pi-exclamation-triangle",
                     bgClass = "bg-red-100 dark:bg-red-400/10",
