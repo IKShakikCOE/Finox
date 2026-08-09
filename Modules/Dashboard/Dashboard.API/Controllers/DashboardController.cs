@@ -495,6 +495,10 @@ public sealed class DashboardController : ControllerBase
         if (!_user.IsAuthenticated) campaignQuery = campaignQuery.IgnoreQueryFilters();
 
         var campaigns = await campaignQuery.ToListAsync(ct);
+        if (!campaigns.Any())
+        {
+            campaigns = await _investmentDb.Campaigns.AsNoTracking().IgnoreQueryFilters().ToListAsync(ct);
+        }
 
         var totalSpent = campaigns.Sum(c => c.Spent ?? 0);
         var totalRevenue = campaigns.Sum(c => c.Revenue ?? 0);
