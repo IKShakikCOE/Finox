@@ -24,6 +24,8 @@ public class CalendarDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CalendarDbContext).Assembly);
 
+        modelBuilder.Entity<CalendarEvent>().ToTable("calendar_events");
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))

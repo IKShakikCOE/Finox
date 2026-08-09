@@ -25,6 +25,9 @@ public class InvestmentDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InvestmentDbContext).Assembly);
 
+        modelBuilder.Entity<Campaign>().ToTable("campaigns");
+        modelBuilder.Entity<Platform>().ToTable("platforms");
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))

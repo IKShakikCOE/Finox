@@ -32,5 +32,20 @@ public class CatalogDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
+
+        modelBuilder.Entity<Bank>().ToTable("banks");
+        modelBuilder.Entity<BankProduct>().ToTable("bank_products");
+        modelBuilder.Entity<BankProfile>().ToTable("bank_profiles");
+
+        modelBuilder.Entity<InsuranceCompany>().ToTable("insurance_companies");
+        modelBuilder.Entity<InsuranceProduct>().ToTable("insurance_products");
+        modelBuilder.Entity<InsuranceProfile>().ToTable("insurance_profiles");
+
+        modelBuilder.Entity<AMC>().ToTable("amcs");
+        modelBuilder.Entity<MutualFund>().ToTable("mutual_funds");
+        modelBuilder.Entity<AMCProfile>().ToTable("amc_profiles");
+
+        modelBuilder.Entity<Article>().ToTable("articles");
+        modelBuilder.Entity<Platform>().ToTable("platforms");
     }
 }

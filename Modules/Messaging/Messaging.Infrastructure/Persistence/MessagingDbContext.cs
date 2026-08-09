@@ -24,6 +24,8 @@ public class MessagingDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MessagingDbContext).Assembly);
 
+        modelBuilder.Entity<Message>().ToTable("messages");
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))

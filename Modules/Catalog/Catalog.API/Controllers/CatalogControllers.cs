@@ -4,6 +4,8 @@ using Finox.Shared.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace Catalog.API.Controllers;
 
 /// <summary>
@@ -11,6 +13,7 @@ namespace Catalog.API.Controllers;
 /// Supports <c>?category=</c> and <c>?bankId=</c> filters on products.
 /// </summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/banks")]
 public sealed class BankController : ControllerBase
 {
@@ -56,6 +59,7 @@ public sealed class BankController : ControllerBase
 
 /// <summary>Read-only catalog for insurance companies, products, and profiles (Requirement 15).</summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/insurance")]
 public sealed class InsuranceController : ControllerBase
 {
@@ -83,6 +87,7 @@ public sealed class InsuranceController : ControllerBase
 
 /// <summary>Read-only catalog for AMCs, mutual funds, and AMC profiles (Requirement 16).</summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/mutual-funds")]
 public sealed class MutualFundsController : ControllerBase
 {
@@ -115,6 +120,7 @@ public sealed class MutualFundsController : ControllerBase
 /// returns the full article including body content.
 /// </summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/news")]
 public sealed class NewsController : ControllerBase
 {

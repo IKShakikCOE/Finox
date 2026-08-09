@@ -24,6 +24,8 @@ public class AdvisorDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AdvisorDbContext).Assembly);
 
+        modelBuilder.Entity<AdvisorMessage>().ToTable("advisor_messages");
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))

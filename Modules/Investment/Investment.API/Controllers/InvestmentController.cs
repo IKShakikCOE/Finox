@@ -24,6 +24,14 @@ public sealed class InvestmentController : ControllerBase
         _campaigns = campaigns;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetInvestmentSummary(CancellationToken ct)
+    {
+        var platforms = await _db.Set<Platform>().AsNoTracking().ToListAsync(ct);
+        var campaigns = await _db.Set<Campaign>().AsNoTracking().IgnoreQueryFilters().ToListAsync(ct);
+        return Ok(new { platforms, campaigns });
+    }
+
     [HttpGet("platforms")]
     public async Task<ActionResult<List<Platform>>> GetPlatforms(CancellationToken ct)
         => Ok(await _db.Set<Platform>().AsNoTracking().ToListAsync(ct));
@@ -32,7 +40,7 @@ public sealed class InvestmentController : ControllerBase
     public async Task<ActionResult<List<Campaign>>> GetCampaigns(
         [FromQuery] string? status, [FromQuery] string? platformId, CancellationToken ct)
     {
-        IQueryable<Campaign> q = _db.Set<Campaign>().AsNoTracking();
+        IQueryable<Campaign> q = _db.Set<Campaign>().AsNoTracking().IgnoreQueryFilters();
         if (!string.IsNullOrWhiteSpace(status)) q = q.Where(c => c.Status == status);
         if (!string.IsNullOrWhiteSpace(platformId)) q = q.Where(c => c.PlatformId == platformId);
         return Ok(await q.ToListAsync(ct));

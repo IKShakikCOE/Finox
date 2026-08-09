@@ -53,8 +53,44 @@ if (keycloakSection.Exists() && !string.IsNullOrWhiteSpace(keycloakSection["Base
     builder.Services.AddFinoxAuthentication(authority, requireHttps, audience);
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "Enter JWT Bearer token like: Bearer {your_token}",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -66,7 +102,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    // Ensure database tables exist for all module DbContexts in PostgreSQL
+    // Ensure database tables exist for all module DbContexts in PostgreSQL.
+    // Uses GenerateCreateScript() per DbContext, split into individual statements,
+    // executing each separately so that already-existing tables are safely skipped.
     using var scope = app.Services.CreateScope();
     var sp = scope.ServiceProvider;
 
@@ -81,27 +119,98 @@ if (app.Environment.IsDevelopment())
         sp.GetRequiredService<Crawler.Infrastructure.Persistence.CrawlerDbContext>()
     ];
 
+    // Ensure the database itself exists
+    {
+        var creator0 = (IRelationalDatabaseCreator)dbContexts[0].Database.GetService<IDatabaseCreator>();
+        if (!await creator0.ExistsAsync())
+        {
+            await creator0.CreateAsync();
+        }
+    }
+
+    // Detect old PascalCase column schema and drop ALL public tables if found.
+    // This handles the one-time migration from PascalCase to snake_case columns.
+    {
+        var conn = dbContexts[0].Database.GetDbConnection();
+        if (conn.State != System.Data.ConnectionState.Open)
+            await conn.OpenAsync();
+
+        using var checkCmd = conn.CreateCommand();
+        checkCmd.CommandText = "SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND column_name = 'Id');";
+        var hasPascalCaseColumns = (bool?)(await checkCmd.ExecuteScalarAsync()) ?? false;
+
+        if (hasPascalCaseColumns)
+        {
+            Console.WriteLine("Detected old PascalCase column schema. Dropping all tables for snake_case migration...");
+            using var dropCmd = conn.CreateCommand();
+            dropCmd.CommandText = @"
+                DO $$ DECLARE r RECORD;
+                BEGIN
+                    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                        EXECUTE 'DROP TABLE IF EXISTS ""' || r.tablename || '"" CASCADE';
+                    END LOOP;
+                END $$;";
+            await dropCmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    // For each DbContext, generate the full creation script, split it into individual
+    // statements, and execute each one. If a statement fails (table already exists), skip it.
     foreach (var db in dbContexts)
     {
         try
         {
             var creator = (IRelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
-            if (!creator.Exists())
+            var script = creator.GenerateCreateScript();
+
+            // Split the script into individual statements by semicolons
+            var statements = script.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            var conn = db.Database.GetDbConnection();
+            if (conn.State != System.Data.ConnectionState.Open)
             {
-                creator.Create();
+                await conn.OpenAsync();
             }
-            if (!creator.HasTables())
+
+            foreach (var stmt in statements)
             {
-                creator.CreateTables();
+                if (string.IsNullOrWhiteSpace(stmt)) continue;
+                try
+                {
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = stmt;
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                catch
+                {
+                    // Table/constraint already exists, skip
+                }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Table already exists or skipped
+            Console.WriteLine($"Module DB Init ({db.GetType().Name}): {ex.Message}");
         }
+    }
+
+    try
+    {
+        var catalogDb = sp.GetRequiredService<Catalog.Infrastructure.Persistence.CatalogDbContext>();
+        await Catalog.Infrastructure.Persistence.CatalogSeeder.SeedAsync(catalogDb);
+
+        var trackerDb = sp.GetRequiredService<Tracker.Infrastructure.Persistence.TrackerDbContext>();
+        await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);
+
+        var investmentDb = sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>();
+        await Investment.Infrastructure.Persistence.InvestmentSeeder.SeedAsync(investmentDb);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Seeding error: {ex.Message}");
     }
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

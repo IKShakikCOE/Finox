@@ -25,6 +25,9 @@ public class IdentityDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IdentityDbContext).Assembly);
 
+        modelBuilder.Entity<UserProfile>().ToTable("user_profiles");
+        modelBuilder.Entity<UserSettings>().ToTable("user_settings");
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IOwnedEntity).IsAssignableFrom(entityType.ClrType))

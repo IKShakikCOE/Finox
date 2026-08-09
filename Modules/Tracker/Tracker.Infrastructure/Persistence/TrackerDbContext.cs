@@ -40,6 +40,12 @@ public class TrackerDbContext : DbContext
         // Apply entity configurations declared in this assembly.
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackerDbContext).Assembly);
 
+        modelBuilder.Entity<Transaction>().ToTable("transactions");
+        modelBuilder.Entity<Account>().ToTable("accounts");
+        modelBuilder.Entity<Category>().ToTable("categories");
+        modelBuilder.Entity<Budget>().ToTable("budgets");
+        modelBuilder.Entity<TrackerMeta>().ToTable("tracker_metas");
+
         // Apply per-user global query filters.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

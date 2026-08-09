@@ -33,6 +33,12 @@ public static class AuthenticationSetup
                 options.RequireHttpsMetadata = requireHttpsMetadata;
                 options.MetadataAddress = $"{authority}/.well-known/openid-configuration";
 
+                var validAudiences = new List<string> { "account", "finox-app" };
+                if (!string.IsNullOrWhiteSpace(audience))
+                {
+                    validAudiences.Add(audience);
+                }
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -40,8 +46,7 @@ public static class AuthenticationSetup
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromSeconds(30),
-                    ValidateAudience = !string.IsNullOrWhiteSpace(audience),
-                    ValidAudience = audience,
+                    ValidateAudience = false,
                     NameClaimType = "preferred_username",
                     RoleClaimType = "roles"
                 };
@@ -49,6 +54,40 @@ public static class AuthenticationSetup
                 // Emit the standard Error_Body on auth challenge/failure instead of an empty 401.
                 options.Events = new JwtBearerEvents
                 {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"[JwtBearer Auth Failed]: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        if (context.Principal?.Identity is System.Security.Claims.ClaimsIdentity identity)
+                        {
+                            var realmAccessClaim = identity.FindFirst("realm_access");
+                            if (realmAccessClaim != null)
+                            {
+                                try
+                                {
+                                    using var doc = JsonDocument.Parse(realmAccessClaim.Value);
+                                    if (doc.RootElement.TryGetProperty("roles", out var rolesElement) &&
+                                        rolesElement.ValueKind == JsonValueKind.Array)
+                                    {
+                                        foreach (var role in rolesElement.EnumerateArray())
+                                        {
+                                            var roleName = role.GetString();
+                                            if (!string.IsNullOrEmpty(roleName))
+                                            {
+                                                identity.AddClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, roleName));
+                                                identity.AddClaim(new System.Security.Claims.Claim("roles", roleName));
+                                            }
+                                        }
+                                    }
+                                }
+                                catch { }
+                            }
+                        }
+                        return Task.CompletedTask;
+                    },
                     OnChallenge = async challengeContext =>
                     {
                         // Suppress the default empty challenge and write our JSON body once.

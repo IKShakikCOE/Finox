@@ -20,5 +20,11 @@ public class CrawlerDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CrawlerDbContext).Assembly);
+
+        modelBuilder.Entity<CrawlSource>().ToTable("crawl_sources");
+        modelBuilder.Entity<CrawlSchedule>().ToTable("crawl_schedules");
+        modelBuilder.Entity<CrawlJob>().ToTable("crawl_jobs");
+        modelBuilder.Entity<RawCrawlRecord>().ToTable("raw_crawl_records");
+        modelBuilder.Entity<ExtractedRecord>().ToTable("extracted_records");
     }
 }
