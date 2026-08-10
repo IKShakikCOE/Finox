@@ -2,6 +2,9 @@ using Finox.Shared.Domain;
 using Tracker.Domain;
 using Tracker.Infrastructure.Persistence;
 using Catalog.Infrastructure.Persistence;
+using Bank.Infrastructure.Persistence;
+using MutualFunds.Infrastructure.Persistence;
+using News.Infrastructure.Persistence;
 using Investment.Infrastructure.Persistence;
 using Investment.Domain;
 using Calendar.Infrastructure.Persistence;
@@ -18,14 +21,28 @@ public sealed class DashboardController : ControllerBase
 {
     private readonly TrackerDbContext _db;
     private readonly CatalogDbContext _catalogDb;
+    private readonly BankDbContext _bankDb;
+    private readonly MutualFundsDbContext _mutualFundsDb;
+    private readonly NewsDbContext _newsDb;
     private readonly InvestmentDbContext _investmentDb;
     private readonly CalendarDbContext _calendarDb;
     private readonly ICurrentUser _user;
 
-    public DashboardController(TrackerDbContext db, CatalogDbContext catalogDb, InvestmentDbContext investmentDb, CalendarDbContext calendarDb, ICurrentUser user)
+    public DashboardController(
+        TrackerDbContext db,
+        CatalogDbContext catalogDb,
+        BankDbContext bankDb,
+        MutualFundsDbContext mutualFundsDb,
+        NewsDbContext newsDb,
+        InvestmentDbContext investmentDb,
+        CalendarDbContext calendarDb,
+        ICurrentUser user)
     {
         _db = db;
         _catalogDb = catalogDb;
+        _bankDb = bankDb;
+        _mutualFundsDb = mutualFundsDb;
+        _newsDb = newsDb;
         _investmentDb = investmentDb;
         _calendarDb = calendarDb;
         _user = user;
@@ -471,7 +488,8 @@ public sealed class DashboardController : ControllerBase
 
     private async Task<object> ComputeNewsAsync(CancellationToken ct)
     {
-        var articles = await _catalogDb.Articles.AsNoTracking().ToListAsync(ct);
+        var articles = await _newsDb.Articles.AsNoTracking().ToListAsync(ct);
+
         return articles
             .OrderByDescending(a => a.Date)
             .Take(4)
@@ -528,8 +546,8 @@ public sealed class DashboardController : ControllerBase
 
     private async Task<object> ComputePortfolioOverviewAsync(CancellationToken ct)
     {
-        var funds = await _catalogDb.MutualFunds.AsNoTracking().ToListAsync(ct);
-        var bankProducts = await _catalogDb.BankProducts.AsNoTracking().ToListAsync(ct);
+        var funds = await _mutualFundsDb.MutualFunds.AsNoTracking().ToListAsync(ct);
+        var bankProducts = await _bankDb.BankProducts.AsNoTracking().ToListAsync(ct);
 
         var growthCount = funds.Count(f => f.Category == "GROWTH");
         var balancedCount = funds.Count(f => f.Category == "BALANCED");

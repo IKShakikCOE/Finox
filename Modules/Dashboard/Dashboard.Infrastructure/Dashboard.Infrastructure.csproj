@@ -2,7 +2,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Dashboard.Application\Dashboard.Application.csproj" />
     <ProjectReference Include="..\..\Tracker\Tracker.Infrastructure\Tracker.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Bank\Bank.Infrastructure\Bank.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\MutualFunds\MutualFunds.Infrastructure\MutualFunds.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\News\News.Infrastructure\News.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Investment\Investment.Infrastructure\Investment.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Calendar\Calendar.Infrastructure\Calendar.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Shared\Finox.Shared.Infrastructure\Finox.Shared.Infrastructure.csproj" />

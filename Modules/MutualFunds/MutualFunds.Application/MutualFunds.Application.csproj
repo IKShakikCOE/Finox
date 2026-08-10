@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Application\Finox.Shared.Application.csproj" />
+    <ProjectReference Include="..\MutualFunds.Domain\MutualFunds.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,7 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Shared\Finox.Shared.API\Finox.Shared.API.csproj" />
     <ProjectReference Include="..\Modules\Tracker\Tracker.API\Tracker.API.csproj" />
-    <ProjectReference Include="..\Modules\Catalog\Catalog.API\Catalog.API.csproj" />
+    <ProjectReference Include="..\Modules\Bank\Bank.API\Bank.API.csproj" />
+    <ProjectReference Include="..\Modules\Insurance\Insurance.API\Insurance.API.csproj" />
+    <ProjectReference Include="..\Modules\MutualFunds\MutualFunds.API\MutualFunds.API.csproj" />
+    <ProjectReference Include="..\Modules\News\News.API\News.API.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.API\Identity.API.csproj" />
     <ProjectReference Include="..\Modules\Investment\Investment.API\Investment.API.csproj" />
     <ProjectReference Include="..\Modules\Calendar\Calendar.API\Calendar.API.csproj" />

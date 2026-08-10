@@ -2,7 +2,10 @@ using Finox.Shared.API;
 using Finox.Shared.Infrastructure.Auth;
 using Finox.Shared.Infrastructure.Errors;
 using Tracker.API;
-using Catalog.API;
+using Bank.API;
+using Insurance.API;
+using MutualFunds.API;
+using News.API;
 using Identity.API;
 using Investment.API;
 using Calendar.API;
@@ -22,7 +25,10 @@ builder.Services.AddSharedApi(builder.Configuration);
 // Register Controllers Application Parts for all feature modules (Modular Monolith controller discovery)
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Tracker.API.Controllers.TransactionsController).Assembly)
-    .AddApplicationPart(typeof(Catalog.API.Controllers.BankController).Assembly)
+    .AddApplicationPart(typeof(Bank.API.Controllers.BankController).Assembly)
+    .AddApplicationPart(typeof(Insurance.API.Controllers.InsuranceController).Assembly)
+    .AddApplicationPart(typeof(MutualFunds.API.Controllers.MutualFundsController).Assembly)
+    .AddApplicationPart(typeof(News.API.Controllers.NewsController).Assembly)
     .AddApplicationPart(typeof(Identity.API.Controllers.UserController).Assembly)
     .AddApplicationPart(typeof(Investment.API.Controllers.InvestmentController).Assembly)
     .AddApplicationPart(typeof(Calendar.API.Controllers.CalendarController).Assembly)
@@ -33,7 +39,10 @@ builder.Services.AddControllers()
 
 // Register Feature Modules (SmartFM Modular Monolith pattern)
 builder.Services.AddTrackerModule(builder.Configuration);
-builder.Services.AddCatalogModule(builder.Configuration);
+builder.Services.AddBankModule(builder.Configuration);
+builder.Services.AddInsuranceModule(builder.Configuration);
+builder.Services.AddMutualFundsModule(builder.Configuration);
+builder.Services.AddNewsModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 builder.Services.AddInvestmentModule(builder.Configuration);
 builder.Services.AddCalendarModule(builder.Configuration);
@@ -110,7 +119,10 @@ if (app.Environment.IsDevelopment())
 
     DbContext[] dbContexts = [
         sp.GetRequiredService<Tracker.Infrastructure.Persistence.TrackerDbContext>(),
-        sp.GetRequiredService<Catalog.Infrastructure.Persistence.CatalogDbContext>(),
+        sp.GetRequiredService<Bank.Infrastructure.Persistence.BankDbContext>(),
+        sp.GetRequiredService<Insurance.Infrastructure.Persistence.InsuranceDbContext>(),
+        sp.GetRequiredService<MutualFunds.Infrastructure.Persistence.MutualFundsDbContext>(),
+        sp.GetRequiredService<News.Infrastructure.Persistence.NewsDbContext>(),
         sp.GetRequiredService<Identity.Infrastructure.Persistence.IdentityDbContext>(),
         sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>(),
         sp.GetRequiredService<Calendar.Infrastructure.Persistence.CalendarDbContext>(),
@@ -195,8 +207,17 @@ if (app.Environment.IsDevelopment())
 
     try
     {
-        var catalogDb = sp.GetRequiredService<Catalog.Infrastructure.Persistence.CatalogDbContext>();
-        await Catalog.Infrastructure.Persistence.CatalogSeeder.SeedAsync(catalogDb);
+        var bankDb = sp.GetRequiredService<Bank.Infrastructure.Persistence.BankDbContext>();
+        await Bank.Infrastructure.Persistence.BankSeeder.SeedAsync(bankDb);
+
+        var insuranceDb = sp.GetRequiredService<Insurance.Infrastructure.Persistence.InsuranceDbContext>();
+        await Insurance.Infrastructure.Persistence.InsuranceSeeder.SeedAsync(insuranceDb);
+
+        var mutualFundsDb = sp.GetRequiredService<MutualFunds.Infrastructure.Persistence.MutualFundsDbContext>();
+        await MutualFunds.Infrastructure.Persistence.MutualFundsSeeder.SeedAsync(mutualFundsDb);
+
+        var newsDb = sp.GetRequiredService<News.Infrastructure.Persistence.NewsDbContext>();
+        await News.Infrastructure.Persistence.NewsSeeder.SeedAsync(newsDb);
 
         var trackerDb = sp.GetRequiredService<Tracker.Infrastructure.Persistence.TrackerDbContext>();
         await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);

@@ -14,11 +14,29 @@
     <Project Path="Modules/Tracker/Tracker.Infrastructure/Tracker.Infrastructure.csproj" />
     <Project Path="Modules/Tracker/Tracker.API/Tracker.API.csproj" />
   </Folder>
-  <Folder Name="/Modules/Catalog/">
-    <Project Path="Modules/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
-    <Project Path="Modules/Catalog/Catalog.Application/Catalog.Application.csproj" />
-    <Project Path="Modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
-    <Project Path="Modules/Catalog/Catalog.API/Catalog.API.csproj" />
+  <Folder Name="/Modules/Bank/">
+    <Project Path="Modules/Bank/Bank.Domain/Bank.Domain.csproj" />
+    <Project Path="Modules/Bank/Bank.Application/Bank.Application.csproj" />
+    <Project Path="Modules/Bank/Bank.Infrastructure/Bank.Infrastructure.csproj" />
+    <Project Path="Modules/Bank/Bank.API/Bank.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Insurance/">
+    <Project Path="Modules/Insurance/Insurance.Domain/Insurance.Domain.csproj" />
+    <Project Path="Modules/Insurance/Insurance.Application/Insurance.Application.csproj" />
+    <Project Path="Modules/Insurance/Insurance.Infrastructure/Insurance.Infrastructure.csproj" />
+    <Project Path="Modules/Insurance/Insurance.API/Insurance.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/MutualFunds/">
+    <Project Path="Modules/MutualFunds/MutualFunds.Domain/MutualFunds.Domain.csproj" />
+    <Project Path="Modules/MutualFunds/MutualFunds.Application/MutualFunds.Application.csproj" />
+    <Project Path="Modules/MutualFunds/MutualFunds.Infrastructure/MutualFunds.Infrastructure.csproj" />
+    <Project Path="Modules/MutualFunds/MutualFunds.API/MutualFunds.API.csproj" />
+  </Folder>
+  <Folder Name="/Modules/News/">
+    <Project Path="Modules/News/News.Domain/News.Domain.csproj" />
+    <Project Path="Modules/News/News.Application/News.Application.csproj" />
+    <Project Path="Modules/News/News.Infrastructure/News.Infrastructure.csproj" />
+    <Project Path="Modules/News/News.API/News.API.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
     <Project Path="Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
@@ -44,6 +62,7 @@
     <Project Path="Modules/Messaging/Messaging.Infrastructure/Messaging.Infrastructure.csproj" />
     <Project Path="Modules/Messaging/Messaging.API/Messaging.API.csproj" />
   </Folder>
+  <Folder Name="/Modules/" />
   <Folder Name="/Modules/Advisor/">
     <Project Path="Modules/Advisor/Advisor.Domain/Advisor.Domain.csproj" />
     <Project Path="Modules/Advisor/Advisor.Application/Advisor.Application.csproj" />

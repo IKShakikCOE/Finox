@@ -14,7 +14,7 @@ namespace Catalog.API.Controllers;
 /// </summary>
 [ApiController]
 [AllowAnonymous]
-[Route("api/banks")]
+[Route("api/catalog-legacy/banks")]
 public sealed class BankController : ControllerBase
 {
     private readonly CatalogDbContext _db;
@@ -60,7 +60,7 @@ public sealed class BankController : ControllerBase
 /// <summary>Read-only catalog for insurance companies, products, and profiles (Requirement 15).</summary>
 [ApiController]
 [AllowAnonymous]
-[Route("api/insurance")]
+[Route("api/catalog-legacy/insurance")]
 public sealed class InsuranceController : ControllerBase
 {
     private readonly CatalogDbContext _db;
@@ -88,7 +88,7 @@ public sealed class InsuranceController : ControllerBase
 /// <summary>Read-only catalog for AMCs, mutual funds, and AMC profiles (Requirement 16).</summary>
 [ApiController]
 [AllowAnonymous]
-[Route("api/mutual-funds")]
+[Route("api/catalog-legacy/mutual-funds")]
 public sealed class MutualFundsController : ControllerBase
 {
     private readonly CatalogDbContext _db;
@@ -121,7 +121,7 @@ public sealed class MutualFundsController : ControllerBase
 /// </summary>
 [ApiController]
 [AllowAnonymous]
-[Route("api/news")]
+[Route("api/catalog-legacy/news")]
 public sealed class NewsController : ControllerBase
 {
     private readonly CatalogDbContext _db;
