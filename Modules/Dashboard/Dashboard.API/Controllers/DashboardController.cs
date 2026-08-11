@@ -1,7 +1,6 @@
 using Finox.Shared.Domain;
 using Tracker.Domain;
 using Tracker.Infrastructure.Persistence;
-using Catalog.Infrastructure.Persistence;
 using Bank.Infrastructure.Persistence;
 using MutualFunds.Infrastructure.Persistence;
 using News.Infrastructure.Persistence;
@@ -20,7 +19,6 @@ namespace Dashboard.API.Controllers;
 public sealed class DashboardController : ControllerBase
 {
     private readonly TrackerDbContext _db;
-    private readonly CatalogDbContext _catalogDb;
     private readonly BankDbContext _bankDb;
     private readonly MutualFundsDbContext _mutualFundsDb;
     private readonly NewsDbContext _newsDb;
@@ -30,7 +28,6 @@ public sealed class DashboardController : ControllerBase
 
     public DashboardController(
         TrackerDbContext db,
-        CatalogDbContext catalogDb,
         BankDbContext bankDb,
         MutualFundsDbContext mutualFundsDb,
         NewsDbContext newsDb,
@@ -39,7 +36,6 @@ public sealed class DashboardController : ControllerBase
         ICurrentUser user)
     {
         _db = db;
-        _catalogDb = catalogDb;
         _bankDb = bankDb;
         _mutualFundsDb = mutualFundsDb;
         _newsDb = newsDb;
