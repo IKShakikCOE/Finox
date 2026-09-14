@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services.AddModuleDbContext<AdvisorDbContext>(configuration);
-        services.AddScoped<IAdvisorService, RuleBasedAdvisorService>();
+        services.AddHttpClient<IAdvisorService, GeminiAdvisorService>();
         return services;
     }
 }
