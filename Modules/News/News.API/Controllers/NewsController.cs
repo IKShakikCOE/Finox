@@ -37,7 +37,7 @@ public sealed class NewsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Article>> GetArticle(string id, CancellationToken ct)
+    public async Task<ActionResult<Article>> GetArticle(Guid id, CancellationToken ct)
     {
         var article = await _db.Articles.AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == id, ct);
@@ -46,3 +46,6 @@ public sealed class NewsController : ControllerBase
         return Ok(article);
     }
 }
+
+
+

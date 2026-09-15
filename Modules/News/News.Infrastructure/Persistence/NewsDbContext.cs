@@ -33,3 +33,4 @@ public class NewsDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NewsDbContext).Assembly);
     }
 }
+

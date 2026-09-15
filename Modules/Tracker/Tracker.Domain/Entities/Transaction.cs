@@ -8,8 +8,8 @@ namespace Tracker.Domain;
 /// </summary>
 public sealed class Transaction : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public string Title { get; set; } = string.Empty;
     public decimal Amount { get; set; }
@@ -17,11 +17,11 @@ public sealed class Transaction : IOwnedEntity
     public DateOnly Date { get; set; }
 
     /// <summary>FK to categories table.</summary>
-    public string? CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
 
     /// <summary>FK to accounts table.</summary>
-    public string? AccountId { get; set; }
+    public Guid? AccountId { get; set; }
     public Account? Account { get; set; }
 
     public PaymentMethod? PaymentMethod { get; set; }

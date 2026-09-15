@@ -18,7 +18,7 @@ public class IdentityDbContext : DbContext
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<UserSettings> UserSettings => Set<UserSettings>();
 
-    public string CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : string.Empty;
+    public Guid? CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : null;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,3 +49,7 @@ public class IdentityDbContext : DbContext
         });
     }
 }
+
+
+
+

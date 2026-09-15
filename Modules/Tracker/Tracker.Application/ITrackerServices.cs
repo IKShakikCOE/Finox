@@ -18,4 +18,6 @@ public interface ICategoryService : ICrudService<Category>
 {
     /// <summary>Returns all categories flat (parents + children) for dropdown pickers.</summary>
     Task<IReadOnlyList<Category>> ListFlatAsync(CancellationToken ct);
+    Task<IReadOnlyList<Category>> GetSubcategoriesAsync(Guid parentId, CancellationToken ct);
 }
+

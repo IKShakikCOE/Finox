@@ -56,12 +56,7 @@
     <Project Path="Modules/Calendar/Calendar.Infrastructure/Calendar.Infrastructure.csproj" />
     <Project Path="Modules/Calendar/Calendar.API/Calendar.API.csproj" />
   </Folder>
-  <Folder Name="/Modules/Messaging/">
-    <Project Path="Modules/Messaging/Messaging.Domain/Messaging.Domain.csproj" />
-    <Project Path="Modules/Messaging/Messaging.Application/Messaging.Application.csproj" />
-    <Project Path="Modules/Messaging/Messaging.Infrastructure/Messaging.Infrastructure.csproj" />
-    <Project Path="Modules/Messaging/Messaging.API/Messaging.API.csproj" />
-  </Folder>
+
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/Advisor/">
     <Project Path="Modules/Advisor/Advisor.Domain/Advisor.Domain.csproj" />

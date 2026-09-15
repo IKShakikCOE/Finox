@@ -4,14 +4,14 @@ namespace Insurance.Domain;
 
 public sealed class InsuranceCompany : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }
 
 public sealed class InsuranceProduct : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string CompanyId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // LIFE|HEALTH|VEHICLE|PROPERTY|CHILD|PENSION
     public string Name { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ public sealed class InsuranceProduct : IEntity
 
 public sealed class InsuranceProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Type { get; set; }
     public int? Established { get; set; }

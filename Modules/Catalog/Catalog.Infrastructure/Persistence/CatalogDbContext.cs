@@ -49,3 +49,4 @@ public class CatalogDbContext : DbContext
         modelBuilder.Entity<Platform>().ToTable("platforms");
     }
 }
+

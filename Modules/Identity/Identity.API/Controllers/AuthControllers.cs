@@ -98,7 +98,7 @@ public sealed class AuthController : ControllerBase
             throw new Finox.Shared.Domain.ValidationException("The current password is incorrect.");
         }
 
-        await _keycloak.SetPasswordAsync(_currentUser.Id, request.NewPassword, ct);
+        await _keycloak.SetPasswordAsync(_currentUser.Id.ToString(), request.NewPassword, ct);
         return Ok();
     }
 
@@ -208,3 +208,4 @@ public sealed class UserController : ControllerBase
         return Ok(existing);
     }
 }
+

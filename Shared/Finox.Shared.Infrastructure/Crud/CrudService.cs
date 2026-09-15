@@ -42,7 +42,7 @@ public class CrudService<TEntity, TContext> : ICrudService<TEntity>
         return input;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(string id, TEntity input, CancellationToken ct)
+    public virtual async Task<TEntity> UpdateAsync(Guid id, TEntity input, CancellationToken ct)
     {
         // The global filter makes foreign-owned rows invisible, so this is null for them.
         var existing = await Set.FirstOrDefaultAsync(e => e.Id == id, ct)
@@ -56,7 +56,7 @@ public class CrudService<TEntity, TContext> : ICrudService<TEntity>
         return existing;
     }
 
-    public virtual async Task DeleteAsync(string id, CancellationToken ct)
+    public virtual async Task DeleteAsync(Guid id, CancellationToken ct)
     {
         var existing = await Set.FirstOrDefaultAsync(e => e.Id == id, ct)
             ?? throw new NotFoundException($"No {typeof(TEntity).Name} with id '{id}' was found.");
@@ -65,7 +65,7 @@ public class CrudService<TEntity, TContext> : ICrudService<TEntity>
         await Db.SaveChangesAsync(ct);
     }
 
-    public virtual async Task BulkDeleteAsync(IReadOnlyCollection<string> ids, CancellationToken ct)
+    public virtual async Task BulkDeleteAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
     {
         if (ids.Count == 0)
         {
@@ -100,3 +100,4 @@ public class CrudService<TEntity, TContext> : ICrudService<TEntity>
             .Where(p => p.Name != nameof(IEntity.Id) && p.Name != nameof(IOwnedEntity.OwnerId))
             .ToArray();
 }
+

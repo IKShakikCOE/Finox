@@ -27,7 +27,7 @@ public sealed class GeminiAdvisorService : IAdvisorService
         _model = configuration["Gemini:Model"] ?? "gemini-3.6-flash";
     }
 
-    public async Task<AdvisorMessage> ReplyAsync(string userMessage, string userId, CancellationToken ct)
+    public async Task<AdvisorMessage> ReplyAsync(string userMessage, Guid userId, CancellationToken ct)
     {
         var now = DateTimeOffset.UtcNow.ToString("o");
 
@@ -112,3 +112,6 @@ public sealed class GeminiAdvisorService : IAdvisorService
         }
     }
 }
+
+
+

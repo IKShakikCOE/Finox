@@ -17,7 +17,7 @@ public class AdvisorDbContext : DbContext
 
     public DbSet<AdvisorMessage> AdvisorMessages => Set<AdvisorMessage>();
 
-    public string CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : string.Empty;
+    public Guid? CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : null;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,3 +39,7 @@ public class AdvisorDbContext : DbContext
         }
     }
 }
+
+
+
+

@@ -20,12 +20,12 @@ public sealed class MutualFundsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<MutualFund>>> GetFunds(
-        [FromQuery] string? category, [FromQuery] string? risk, [FromQuery] string? amcId, CancellationToken ct)
+        [FromQuery] string? category, [FromQuery] string? risk, [FromQuery] Guid? amcId, CancellationToken ct)
     {
         IQueryable<MutualFund> q = _db.MutualFunds.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(category)) q = q.Where(f => f.Category == category);
         if (!string.IsNullOrWhiteSpace(risk)) q = q.Where(f => f.RiskLevel == risk);
-        if (!string.IsNullOrWhiteSpace(amcId)) q = q.Where(f => f.AmcId == amcId);
+        if (amcId.HasValue) q = q.Where(f => f.AmcId == amcId);
         return Ok(await q.ToListAsync(ct));
     }
 
@@ -33,3 +33,7 @@ public sealed class MutualFundsController : ControllerBase
     public async Task<ActionResult<List<AMCProfile>>> GetProfiles(CancellationToken ct)
         => Ok(await _db.AmcProfiles.AsNoTracking().ToListAsync(ct));
 }
+
+
+
+

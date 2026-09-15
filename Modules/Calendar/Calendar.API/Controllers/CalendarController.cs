@@ -62,7 +62,7 @@ public sealed class CalendarController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<CalendarEvent>> Update(string id, [FromBody] CalendarEvent input, CancellationToken ct)
+    public async Task<ActionResult<CalendarEvent>> Update(Guid id, [FromBody] CalendarEvent input, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(input.Title) || string.IsNullOrWhiteSpace(input.Date) || string.IsNullOrWhiteSpace(input.Type))
             throw new ValidationException("title, date, and type are required.");
@@ -70,9 +70,12 @@ public sealed class CalendarController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await _crud.DeleteAsync(id, ct);
         return NoContent();
     }
 }
+
+
+

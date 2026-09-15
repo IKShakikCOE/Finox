@@ -8,11 +8,11 @@ namespace Tracker.Domain;
 /// </summary>
 public sealed class Budget : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     /// <summary>FK to categories table.</summary>
-    public string CategoryId { get; set; } = string.Empty;
+    public Guid CategoryId { get; set; }
     public Category? Category { get; set; }
 
     public decimal AllocatedAmount { get; set; }

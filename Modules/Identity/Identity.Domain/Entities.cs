@@ -4,8 +4,8 @@ namespace Identity.Domain;
 
 public sealed class UserProfile : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public string? FullName { get; set; }
     public string? Email { get; set; }
@@ -27,8 +27,8 @@ public sealed class UserProfile : IOwnedEntity
 /// </summary>
 public sealed class UserSettings : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public NotificationSettings Notifications { get; set; } = new();
     public PrivacySettings Privacy { get; set; } = new();
@@ -69,7 +69,7 @@ public sealed class RegisterRequest
 /// <summary>The current authenticated user projected from token claims (response for <c>/api/auth/me</c>).</summary>
 public sealed class AuthUser
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string? FirstName { get; set; }
@@ -95,7 +95,7 @@ public sealed class KeycloakOptions
     public string ClientId { get; set; } = "finox-app";
     public string? Audience { get; set; }
     public bool RequireHttpsMetadata { get; set; } = true;
-    public string AdminClientId { get; set; } = string.Empty;
+    public string AdminClientId { get; set; }
     public string AdminClientSecret { get; set; } = string.Empty;
 
     public string Authority => $"{BaseUrl.TrimEnd('/')}/realms/{Realm}";

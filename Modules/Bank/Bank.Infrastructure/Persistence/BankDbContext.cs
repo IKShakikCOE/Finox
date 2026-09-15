@@ -40,3 +40,4 @@ public class BankDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BankDbContext).Assembly);
     }
 }
+

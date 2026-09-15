@@ -86,7 +86,7 @@ public sealed class CrawlerController : ControllerBase
 
     /// <summary>Approve a source for crawling (Req 24.4).</summary>
     [HttpPost("sources/{id}/approve")]
-    public async Task<IActionResult> ApproveSource(string id, CancellationToken ct)
+    public async Task<IActionResult> ApproveSource(Guid id, CancellationToken ct)
     {
         var source = await _db.Set<CrawlSource>().IgnoreQueryFilters()
             .FirstOrDefaultAsync(s => s.Id == id, ct)
@@ -100,7 +100,7 @@ public sealed class CrawlerController : ControllerBase
 
     /// <summary>Set a recurring schedule (Req 25.1–25.2).</summary>
     [HttpPut("sources/{id}/schedule")]
-    public async Task<IActionResult> SetSchedule(string id, [FromBody] SetScheduleRequest request, CancellationToken ct)
+    public async Task<IActionResult> SetSchedule(Guid id, [FromBody] SetScheduleRequest request, CancellationToken ct)
     {
         var source = await _db.Set<CrawlSource>().IgnoreQueryFilters()
             .FirstOrDefaultAsync(s => s.Id == id, ct)
@@ -122,13 +122,13 @@ public sealed class CrawlerController : ControllerBase
         schedule.Enabled = true;
         await _db.SaveChangesAsync(ct);
 
-        _scheduler.RegisterRecurring(id, TimeSpan.FromMinutes(request.IntervalMinutes));
+        _scheduler.RegisterRecurring(id.ToString(), TimeSpan.FromMinutes(request.IntervalMinutes));
         return Ok(schedule);
     }
 
     /// <summary>Trigger an on-demand crawl (Req 25.5–25.6).</summary>
     [HttpPost("sources/{id}/run")]
-    public async Task<IActionResult> RunNow(string id, CancellationToken ct)
+    public async Task<IActionResult> RunNow(Guid id, CancellationToken ct)
     {
         var source = await _db.Set<CrawlSource>().IgnoreQueryFilters()
             .FirstOrDefaultAsync(s => s.Id == id, ct)
@@ -137,13 +137,13 @@ public sealed class CrawlerController : ControllerBase
         if (source.ApprovalStatus != "APPROVED")
             throw new ValidationException("Only approved sources can be crawled.");
 
-        _scheduler.EnqueueOnDemand(id);
+        _scheduler.EnqueueOnDemand(id.ToString());
         return Accepted();
     }
 
     /// <summary>Crawl job history for a source (Req 30.1).</summary>
     [HttpGet("sources/{id}/jobs")]
-    public async Task<IActionResult> GetJobs(string id, CancellationToken ct)
+    public async Task<IActionResult> GetJobs(Guid id, CancellationToken ct)
     {
         var jobs = await _db.Set<CrawlJob>().IgnoreQueryFilters().AsNoTracking()
             .Where(j => j.CrawlSourceId == id)
@@ -152,3 +152,8 @@ public sealed class CrawlerController : ControllerBase
         return Ok(jobs);
     }
 }
+
+
+
+
+

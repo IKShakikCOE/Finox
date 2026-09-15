@@ -19,12 +19,12 @@ public sealed class CurrentUser : ICurrentUser
 
     public bool IsAuthenticated => _principal?.Identity?.IsAuthenticated ?? false;
 
-    public string Id =>
+    public Guid Id => Guid.Parse(
         Find(ClaimTypes.NameIdentifier, "sub")
-        ?? throw new InvalidOperationException("No authenticated user is available for the current request.");
+        ?? throw new InvalidOperationException("No authenticated user is available for the current request."));
 
     public string Username =>
-        Find("preferred_username", ClaimTypes.Name) ?? Id;
+        Find("preferred_username", ClaimTypes.Name) ?? Id.ToString();
 
     public string? Email => Find(ClaimTypes.Email, "email");
 

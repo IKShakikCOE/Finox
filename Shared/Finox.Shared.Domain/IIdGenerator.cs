@@ -6,7 +6,7 @@ namespace Finox.Shared.Domain;
 /// </summary>
 public interface IIdGenerator
 {
-    string NewId();
+    Guid NewId();
 }
 
 /// <summary>
@@ -15,5 +15,6 @@ public interface IIdGenerator
 /// </summary>
 public sealed class GuidIdGenerator : IIdGenerator
 {
-    public string NewId() => Guid.NewGuid().ToString("N");
+    public Guid NewId() => Guid.NewGuid();
 }
+

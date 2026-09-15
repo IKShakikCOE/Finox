@@ -51,6 +51,18 @@ public sealed class TransactionService : CrudService<Transaction, TrackerDbConte
 
     public override async Task<Transaction> CreateAsync(Transaction input, CancellationToken ct)
     {
+        if (input.AccountId.HasValue)
+        {
+            var account = await Db.Set<Account>().FirstOrDefaultAsync(a => a.Id == input.AccountId.Value, ct);
+            if (account != null)
+            {
+                if (input.Type == FlowType.INCOME)
+                    account.Balance += input.Amount;
+                else if (input.Type == FlowType.EXPENSE)
+                    account.Balance -= input.Amount;
+            }
+        }
+
         var created = await base.CreateAsync(input, ct);
 
         // Reload with navigation properties
@@ -63,8 +75,33 @@ public sealed class TransactionService : CrudService<Transaction, TrackerDbConte
         return created;
     }
 
-    public override async Task<Transaction> UpdateAsync(string id, Transaction input, CancellationToken ct)
+    public override async Task<Transaction> UpdateAsync(Guid id, Transaction input, CancellationToken ct)
     {
+        var oldTxn = await Set.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id, ct);
+        if (oldTxn != null && oldTxn.AccountId.HasValue)
+        {
+            var oldAccount = await Db.Set<Account>().FirstOrDefaultAsync(a => a.Id == oldTxn.AccountId.Value, ct);
+            if (oldAccount != null)
+            {
+                if (oldTxn.Type == FlowType.INCOME)
+                    oldAccount.Balance -= oldTxn.Amount;
+                else if (oldTxn.Type == FlowType.EXPENSE)
+                    oldAccount.Balance += oldTxn.Amount;
+            }
+        }
+
+        if (input.AccountId.HasValue)
+        {
+            var newAccount = await Db.Set<Account>().FirstOrDefaultAsync(a => a.Id == input.AccountId.Value, ct);
+            if (newAccount != null)
+            {
+                if (input.Type == FlowType.INCOME)
+                    newAccount.Balance += input.Amount;
+                else if (input.Type == FlowType.EXPENSE)
+                    newAccount.Balance -= input.Amount;
+            }
+        }
+
         var updated = await base.UpdateAsync(id, input, ct);
 
         // Reload with navigation properties
@@ -75,6 +112,44 @@ public sealed class TransactionService : CrudService<Transaction, TrackerDbConte
             await entry.Reference(t => t.Account).LoadAsync(ct);
 
         return updated;
+    }
+
+    public override async Task DeleteAsync(Guid id, CancellationToken ct)
+    {
+        var oldTxn = await Set.FirstOrDefaultAsync(t => t.Id == id, ct);
+        if (oldTxn != null && oldTxn.AccountId.HasValue)
+        {
+            var account = await Db.Set<Account>().FirstOrDefaultAsync(a => a.Id == oldTxn.AccountId.Value, ct);
+            if (account != null)
+            {
+                if (oldTxn.Type == FlowType.INCOME)
+                    account.Balance -= oldTxn.Amount;
+                else if (oldTxn.Type == FlowType.EXPENSE)
+                    account.Balance += oldTxn.Amount;
+            }
+        }
+
+        await base.DeleteAsync(id, ct);
+    }
+
+    public override async Task BulkDeleteAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
+    {
+        var txns = await Set.Where(e => ids.Contains(e.Id)).ToListAsync(ct);
+        var accountIds = txns.Where(t => t.AccountId.HasValue).Select(t => t.AccountId!.Value).Distinct().ToList();
+        var accounts = await Db.Set<Account>().Where(a => accountIds.Contains(a.Id)).ToDictionaryAsync(a => a.Id, ct);
+
+        foreach (var txn in txns)
+        {
+            if (txn.AccountId.HasValue && accounts.TryGetValue(txn.AccountId.Value, out var account))
+            {
+                if (txn.Type == FlowType.INCOME)
+                    account.Balance -= txn.Amount;
+                else if (txn.Type == FlowType.EXPENSE)
+                    account.Balance += txn.Amount;
+            }
+        }
+
+        await base.BulkDeleteAsync(ids, ct);
     }
 }
 
@@ -102,6 +177,11 @@ public sealed class CategoryService : CrudService<Category, TrackerDbContext>, I
     }
 
     /// <summary>Returns all categories flat (parents + children) for dropdown pickers.</summary>
+    public async Task<IReadOnlyList<Category>> GetSubcategoriesAsync(Guid parentId, CancellationToken ct)
+    {
+        return await Set.Where(c => c.ParentId == parentId).ToListAsync(ct);
+    }
+
     public async Task<IReadOnlyList<Category>> ListFlatAsync(CancellationToken ct)
     {
         return await Set
@@ -135,7 +215,7 @@ public sealed class CategoryService : CrudService<Category, TrackerDbContext>, I
             .Trim('_');
     }
 
-    public override async Task<Category> UpdateAsync(string id, Category input, CancellationToken ct)
+    public override async Task<Category> UpdateAsync(Guid id, Category input, CancellationToken ct)
     {
         var existing = await Set.FirstOrDefaultAsync(e => e.Id == id, ct)
             ?? throw new NotFoundException($"No Category with id '{id}' was found.");
@@ -146,7 +226,7 @@ public sealed class CategoryService : CrudService<Category, TrackerDbContext>, I
         return await base.UpdateAsync(id, input, ct);
     }
 
-    public override async Task DeleteAsync(string id, CancellationToken ct)
+    public override async Task DeleteAsync(Guid id, CancellationToken ct)
     {
         var existing = await Set.FirstOrDefaultAsync(e => e.Id == id, ct)
             ?? throw new NotFoundException($"No Category with id '{id}' was found.");
@@ -179,3 +259,7 @@ public sealed class AccountService : CrudService<Account, TrackerDbContext>
         return base.CreateAsync(input, ct);
     }
 }
+
+
+
+

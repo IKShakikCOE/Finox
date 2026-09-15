@@ -4,8 +4,8 @@ namespace Calendar.Domain;
 
 public sealed class CalendarEvent : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public string Title { get; set; } = string.Empty;
     public string Date { get; set; } = string.Empty;  // YYYY-MM-DD

@@ -13,9 +13,9 @@ public interface ICrudService<T> where T : class, IOwnedEntity
 
     Task<T> CreateAsync(T input, CancellationToken ct);
 
-    Task<T> UpdateAsync(string id, T input, CancellationToken ct);
+    Task<T> UpdateAsync(Guid id, T input, CancellationToken ct);
 
-    Task DeleteAsync(string id, CancellationToken ct);
+    Task DeleteAsync(Guid id, CancellationToken ct);
 
-    Task BulkDeleteAsync(IReadOnlyCollection<string> ids, CancellationToken ct);
+    Task BulkDeleteAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct);
 }

@@ -18,7 +18,7 @@ public sealed class RuleBasedAdvisorService : IAdvisorService
         _idGen = idGen;
     }
 
-    public async Task<AdvisorMessage> ReplyAsync(string userMessage, string userId, CancellationToken ct)
+    public async Task<AdvisorMessage> ReplyAsync(string userMessage, Guid userId, CancellationToken ct)
     {
         var now = DateTimeOffset.UtcNow.ToString("o");
 
@@ -59,3 +59,6 @@ public sealed class RuleBasedAdvisorService : IAdvisorService
         return "I'm your financial advisor. Ask me about budgeting, saving, investing, or any financial topic and I'll provide personalized guidance based on your data.";
     }
 }
+
+
+

@@ -4,15 +4,15 @@ namespace Catalog.Domain;
 
 public sealed class Bank : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Logo { get; set; }
 }
 
 public sealed class BankProduct : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string BankId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid BankId { get; set; }
     public string BankName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // SAVINGS | LOAN | FDR | DPS
     public string Name { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ public sealed class BankProduct : IEntity
 
 public sealed class BankProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Type { get; set; }
     public int? Established { get; set; }
@@ -50,14 +50,14 @@ public sealed class BankProfile : IEntity
 
 public sealed class InsuranceCompany : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }
 
 public sealed class InsuranceProduct : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string CompanyId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // LIFE|HEALTH|VEHICLE|PROPERTY|CHILD|PENSION
     public string Name { get; set; } = string.Empty;
@@ -71,7 +71,7 @@ public sealed class InsuranceProduct : IEntity
 
 public sealed class InsuranceProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Type { get; set; }
     public int? Established { get; set; }
@@ -94,14 +94,14 @@ public sealed class InsuranceProfile : IEntity
 
 public sealed class AMC : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }
 
 public sealed class MutualFund : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string AmcId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid AmcId { get; set; }
     public string AmcName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // GROWTH | BALANCED | FIXED_INCOME
     public string Name { get; set; } = string.Empty;
@@ -119,7 +119,7 @@ public sealed class MutualFund : IEntity
 
 public sealed class AMCProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int? Established { get; set; }
     public string? PaidUpCapital { get; set; }
@@ -139,7 +139,7 @@ public sealed class AMCProfile : IEntity
 
 public sealed class Article : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string? Category { get; set; } // News | Tips | Advice | Books | Learning
     public string Title { get; set; } = string.Empty;
     public string? Excerpt { get; set; }
@@ -154,7 +154,7 @@ public sealed class Article : IEntity
 
 public sealed class Platform : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Icon { get; set; }
     public string? Color { get; set; }

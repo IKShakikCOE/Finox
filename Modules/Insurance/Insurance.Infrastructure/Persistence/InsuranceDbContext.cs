@@ -40,3 +40,4 @@ public class InsuranceDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InsuranceDbContext).Assembly);
     }
 }
+

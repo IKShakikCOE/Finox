@@ -38,11 +38,11 @@ public sealed class InvestmentController : ControllerBase
 
     [HttpGet("campaigns")]
     public async Task<ActionResult<List<Campaign>>> GetCampaigns(
-        [FromQuery] string? status, [FromQuery] string? platformId, CancellationToken ct)
+        [FromQuery] string? status, [FromQuery] Guid? platformId, CancellationToken ct)
     {
         IQueryable<Campaign> q = _db.Set<Campaign>().AsNoTracking().IgnoreQueryFilters();
         if (!string.IsNullOrWhiteSpace(status)) q = q.Where(c => c.Status == status);
-        if (!string.IsNullOrWhiteSpace(platformId)) q = q.Where(c => c.PlatformId == platformId);
+        if (platformId.HasValue) q = q.Where(c => c.PlatformId == platformId);
         return Ok(await q.ToListAsync(ct));
     }
 
@@ -51,13 +51,17 @@ public sealed class InvestmentController : ControllerBase
         => StatusCode(StatusCodes.Status201Created, await _campaigns.CreateAsync(input, ct));
 
     [HttpPut("campaigns/{id}")]
-    public async Task<ActionResult<Campaign>> UpdateCampaign(string id, [FromBody] Campaign input, CancellationToken ct)
+    public async Task<ActionResult<Campaign>> UpdateCampaign(Guid id, [FromBody] Campaign input, CancellationToken ct)
         => Ok(await _campaigns.UpdateAsync(id, input, ct));
 
     [HttpDelete("campaigns/{id}")]
-    public async Task<IActionResult> DeleteCampaign(string id, CancellationToken ct)
+    public async Task<IActionResult> DeleteCampaign(Guid id, CancellationToken ct)
     {
         await _campaigns.DeleteAsync(id, ct);
         return NoContent();
     }
 }
+
+
+
+

@@ -8,8 +8,8 @@ namespace Tracker.Domain;
 /// </summary>
 public sealed class TrackerMeta : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public List<string> PaymentMethods { get; set; } = new();
     public List<string> IncomeCategories { get; set; } = new();

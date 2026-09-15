@@ -8,8 +8,8 @@ namespace Tracker.Domain;
 /// </summary>
 public sealed class Account : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public string Name { get; set; } = string.Empty;
     public AccountType Type { get; set; }

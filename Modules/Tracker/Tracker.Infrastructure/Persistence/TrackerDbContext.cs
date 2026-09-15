@@ -31,7 +31,7 @@ public class TrackerDbContext : DbContext
     /// The owner id used by the per-user query filter. Read at query-translation time so a
     /// single context instance always reflects the request's current user.
     /// </summary>
-    public string CurrentOwnerId => _currentUser.IsAuthenticated ? (_currentUser.Id ?? string.Empty) : string.Empty;
+    public Guid? CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : null;
     public string CurrentUsername => _currentUser.IsAuthenticated ? (_currentUser.Username ?? string.Empty) : string.Empty;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -65,14 +65,12 @@ public class TrackerDbContext : DbContext
         var ownerProperty = Expression.Property(parameter, nameof(IOwnedEntity.OwnerId));
 
         var currentOwner = Expression.Property(Expression.Constant(this), nameof(CurrentOwnerId));
-        var currentUsername = Expression.Property(Expression.Constant(this), nameof(CurrentUsername));
-
-        var isNull = Expression.Equal(ownerProperty, Expression.Constant(null, typeof(string)));
-        var isEmpty = Expression.Equal(ownerProperty, Expression.Constant("", typeof(string)));
+        var isNull = Expression.Equal(ownerProperty, Expression.Constant(null, typeof(Guid?)));
+        
         var equalsOwner = Expression.Equal(ownerProperty, currentOwner);
-        var equalsUsername = Expression.Equal(ownerProperty, currentUsername);
-
-        var body = Expression.OrElse(isNull, Expression.OrElse(isEmpty, Expression.OrElse(equalsOwner, equalsUsername)));
+        var body = Expression.OrElse(isNull, equalsOwner);
         return Expression.Lambda(body, parameter);
     }
 }
+
+

@@ -21,11 +21,11 @@ public sealed class InsuranceController : ControllerBase
 
     [HttpGet("products")]
     public async Task<ActionResult<List<InsuranceProduct>>> GetProducts(
-        [FromQuery] string? category, [FromQuery] string? companyId, CancellationToken ct)
+        [FromQuery] string? category, [FromQuery] Guid? companyId, CancellationToken ct)
     {
         IQueryable<InsuranceProduct> q = _db.InsuranceProducts.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(category)) q = q.Where(p => p.Category == category);
-        if (!string.IsNullOrWhiteSpace(companyId)) q = q.Where(p => p.CompanyId == companyId);
+        if (companyId.HasValue) q = q.Where(p => p.CompanyId == companyId);
         return Ok(await q.ToListAsync(ct));
     }
 
@@ -33,3 +33,7 @@ public sealed class InsuranceController : ControllerBase
     public async Task<ActionResult<List<InsuranceProfile>>> GetProfiles(CancellationToken ct)
         => Ok(await _db.InsuranceProfiles.AsNoTracking().ToListAsync(ct));
 }
+
+
+
+

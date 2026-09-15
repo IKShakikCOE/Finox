@@ -4,7 +4,7 @@ namespace News.Domain;
 
 public sealed class Article : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string? Category { get; set; } // News | Tips | Advice | Books | Learning
     public string Title { get; set; } = string.Empty;
     public string? Excerpt { get; set; }
@@ -19,7 +19,7 @@ public sealed class Article : IEntity
 
 public sealed class Platform : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Icon { get; set; }
     public string? Color { get; set; }

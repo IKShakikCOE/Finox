@@ -8,7 +8,7 @@ namespace Finox.Shared.Domain;
 public interface ICurrentUser
 {
     /// <summary>Keycloak <c>sub</c> claim — the stable user identifier used to scope per-user data.</summary>
-    string Id { get; }
+    Guid Id { get; }
 
     /// <summary>Keycloak <c>preferred_username</c> claim.</summary>
     string Username { get; }

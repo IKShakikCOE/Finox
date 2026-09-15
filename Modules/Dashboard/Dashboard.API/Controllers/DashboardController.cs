@@ -220,14 +220,6 @@ public sealed class DashboardController : ControllerBase
             .OrderByDescending(a => a.percentage)
             .ToList();
 
-        if (!allocations.Any())
-        {
-            allocations = new[]
-            {
-                new { assetClass = "Bank Accounts", description = "0 Accounts registered", percentage = 0, colorClass = "bg-blue-500", textColorClass = "text-blue-500" }
-            }.ToList();
-        }
-
         return allocations;
     }
 
@@ -366,27 +358,26 @@ public sealed class DashboardController : ControllerBase
 
         var transactions = await txnQuery.ToListAsync(ct);
 
-        return Enumerable.Range(1, 4).Select(q =>
+        return Enumerable.Range(0, 6).Select(i =>
         {
-            var startMonth = (q - 1) * 3 + 1;
-            var endMonth = q * 3;
-            var qStart = new DateOnly(now.Year, startMonth, 1);
-            var qEnd = new DateOnly(now.Year, endMonth, DateTime.DaysInMonth(now.Year, endMonth));
+            var targetMonthDate = now.AddMonths(-5 + i);
+            var mStart = new DateOnly(targetMonthDate.Year, targetMonthDate.Month, 1);
+            var mEnd = new DateOnly(targetMonthDate.Year, targetMonthDate.Month, DateTime.DaysInMonth(targetMonthDate.Year, targetMonthDate.Month));
 
-            var qIncome = transactions
-                .Where(t => t.Type == FlowType.INCOME && t.Date >= qStart && t.Date <= qEnd)
+            var mIncome = transactions
+                .Where(t => t.Type == FlowType.INCOME && t.Date >= mStart && t.Date <= mEnd)
                 .Sum(t => t.Amount);
 
-            var qExpense = transactions
-                .Where(t => t.Type == FlowType.EXPENSE && t.Date >= qStart && t.Date <= qEnd)
+            var mExpense = transactions
+                .Where(t => t.Type == FlowType.EXPENSE && t.Date >= mStart && t.Date <= mEnd)
                 .Sum(t => t.Amount);
 
             return new
             {
-                quarter = $"Q{q}",
-                income = qIncome,
-                expense = qExpense,
-                savings = qIncome - qExpense
+                month = targetMonthDate.ToString("MMM"),
+                income = mIncome,
+                expense = mExpense,
+                savings = mIncome - mExpense
             };
         }).ToList();
     }
@@ -416,12 +407,12 @@ public sealed class DashboardController : ControllerBase
         var budgetVsActual = budgets.Select(budget =>
         {
             var category = budget.Category ?? categories.FirstOrDefault(c => c.Id == budget.CategoryId);
-            var categoryIds = new List<string> { budget.CategoryId };
+            var categoryIds = new List<Guid> { budget.CategoryId };
             var children = categories.Where(c => c.ParentId == budget.CategoryId).Select(c => c.Id);
             categoryIds.AddRange(children);
 
             var spent = transactions
-                .Where(t => t.CategoryId != null && categoryIds.Contains(t.CategoryId))
+                .Where(t => t.CategoryId != null && categoryIds.Contains(t.CategoryId.Value))
                 .Sum(t => t.Amount);
 
             var percentage = budget.AllocatedAmount > 0 ? (int)Math.Round((double)(spent / budget.AllocatedAmount * 100)) : 0;
@@ -620,3 +611,7 @@ public sealed class DashboardController : ControllerBase
         return events;
     }
 }
+
+
+
+

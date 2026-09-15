@@ -10,7 +10,6 @@
     <ProjectReference Include="..\Modules\Identity\Identity.API\Identity.API.csproj" />
     <ProjectReference Include="..\Modules\Investment\Investment.API\Investment.API.csproj" />
     <ProjectReference Include="..\Modules\Calendar\Calendar.API\Calendar.API.csproj" />
-    <ProjectReference Include="..\Modules\Messaging\Messaging.API\Messaging.API.csproj" />
     <ProjectReference Include="..\Modules\Advisor\Advisor.API\Advisor.API.csproj" />
     <ProjectReference Include="..\Modules\Dashboard\Dashboard.API\Dashboard.API.csproj" />
     <ProjectReference Include="..\Modules\Crawler\Crawler.API\Crawler.API.csproj" />

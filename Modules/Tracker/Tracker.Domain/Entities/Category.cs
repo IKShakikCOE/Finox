@@ -9,10 +9,10 @@ namespace Tracker.Domain;
 /// </summary>
 public sealed class Category : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 
     /// <summary>NULL for system/global categories, Keycloak sub for user-created ones.</summary>
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid? OwnerId { get; set; }
 
     public string Name { get; set; } = string.Empty;
 
@@ -25,7 +25,7 @@ public sealed class Category : IOwnedEntity
     public string? Color { get; set; }
 
     /// <summary>Self-referencing FK for sub-categories (2-level hierarchy).</summary>
-    public string? ParentId { get; set; }
+    public Guid? ParentId { get; set; }
     public Category? Parent { get; set; }
 
     /// <summary>Display order within the same parent group.</summary>

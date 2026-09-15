@@ -9,13 +9,13 @@ namespace Messaging.API.Controllers;
 
 public sealed class SendMessageRequest
 {
-    public string ReceiverId { get; set; } = string.Empty;
+    public Guid ReceiverId { get; set; }
     public string Content { get; set; } = string.Empty;
 }
 
 public sealed class MarkReadRequest
 {
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }
 
 /// <summary>
@@ -137,3 +137,6 @@ public sealed class MessagesController : ControllerBase
         return Ok(contacts);
     }
 }
+
+
+

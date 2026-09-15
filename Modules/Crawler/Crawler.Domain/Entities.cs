@@ -10,7 +10,7 @@ public enum ExtractionState { PENDING, EXTRACTED, EXTRACTION_FAILED }
 
 public sealed class CrawlSource : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Url { get; set; } = string.Empty;
     public string Kind { get; set; } = string.Empty;           // HTML | PDF
     public string Domain { get; set; } = string.Empty;         // BANK_PRODUCT | INSURANCE_PRODUCT | MUTUAL_FUND
@@ -24,16 +24,16 @@ public sealed class CrawlSource : IEntity
 
 public sealed class CrawlSchedule : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string CrawlSourceId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid CrawlSourceId { get; set; }
     public int IntervalMinutes { get; set; } // 60–43200 (1h–30d)
     public bool Enabled { get; set; } = true;
 }
 
 public sealed class CrawlJob : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string CrawlSourceId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid CrawlSourceId { get; set; }
     public string State { get; set; } = "PENDING"; // PENDING | RUNNING | SUCCEEDED | FAILED | SKIPPED
     public DateTimeOffset? StartedAt { get; set; }
     public DateTimeOffset? CompletedAt { get; set; }
@@ -44,9 +44,9 @@ public sealed class CrawlJob : IEntity
 
 public sealed class RawCrawlRecord : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string CrawlJobId { get; set; } = string.Empty;
-    public string CrawlSourceId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid CrawlJobId { get; set; }
+    public Guid CrawlSourceId { get; set; }
     public string SourceUrl { get; set; } = string.Empty;
     public DateTimeOffset CapturedAt { get; set; } = DateTimeOffset.UtcNow;
     public string ContentKind { get; set; } = string.Empty; // HTML | PDF
@@ -57,8 +57,8 @@ public sealed class RawCrawlRecord : IEntity
 
 public sealed class ExtractedRecord : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string RawCrawlRecordId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid RawCrawlRecordId { get; set; }
     public string Domain { get; set; } = string.Empty; // BANK_PRODUCT | INSURANCE_PRODUCT | MUTUAL_FUND
     public string PayloadJson { get; set; } = string.Empty; // jsonb
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

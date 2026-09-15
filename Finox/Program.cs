@@ -9,7 +9,6 @@ using News.API;
 using Identity.API;
 using Investment.API;
 using Calendar.API;
-using Messaging.API;
 using Advisor.API;
 using Dashboard.API;
 using Crawler.API;
@@ -32,7 +31,6 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(Identity.API.Controllers.UserController).Assembly)
     .AddApplicationPart(typeof(Investment.API.Controllers.InvestmentController).Assembly)
     .AddApplicationPart(typeof(Calendar.API.Controllers.CalendarController).Assembly)
-    .AddApplicationPart(typeof(Messaging.API.Controllers.MessagesController).Assembly)
     .AddApplicationPart(typeof(Advisor.API.Controllers.AdvisorController).Assembly)
     .AddApplicationPart(typeof(Dashboard.API.Controllers.DashboardController).Assembly)
     .AddApplicationPart(typeof(Crawler.API.Controllers.CrawlerController).Assembly);
@@ -46,7 +44,6 @@ builder.Services.AddNewsModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 builder.Services.AddInvestmentModule(builder.Configuration);
 builder.Services.AddCalendarModule(builder.Configuration);
-builder.Services.AddMessagingModule(builder.Configuration);
 builder.Services.AddAdvisorModule(builder.Configuration);
 builder.Services.AddDashboardModule(builder.Configuration);
 builder.Services.AddCrawlerModule(builder.Configuration);
@@ -126,7 +123,6 @@ if (app.Environment.IsDevelopment())
         sp.GetRequiredService<Identity.Infrastructure.Persistence.IdentityDbContext>(),
         sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>(),
         sp.GetRequiredService<Calendar.Infrastructure.Persistence.CalendarDbContext>(),
-        sp.GetRequiredService<Messaging.Infrastructure.Persistence.MessagingDbContext>(),
         sp.GetRequiredService<Advisor.Infrastructure.Persistence.AdvisorDbContext>(),
         sp.GetRequiredService<Crawler.Infrastructure.Persistence.CrawlerDbContext>()
     ];
@@ -220,7 +216,7 @@ if (app.Environment.IsDevelopment())
         await News.Infrastructure.Persistence.NewsSeeder.SeedAsync(newsDb);
 
         var trackerDb = sp.GetRequiredService<Tracker.Infrastructure.Persistence.TrackerDbContext>();
-        await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);
+        // await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);
 
         var investmentDb = sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>();
         await Investment.Infrastructure.Persistence.InvestmentSeeder.SeedAsync(investmentDb);

@@ -22,13 +22,13 @@ public sealed class BankController : ControllerBase
 
     [HttpGet("products")]
     public async Task<ActionResult<List<BankProduct>>> GetProducts(
-        [FromQuery] string? category, [FromQuery] string? bankId, CancellationToken ct)
+        [FromQuery] string? category, [FromQuery] Guid? bankId, CancellationToken ct)
     {
         IQueryable<BankProduct> query = _db.BankProducts.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(category))
             query = query.Where(p => p.Category == category);
-        if (!string.IsNullOrWhiteSpace(bankId))
+        if (bankId.HasValue)
             query = query.Where(p => p.BankId == bankId);
 
         return Ok(await query.ToListAsync(ct));
@@ -42,7 +42,7 @@ public sealed class BankController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<BankProfile>> GetProfile(string id, CancellationToken ct)
+    public async Task<ActionResult<BankProfile>> GetProfile(Guid id, CancellationToken ct)
     {
         var profile = await _db.BankProfiles.AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id, ct);
@@ -51,3 +51,7 @@ public sealed class BankController : ControllerBase
         return Ok(profile);
     }
 }
+
+
+
+

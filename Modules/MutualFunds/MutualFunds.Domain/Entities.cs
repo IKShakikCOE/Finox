@@ -4,14 +4,14 @@ namespace MutualFunds.Domain;
 
 public sealed class AMC : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }
 
 public sealed class MutualFund : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string AmcId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid AmcId { get; set; }
     public string AmcName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // GROWTH | BALANCED | FIXED_INCOME
     public string Name { get; set; } = string.Empty;
@@ -29,7 +29,7 @@ public sealed class MutualFund : IEntity
 
 public sealed class AMCProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int? Established { get; set; }
     public string? PaidUpCapital { get; set; }

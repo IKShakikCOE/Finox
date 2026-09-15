@@ -28,3 +28,4 @@ public class CrawlerDbContext : DbContext
         modelBuilder.Entity<ExtractedRecord>().ToTable("extracted_records");
     }
 }
+

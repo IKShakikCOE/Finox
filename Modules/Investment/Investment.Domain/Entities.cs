@@ -4,10 +4,10 @@ namespace Investment.Domain;
 
 public sealed class Campaign : IOwnedEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid? OwnerId { get; set; }
 
-    public string? PlatformId { get; set; }
+    public Guid? PlatformId { get; set; }
     public string? PlatformName { get; set; }
     public string? Name { get; set; }
     public string? Type { get; set; }
@@ -27,7 +27,7 @@ public sealed class Campaign : IOwnedEntity
 
 public sealed class Platform : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Icon { get; set; }
     public string? Color { get; set; }

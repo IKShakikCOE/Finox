@@ -4,15 +4,15 @@ namespace Bank.Domain;
 
 public sealed class BankEntity : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Logo { get; set; }
 }
 
 public sealed class BankProduct : IEntity
 {
-    public string Id { get; set; } = string.Empty;
-    public string BankId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+    public Guid BankId { get; set; }
     public string BankName { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty; // SAVINGS | LOAN | FDR | DPS
     public string Name { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ public sealed class BankProduct : IEntity
 
 public sealed class BankProfile : IEntity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Type { get; set; }
     public int? Established { get; set; }

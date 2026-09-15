@@ -37,20 +37,20 @@ public abstract class CrudControllerBase<T> : ControllerBase where T : class, IO
     }
 
     [HttpPut("{id}")]
-    public virtual async Task<ActionResult<T>> Update(string id, [FromBody] T input, CancellationToken ct)
+    public virtual async Task<ActionResult<T>> Update(Guid id, [FromBody] T input, CancellationToken ct)
         => Ok(await Service.UpdateAsync(id, input, ct));
 
     [HttpDelete("{id}")]
-    public virtual async Task<IActionResult> Delete(string id, CancellationToken ct)
+    public virtual async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await Service.DeleteAsync(id, ct);
         return NoContent();
     }
 
     [HttpPost("bulk-delete")]
-    public virtual async Task<IActionResult> BulkDelete([FromBody] BulkDeleteRequest request, CancellationToken ct)
+    public virtual async Task<IActionResult> BulkDelete([FromBody] IReadOnlyCollection<Guid> ids, CancellationToken ct)
     {
-        await Service.BulkDeleteAsync(request.Ids, ct);
+        await Service.BulkDeleteAsync(ids, ct);
         return Ok();
     }
 }

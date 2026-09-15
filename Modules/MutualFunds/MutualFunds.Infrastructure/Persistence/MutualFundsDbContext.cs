@@ -40,3 +40,4 @@ public class MutualFundsDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MutualFundsDbContext).Assembly);
     }
 }
+
