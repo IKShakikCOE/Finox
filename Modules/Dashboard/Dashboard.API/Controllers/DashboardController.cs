@@ -114,6 +114,13 @@ public sealed class DashboardController : ControllerBase
         return Ok(news);
     }
 
+    [HttpGet("spending-by-category")]
+    public async Task<IActionResult> GetSpendingByCategory(CancellationToken ct)
+    {
+        var spending = await ComputeSpendingByCategoryAsync(ct);
+        return Ok(spending);
+    }
+
     // ─── Private Helper Calculations ──────────────────────────────────────────
 
     private async Task<object> ComputeSummaryAsync(CancellationToken ct)
@@ -141,11 +148,15 @@ public sealed class DashboardController : ControllerBase
             transactions = await _db.Set<Transaction>().AsNoTracking().IgnoreQueryFilters().ToListAsync(ct);
         }
 
-        var totalBalance = accounts.Sum(a => a.Balance);
-        if (totalBalance == 0 && transactions.Any())
+        // Calculate total balance from transactions to ensure it perfectly matches the ledger
+        var totalIncome = transactions.Where(t => t.Type == FlowType.INCOME).Sum(t => t.Amount);
+        var totalExpense = transactions.Where(t => t.Type == FlowType.EXPENSE).Sum(t => t.Amount);
+        var totalBalance = totalIncome - totalExpense;
+
+        // If no transactions exist, fallback to account balances
+        if (totalBalance == 0 && !transactions.Any())
         {
-            totalBalance = transactions.Where(t => t.Type == FlowType.INCOME).Sum(t => t.Amount)
-                         - transactions.Where(t => t.Type == FlowType.EXPENSE).Sum(t => t.Amount);
+            totalBalance = accounts.Sum(a => a.Balance);
         }
 
         var monthlyIncome = transactions
@@ -190,28 +201,29 @@ public sealed class DashboardController : ControllerBase
         var totalPositiveBalance = accounts.Where(a => a.Balance > 0).Sum(a => a.Balance);
         if (totalPositiveBalance == 0) totalPositiveBalance = totalBalance > 0 ? totalBalance : 1;
 
-        var accountGroupInfo = new Dictionary<AccountType, (string Name, string Color, string TextColor)>
+        var accountGroupInfo = new Dictionary<AccountType, (string Color, string TextColor)>
         {
-            { AccountType.BANK, ("Bank Accounts", "bg-blue-500", "text-blue-500") },
-            { AccountType.MOBILE_BANKING, ("Mobile Banking", "bg-emerald-500", "text-emerald-500") },
-            { AccountType.CASH, ("Cash & Wallet", "bg-amber-500", "text-amber-500") },
-            { AccountType.CREDIT_CARD, ("Credit Cards", "bg-purple-500", "text-purple-500") }
+            { AccountType.BANK, ("bg-blue-500", "text-blue-500") },
+            { AccountType.MOBILE_BANKING, ("bg-emerald-500", "text-emerald-500") },
+            { AccountType.CASH, ("bg-amber-500", "text-amber-500") },
+            { AccountType.CREDIT_CARD, ("bg-purple-500", "text-purple-500") }
         };
 
         var allocations = accounts
-            .GroupBy(a => a.Type)
-            .Select(g =>
+            .Select(a =>
             {
-                var groupBalance = g.Sum(a => a.Balance);
-                var pct = (int)Math.Round((groupBalance / totalPositiveBalance) * 100);
-                var info = accountGroupInfo.TryGetValue(g.Key, out var val) 
+                var pct = (int)Math.Round((a.Balance / totalPositiveBalance) * 100);
+                var info = accountGroupInfo.TryGetValue(a.Type, out var val) 
                     ? val 
-                    : (Name: g.Key.ToString(), Color: "bg-indigo-500", TextColor: "text-indigo-500");
+                    : (Color: "bg-indigo-500", TextColor: "text-indigo-500");
+
+                var typeName = a.Type.ToString().Replace("_", " ");
+                typeName = char.ToUpper(typeName[0]) + typeName.Substring(1).ToLower();
 
                 return new
                 {
-                    assetClass = info.Name,
-                    description = $"{g.Count()} Account(s) - ৳ {groupBalance:N0}",
+                    assetClass = a.Name,
+                    description = $"{typeName} - ৳ {a.Balance:N0}",
                     percentage = Math.Max(0, pct),
                     colorClass = info.Color,
                     textColorClass = info.TextColor
@@ -471,6 +483,40 @@ public sealed class DashboardController : ControllerBase
         }
 
         return groups;
+    }
+
+    private async Task<object> ComputeSpendingByCategoryAsync(CancellationToken ct)
+    {
+        var now = DateOnly.FromDateTime(DateTime.UtcNow);
+        var monthStart = new DateOnly(now.Year, now.Month, 1);
+
+        IQueryable<Transaction> txnQuery = _db.Set<Transaction>().AsNoTracking().Include(t => t.Category);
+        if (!_user.IsAuthenticated) txnQuery = txnQuery.IgnoreQueryFilters();
+
+        var transactions = await txnQuery
+            .Where(t => t.Type == FlowType.EXPENSE && t.Date >= monthStart && t.Date <= now)
+            .ToListAsync(ct);
+
+        var totalSpent = transactions.Sum(t => t.Amount);
+
+        var spendingByCategory = transactions
+            .Where(t => t.Category != null)
+            .GroupBy(t => t.Category!.Name)
+            .Select(g => new
+            {
+                category = g.Key,
+                amount = g.Sum(t => t.Amount),
+                percentage = totalSpent > 0 ? (int)Math.Round((double)(g.Sum(t => t.Amount) / totalSpent * 100)) : 0,
+                color = g.First().Category?.Color ?? "#cbd5e1"
+            })
+            .OrderByDescending(x => x.amount)
+            .ToList();
+
+        return new
+        {
+            totalSpent,
+            items = spendingByCategory
+        };
     }
 
     private async Task<object> ComputeNewsAsync(CancellationToken ct)

@@ -26,6 +26,11 @@ public class TrackerDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Budget> Budgets => Set<Budget>();
     public DbSet<TrackerMeta> TrackerMetas => Set<TrackerMeta>();
+    public DbSet<Goal> Goals => Set<Goal>();
+    public DbSet<GoalTransaction> GoalTransactions => Set<GoalTransaction>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
+    public DbSet<SubscriptionPaymentHistory> SubscriptionPaymentHistories => Set<SubscriptionPaymentHistory>();
+    public DbSet<RecurringRule> RecurringRules => Set<RecurringRule>();
 
     /// <summary>
     /// The owner id used by the per-user query filter. Read at query-translation time so a

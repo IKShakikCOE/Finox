@@ -27,6 +27,11 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ICrudService<Account>, AccountService>();
         services.AddScoped<ICrudService<Budget>, Finox.Shared.Infrastructure.Crud.CrudService<Budget, TrackerDbContext>>();
+        services.AddScoped<ICrudService<Goal>, Finox.Shared.Infrastructure.Crud.CrudService<Goal, TrackerDbContext>>();
+        services.AddScoped<ICrudService<GoalTransaction>, Finox.Shared.Infrastructure.Crud.CrudService<GoalTransaction, TrackerDbContext>>();
+        services.AddScoped<ICrudService<Subscription>, Finox.Shared.Infrastructure.Crud.CrudService<Subscription, TrackerDbContext>>();
+        services.AddScoped<ICrudService<SubscriptionPaymentHistory>, Finox.Shared.Infrastructure.Crud.CrudService<SubscriptionPaymentHistory, TrackerDbContext>>();
+        services.AddScoped<ICrudService<RecurringRule>, Finox.Shared.Infrastructure.Crud.CrudService<RecurringRule, TrackerDbContext>>();
 
         return services;
     }

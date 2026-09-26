@@ -43,5 +43,25 @@ public enum BudgetPeriod
     MONTHLY,
     WEEKLY,
     YEARLY,
-    CUSTOM
+}
+
+public enum GoalStatus
+{
+    IN_PROGRESS,
+    COMPLETED,
+    PAUSED,
+    CANCELLED
+}
+
+public enum SubscriptionStatus
+{
+    ACTIVE,
+    PAUSED,
+    CANCELLED
+}
+
+public enum BillingCycle
+{
+    MONTHLY,
+    YEARLY
 }

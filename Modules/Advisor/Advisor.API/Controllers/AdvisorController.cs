@@ -10,6 +10,7 @@ namespace Advisor.API.Controllers;
 public sealed class ChatRequest
 {
     public string Message { get; set; } = string.Empty;
+    public string? Context { get; set; }
 }
 
 /// <summary>AI Advisor chat endpoints (Requirement 21).</summary>
@@ -34,7 +35,7 @@ public sealed class AdvisorController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Message))
             throw new ValidationException("The 'message' field is required.");
 
-        var reply = await _advisor.ReplyAsync(request.Message, _user.Id, ct);
+        var reply = await _advisor.ReplyAsync(request.Message, _user.Id, request.Context, ct);
         return Ok(reply);
     }
 
