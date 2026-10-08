@@ -128,12 +128,17 @@ if (app.Environment.IsDevelopment())
     ];
 
     // Ensure the database itself exists
+    try
     {
         var creator0 = (IRelationalDatabaseCreator)dbContexts[0].Database.GetService<IDatabaseCreator>();
         if (!await creator0.ExistsAsync())
         {
             await creator0.CreateAsync();
         }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database initialization check: {ex.Message}");
     }
 
     // Detect old PascalCase column schema and drop ALL public tables if found.
