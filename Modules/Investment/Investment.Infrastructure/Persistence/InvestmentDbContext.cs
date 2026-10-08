@@ -17,6 +17,9 @@ public class InvestmentDbContext : DbContext
 
     public DbSet<Campaign> Campaigns => Set<Campaign>();
     public DbSet<Platform> Platforms => Set<Platform>();
+    public DbSet<InvestmentLead> InvestmentLeads => Set<InvestmentLead>();
+    public DbSet<AuditReport> AuditReports => Set<AuditReport>();
+    public DbSet<CrawlJobRecord> CrawlJobRecords => Set<CrawlJobRecord>();
 
     public Guid? CurrentOwnerId => _currentUser.IsAuthenticated ? _currentUser.Id : null;
     public string CurrentUsername => _currentUser.IsAuthenticated ? (_currentUser.Username ?? string.Empty) : string.Empty;
@@ -28,6 +31,15 @@ public class InvestmentDbContext : DbContext
 
         modelBuilder.Entity<Campaign>().ToTable("campaigns");
         modelBuilder.Entity<Platform>().ToTable("platforms");
+        modelBuilder.Entity<InvestmentLead>().ToTable("investment_leads");
+        modelBuilder.Entity<AuditReport>().ToTable("investment_audit_reports");
+        modelBuilder.Entity<CrawlJobRecord>().ToTable("investment_crawl_jobs");
+
+        modelBuilder.Entity<InvestmentLead>()
+            .HasOne(l => l.AuditReport)
+            .WithOne()
+            .HasForeignKey<AuditReport>(r => r.InvestmentLeadId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
