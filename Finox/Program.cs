@@ -270,7 +270,7 @@ if (app.Environment.IsDevelopment())
         await News.Infrastructure.Persistence.NewsSeeder.SeedAsync(newsDb);
 
         var trackerDb = sp.GetRequiredService<Tracker.Infrastructure.Persistence.TrackerDbContext>();
-        // await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);
+        await Tracker.Infrastructure.Persistence.TrackerSeeder.SeedAsync(trackerDb);
 
         var investmentDb = sp.GetRequiredService<Investment.Infrastructure.Persistence.InvestmentDbContext>();
         await Investment.Infrastructure.Persistence.InvestmentSeeder.SeedAsync(investmentDb);
