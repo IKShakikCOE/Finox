@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Domain\Finox.Shared.Domain.csproj" />
+  </ItemGroup>
+</Project>

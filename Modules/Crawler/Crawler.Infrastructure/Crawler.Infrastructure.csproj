@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Crawler.Application\Crawler.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Infrastructure\Finox.Shared.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

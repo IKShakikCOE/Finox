@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Finox.Shared.Infrastructure\Finox.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\News.Application\News.Application.csproj" />
+  </ItemGroup>
+</Project>

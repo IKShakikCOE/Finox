@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\News.Application\News.Application.csproj" />
+    <ProjectReference Include="..\News.Infrastructure\News.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
