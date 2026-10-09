@@ -19,10 +19,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register Shared API & Infrastructure (CurrentUser, IIdGenerator, Controllers, JSON Options, Validation errors)
 builder.Services.AddSharedApi(builder.Configuration);
 
-// Register Controllers Application Parts for all feature modules (Modular Monolith controller discovery)
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Tracker.API.Controllers.TransactionsController).Assembly)
     .AddApplicationPart(typeof(Bank.API.Controllers.BankController).Assembly)
@@ -36,7 +34,6 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(Dashboard.API.Controllers.DashboardController).Assembly)
     .AddApplicationPart(typeof(Crawler.API.Controllers.CrawlerController).Assembly);
 
-// Register Feature Modules (SmartFM Modular Monolith pattern)
 builder.Services.AddTrackerModule(builder.Configuration);
 builder.Services.AddBankModule(builder.Configuration);
 builder.Services.AddInsuranceModule(builder.Configuration);
@@ -49,7 +46,6 @@ builder.Services.AddAdvisorModule(builder.Configuration);
 builder.Services.AddDashboardModule(builder.Configuration);
 builder.Services.AddCrawlerModule(builder.Configuration);
 
-// JWT Authentication & Authorization
 var keycloakSection = builder.Configuration.GetSection("Keycloak");
 if (keycloakSection.Exists() && !string.IsNullOrWhiteSpace(keycloakSection["BaseUrl"]))
 {
@@ -60,14 +56,26 @@ if (keycloakSection.Exists() && !string.IsNullOrWhiteSpace(keycloakSection["Base
     builder.Services.AddFinoxAuthentication(authority, requireHttps, audience);
 }
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.SetIsOriginAllowed(_ => true)
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.SetIsOriginAllowed(_ => true)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        }
     });
 });
 
@@ -101,7 +109,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Exception handling middleware (maps ApiException to standard error shape)
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
